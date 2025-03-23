@@ -74,14 +74,14 @@ const About = () => {
           </div>
           <h2 className="heading-lg text-gray-900 mb-4">Democratizing Robotics for All</h2>
           <p className="subtitle text-gray-600 mb-6">
-            At VirtusCo, we're committed to bridging the gap between those with resources and those without, 
-            while building tailored robotic solutions for any industry. We believe automation should be accessible 
+            <strong>At VirtusCo, we're committed to bridging the gap between those with resources and those without, 
+            while building tailored robotic solutions for any industry.</strong> We believe automation should be accessible 
             to businesses of all sizes, not just large corporations.
           </p>
           <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 mt-8 mb-8">
             <h3 className="text-xl font-semibold text-virtus-primary mb-3">Our Vision</h3>
             <p className="text-gray-700">
-              We envision a future where robotics and automation empower businesses of all sizes to achieve more with less. 
+              <strong>We envision a future where robotics and automation empower businesses of all sizes to achieve more with less.</strong> 
               By democratizing access to cutting-edge robotic solutions, we're working to create a world where technology 
               bridges divides rather than creating them.
             </p>
