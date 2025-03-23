@@ -21,35 +21,35 @@ const About = () => {
       name: 'Antony Austin',
       role: 'CEO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Visionary leader with a background in robotics engineering and AI systems development. Antony's expertise in autonomous navigation systems forms the core of our product strategy.',
+      bio: "Visionary leader with a background in robotics engineering and AI systems development. Antony's expertise in autonomous navigation systems forms the core of our product strategy.",
       expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning'],
     },
     {
       name: 'Alwin George Thomas',
       role: 'CTO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Technology innovator with deep experience in hardware-software integration. Alwin leads our technical development, ensuring cutting-edge solutions that meet real-world needs.',
+      bio: "Technology innovator with deep experience in hardware-software integration. Alwin leads our technical development, ensuring cutting-edge solutions that meet real-world needs.",
       expertise: ['Hardware Integration', 'Software Architecture', 'R&D Management'],
     },
     {
       name: 'A.Azeem Kouther',
       role: 'COO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Operations expert specialized in logistics and process optimization. Azeem brings efficiency to every aspect of our business, from supply chain to deployment strategies.',
+      bio: "Operations expert specialized in logistics and process optimization. Azeem brings efficiency to every aspect of our business, from supply chain to deployment strategies.",
       expertise: ['Operations Management', 'Supply Chain', 'Process Optimization'],
     },
     {
       name: 'Allen George Thomas',
       role: 'CDO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Product designer with a passion for human-centered solutions. Allen ensures our robots deliver exceptional user experiences while maintaining technical excellence.',
+      bio: "Product designer with a passion for human-centered solutions. Allen ensures our robots deliver exceptional user experiences while maintaining technical excellence.",
       expertise: ['Product Design', 'User Experience', 'Interaction Design'],
     },
     {
       name: 'Danush Krishna',
       role: 'CFO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Financial strategist with extensive startup experience. Danush developed our unique revenue model and leads our financial planning for sustainable growth.',
+      bio: "Financial strategist with extensive startup experience. Danush developed our unique revenue model and leads our financial planning for sustainable growth.",
       expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling'],
     },
   ];
@@ -57,7 +57,7 @@ const About = () => {
   const values = [
     {
       title: 'Innovation',
-      description: 'We constantly push the boundaries of what's possible in autonomous robotics and service technology.',
+      description: "We constantly push the boundaries of what's possible in autonomous robotics and service technology.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />

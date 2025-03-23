@@ -85,7 +85,7 @@ const Product = () => {
         </svg>
       ),
       title: 'Modular Hardware Architecture',
-      description: 'Field-replaceable components allow for rapid maintenance and upgrades, extending the robot's operational life and reducing downtime.',
+      description: "Field-replaceable components allow for rapid maintenance and upgrades, extending the robot's operational life and reducing downtime.",
     },
     {
       icon: (
