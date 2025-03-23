@@ -1,9 +1,8 @@
-
 import { useRef, useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
-import { Briefcase, Code, Users, Robot, Brain, MessageSquare, Mail, Search } from 'lucide-react';
+import { Briefcase, Code, Users, Bot, Brain, MessageSquare, Mail, Search } from 'lucide-react';
 
 interface JobPosting {
   title: string;
@@ -38,7 +37,7 @@ const Careers = () => {
         "Proficiency in C++ and Python",
         "Master's or PhD in Robotics, Computer Science, or related field"
       ],
-      icon: <Robot className="h-6 w-6" />
+      icon: <Bot className="h-6 w-6" />
     },
     {
       title: "AI/ML Engineer",
@@ -110,7 +109,7 @@ const Careers = () => {
     {
       title: "Innovation First",
       description: "We encourage bold thinking and creative problem-solving to push the boundaries of what's possible in robotics.",
-      icon: <Robot className="h-6 w-6" />
+      icon: <Bot className="h-6 w-6" />
     },
     {
       title: "Collaborative Environment",
