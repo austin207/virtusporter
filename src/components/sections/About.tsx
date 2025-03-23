@@ -18,31 +18,31 @@ const About = () => {
       name: 'Antony Austin',
       role: 'CEO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Robotics engineer with extensive experience in autonomous systems and AI.',
+      bio: "Robotics engineer with extensive experience in autonomous systems and AI.",
     },
     {
       name: 'Alwin George Thomas',
       role: 'CTO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Technology leader with expertise in hardware and software integration.',
+      bio: "Technology leader with expertise in hardware and software integration.",
     },
     {
       name: 'A.Azeem Kouther',
       role: 'COO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Operations expert with deep knowledge of logistics and process optimization.',
+      bio: "Operations expert with deep knowledge of logistics and process optimization.",
     },
     {
       name: 'Allen George Thomas',
       role: 'CDO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Product designer focused on creating intuitive user experiences.',
+      bio: "Product designer focused on creating intuitive user experiences.",
     },
     {
       name: 'Danush Krishna',
       role: 'CFO & Co-Founder',
       image: '/placeholder.svg',
-      bio: 'Financial strategist with background in startup funding and revenue models.',
+      bio: "Financial strategist with background in startup funding and revenue models.",
     },
   ];
 
@@ -67,17 +67,25 @@ const About = () => {
   return (
     <section ref={sectionRef} className="py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Company Vision */}
+        {/* Company Mission & Vision */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-virtus-primary/10 text-virtus-primary mb-6">
-            Our Vision
+            Our Mission
           </div>
-          <h2 className="heading-lg text-gray-900 mb-4">Transforming Airport Experiences</h2>
+          <h2 className="heading-lg text-gray-900 mb-4">Democratizing Robotics for All</h2>
           <p className="subtitle text-gray-600 mb-6">
-            At VirtusCo, we're committed to bridging the gap between innovation and practical solutions. 
-            Our autonomous porter robots are designed to address real challenges faced by travelers, 
-            while embracing sustainability and technical excellence.
+            At VirtusCo, we're committed to bridging the gap between those with resources and those without, 
+            while building tailored robotic solutions for any industry. We believe automation should be accessible 
+            to businesses of all sizes, not just large corporations.
           </p>
+          <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 mt-8 mb-8">
+            <h3 className="text-xl font-semibold text-virtus-primary mb-3">Our Vision</h3>
+            <p className="text-gray-700">
+              We envision a future where robotics and automation empower businesses of all sizes to achieve more with less. 
+              By democratizing access to cutting-edge robotic solutions, we're working to create a world where technology 
+              bridges divides rather than creating them.
+            </p>
+          </div>
           <Button to="/about" size="lg">Learn More About Us</Button>
         </div>
 

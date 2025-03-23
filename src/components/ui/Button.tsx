@@ -2,10 +2,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
-  size?: 'sm' | 'md' | 'lg';
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        primary: "bg-virtus-primary text-white hover:bg-virtus-primary/90",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
   href?: string;
@@ -16,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ 
     className, 
     variant = 'primary', 
-    size = 'md', 
+    size = 'default', 
     asChild = false,
     isLoading = false,
     href,
@@ -24,29 +56,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     children, 
     ...props 
   }, ref) => {
-    const baseStyles = "inline-flex items-center justify-center font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-virtus-primary disabled:opacity-50 disabled:pointer-events-none btn-hover-effect";
+    const Comp = asChild ? Slot : "button";
     
-    const variantStyles = {
-      primary: "bg-virtus-primary text-white hover:bg-virtus-primary/90",
-      secondary: "bg-virtus-secondary text-white hover:bg-virtus-secondary/90",
-      outline: "bg-transparent border border-virtus-primary text-virtus-primary hover:bg-virtus-primary/10",
-      ghost: "bg-transparent text-virtus-primary hover:bg-virtus-primary/10",
-      link: "bg-transparent text-virtus-primary underline-offset-4 hover:underline p-0",
-    };
+    const baseStyles = cn(buttonVariants({ variant, size, className }));
     
-    const sizeStyles = {
-      sm: "text-xs px-3 py-1.5 rounded-full",
-      md: "text-sm px-5 py-2 rounded-full",
-      lg: "text-base px-6 py-3 rounded-full",
-    };
-
-    const classes = cn(
-      baseStyles,
-      variantStyles[variant],
-      variant !== 'link' && sizeStyles[size],
-      className
-    );
-
     const content = (
       <>
         {isLoading && (
@@ -63,7 +76,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <a 
           href={href} 
-          className={classes}
+          className={baseStyles}
           target="_blank" 
           rel="noopener noreferrer"
         >
@@ -74,24 +87,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (to) {
       return (
-        <Link to={to} className={classes}>
+        <Link to={to} className={baseStyles}>
           {content}
         </Link>
       );
     }
 
     return (
-      <button
-        className={classes}
+      <Comp
+        className={baseStyles}
         ref={ref}
         {...props}
       >
         {content}
-      </button>
+      </Comp>
     );
   }
 );
 
 Button.displayName = 'Button';
 
+export { Button, buttonVariants };
 export default Button;
