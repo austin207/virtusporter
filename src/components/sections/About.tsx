@@ -74,7 +74,7 @@ const About = () => {
           </div>
           <h2 className="heading-lg text-gray-900 mb-4">Democratizing Robotics</h2>
           <p className="subtitle text-gray-600 mb-6">
-            <strong>Clearly state VirtusCo's mission: Bridging the gap between those with resources and those without, 
+            <strong>Bridging the gap between those with resources and those without, 
             while building tailored robotic solutions for any industry.</strong> 
             We believe automation should be accessible to businesses of all sizes, not just large corporations.
           </p>
