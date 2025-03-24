@@ -72,18 +72,18 @@ const About = () => {
           <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-virtus-primary/10 text-virtus-primary mb-6">
             Our Story
           </div>
-          <h2 className="heading-lg text-gray-900 mb-4">Transforming Airport Experience</h2>
+          <h2 className="heading-lg text-gray-900 mb-4">Democratizing Robotics</h2>
           <p className="subtitle text-gray-600 mb-6">
-            <strong>VirtusCo was founded with a clear vision: to transform the airport experience through 
-            innovation that addresses real challenges faced by travelers and creates value for airports.</strong> 
+            <strong>Clearly state VirtusCo's mission: Bridging the gap between those with resources and those without, 
+            while building tailored robotic solutions for any industry.</strong> 
             We believe automation should be accessible to businesses of all sizes, not just large corporations.
           </p>
           <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 mt-8 mb-8">
-            <h3 className="text-xl font-semibold text-virtus-primary mb-3">Our Mission</h3>
+            <h3 className="text-xl font-semibold text-virtus-primary mb-3">Our Vision</h3>
             <p className="text-gray-700">
-              <strong>At VirtusCo, we're bridging the gap between those with resources and those without, 
-              while building tailored robotic solutions for the travel industry.</strong> Our autonomous porter robots 
-              emerged from years of research, with a focus on creating technology that's genuinely helpful.
+              <strong>At VirtusCo, we're committed to democratizing robotics and making automation 
+              accessible to businesses of all sizes.</strong> Our innovative solutions emerged from years of research, 
+              with a focus on creating technology that's genuinely helpful and accessible to everyone.
             </p>
           </div>
           <Button to="/about" size="lg">Learn More About Us</Button>
