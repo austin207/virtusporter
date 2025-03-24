@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot } from 'lucide-react';
 
@@ -20,7 +19,6 @@ const VirtueChat = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Add these variables to make the component respond without real API calls for now
   const placeholderResponses = [
     "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
     "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
@@ -43,67 +41,23 @@ const VirtueChat = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
-    // Simulate API response
     setTimeout(() => {
       const randomResponse = placeholderResponses[Math.floor(Math.random() * placeholderResponses.length)];
       const botMessage: Message = { role: 'assistant', content: randomResponse };
       setMessages(prev => [...prev, botMessage]);
       setIsLoading(false);
     }, 1000);
-
-    // In a real implementation, we would call the Claude API here
-    // For example:
-    /*
-    const fetchAIResponse = async (userInput: string) => {
-      try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': 'YOUR_CLAUDE_API_KEY',
-            'anthropic-version': '2023-06-01'
-          },
-          body: JSON.stringify({
-            model: 'claude-3-5-sonnet-20240620',
-            messages: messages.concat([userMessage]),
-            max_tokens: 1024
-          })
-        });
-        
-        const data = await response.json();
-        const botMessage: Message = { 
-          role: 'assistant', 
-          content: data.content[0].text 
-        };
-        
-        setMessages(prev => [...prev, botMessage]);
-      } catch (error) {
-        console.error('Error fetching AI response:', error);
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: 'Sorry, I encountered an error. Please try again later.' 
-        }]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchAIResponse(input);
-    */
   };
 
-  // Auto-scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle textarea height
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     e.target.style.height = 'auto';
@@ -111,8 +65,7 @@ const VirtueChat = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Chat toggle button */}
+    <div className="fixed bottom-0 right-0 z-50 p-6">
       <button
         onClick={toggleChat}
         className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all ${
@@ -123,7 +76,6 @@ const VirtueChat = () => {
         <MessageCircle className="w-6 h-6" />
       </button>
 
-      {/* Chat window */}
       <div
         className={`bg-white rounded-2xl shadow-xl w-80 sm:w-96 overflow-hidden transition-all duration-300 ${
           isOpen
@@ -132,7 +84,6 @@ const VirtueChat = () => {
         }`}
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-virtus-primary text-white">
           <div className="flex items-center space-x-2">
             <Bot className="w-5 h-5" />
@@ -147,7 +98,6 @@ const VirtueChat = () => {
           </button>
         </div>
 
-        {/* Messages */}
         <div className="p-4 overflow-y-auto" style={{ maxHeight: '400px' }}>
           <div className="space-y-4">
             {messages.map((message, index) => (
@@ -183,7 +133,6 @@ const VirtueChat = () => {
           </div>
         </div>
 
-        {/* Input */}
         <form onSubmit={handleSubmit} className="border-t border-gray-200 p-3">
           <div className="flex items-end space-x-2">
             <textarea
