@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot } from 'lucide-react';
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
+import { useState, useRef, useEffect } from 'react';
+import { MessageCircle } from 'lucide-react';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ChatInput from './ChatInput';
+import { Message } from './types';
 
 const VirtueChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +14,7 @@ const VirtueChat = () => {
       content: 'Hi there! I\'m Virtue, VirtusCo\'s AI assistant. How can I help you today?' 
     }
   ]);
-  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const placeholderResponses = [
@@ -37,13 +35,9 @@ const VirtueChat = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const userMessage: Message = { role: 'user', content: input };
+  const handleSendMessage = (content: string) => {
+    const userMessage: Message = { role: 'user', content };
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setIsLoading(true);
 
     setTimeout(() => {
@@ -52,16 +46,6 @@ const VirtueChat = () => {
       setMessages(prev => [...prev, botMessage]);
       setIsLoading(false);
     }, 1000);
-  };
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-    e.target.style.height = 'auto';
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
   };
 
   return (
@@ -84,85 +68,9 @@ const VirtueChat = () => {
         }`}
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >
-        <div className="flex items-center justify-between px-4 py-3 bg-virtus-primary text-white">
-          <div className="flex items-center space-x-2">
-            <Bot className="w-5 h-5" />
-            <h3 className="font-semibold text-lg">Virtue</h3>
-          </div>
-          <button
-            onClick={toggleChat}
-            className="p-1 rounded-full hover:bg-white/20 transition-colors"
-            aria-label="Close chat"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-4 overflow-y-auto" style={{ maxHeight: '400px' }}>
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-virtus-primary text-white rounded-tr-none'
-                      : 'bg-gray-100 text-gray-800 rounded-tl-none'
-                  }`}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="border-t border-gray-200 p-3">
-          <div className="flex items-end space-x-2">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={handleInputChange}
-              placeholder="Ask Virtue anything..."
-              className="flex-1 max-h-32 resize-none border border-gray-200 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-virtus-primary focus:border-transparent"
-              rows={1}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className={`p-2 rounded-lg ${
-                !input.trim() || isLoading
-                  ? 'bg-gray-100 text-gray-400'
-                  : 'bg-virtus-primary text-white'
-              }`}
-              aria-label="Send message"
-            >
-              <Send className="w-5 h-5" />
-            </button>
-          </div>
-        </form>
+        <ChatHeader onClose={toggleChat} />
+        <MessageList messages={messages} isLoading={isLoading} />
+        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </div>
   );
