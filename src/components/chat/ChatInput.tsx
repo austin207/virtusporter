@@ -1,15 +1,15 @@
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Send } from 'lucide-react';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isLoading: boolean;
+  inputRef?: React.RefObject<HTMLTextAreaElement>;
 }
 
-const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
+const ChatInput = ({ onSendMessage, isLoading, inputRef }: ChatInputProps) => {
   const [input, setInput] = useState('');
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -23,6 +23,11 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
     
     onSendMessage(input);
     setInput('');
+    
+    // Reset the textarea height
+    if (inputRef?.current) {
+      inputRef.current.style.height = 'auto';
+    }
   };
 
   return (
