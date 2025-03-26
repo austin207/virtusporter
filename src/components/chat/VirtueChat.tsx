@@ -49,7 +49,7 @@ const VirtueChat = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50">
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
       <button
         onClick={toggleChat}
         className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all ${
@@ -70,7 +70,7 @@ const VirtueChat = () => {
       >
         <ChatHeader onClose={toggleChat} />
         <MessageList messages={messages} isLoading={isLoading} />
-        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} inputRef={inputRef} />
       </div>
     </div>
   );

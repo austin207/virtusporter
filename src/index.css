@@ -96,6 +96,23 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  
+  /* Improved responsive text scaling */
+  h1 {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+  
+  p {
+    @apply text-base sm:text-lg;
+  }
 }
 
 @layer components {
@@ -108,31 +125,31 @@
   }
   
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-24;
   }
   
   .heading-xl {
-    @apply text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight;
   }
   
   .heading-lg {
-    @apply text-4xl md:text-5xl font-bold tracking-tight;
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight;
   }
   
   .heading-md {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight;
   }
   
   .heading-sm {
-    @apply text-2xl md:text-3xl font-bold tracking-tight;
+    @apply text-xl sm:text-2xl md:text-3xl font-bold tracking-tight;
   }
   
   .heading-xs {
-    @apply text-xl md:text-2xl font-bold tracking-tight;
+    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight;
   }
   
   .subtitle {
-    @apply text-lg text-gray-600 max-w-3xl;
+    @apply text-base sm:text-lg text-gray-600 max-w-3xl;
   }
   
   .badge {
@@ -179,6 +196,19 @@
   .btn-hover-effect:hover::after {
     @apply scale-x-100 origin-bottom-left;
   }
+  
+  /* Improved responsive layout classes */
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+  
+  .responsive-flex {
+    @apply flex flex-col md:flex-row items-center gap-4 md:gap-6;
+  }
+  
+  .responsive-padding {
+    @apply px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-14;
+  }
 }
 
 /* Base transition for page changes */
@@ -204,6 +234,23 @@
   transition: opacity 300ms, transform 300ms;
 }
 
+/* Mobile-first responsive media queries */
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+}
+
+@media (min-width: 641px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -221,4 +268,18 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(156, 163, 175);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
 }
