@@ -474,7 +474,7 @@ const Careers = () => {
                   <Button href="#openings" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     View Open Positions
                   </Button>
-                  <Button to="/contact" variant="outline" className="border-white text-white hover:bg-white/10" size="lg">
+                  <Button to="/contact"  className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Contact Recruiting
                   </Button>
                 </div>

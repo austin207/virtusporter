@@ -329,7 +329,7 @@ const Service = () => {
                   <Button to="/contact" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Contact Us
                   </Button>
-                  <Button to="/product" variant="outline" className="border-white text-white hover:bg-white/10" size="lg">
+                  <Button to="/product" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Explore Products
                   </Button>
                 </div>

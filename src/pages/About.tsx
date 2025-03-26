@@ -19,35 +19,35 @@ const About = () => {
   const team: TeamMember[] = [
     {
       name: 'Antony Austin',
-      role: 'CEO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Visionary leader with a background in robotics engineering and AI systems development. Antony's expertise in autonomous navigation systems forms the core of our product strategy.",
       expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning'],
     },
     {
       name: 'Alwin George Thomas',
-      role: 'CTO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Technology innovator with deep experience in hardware-software integration. Alwin leads our technical development, ensuring cutting-edge solutions that meet real-world needs.",
       expertise: ['Hardware Integration', 'Software Architecture', 'R&D Management'],
     },
     {
       name: 'A.Azeem Kouther',
-      role: 'COO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Operations expert specialized in logistics and process optimization. Azeem brings efficiency to every aspect of our business, from supply chain to deployment strategies.",
       expertise: ['Operations Management', 'Supply Chain', 'Process Optimization'],
     },
     {
       name: 'Allen George Thomas',
-      role: 'CDO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Product designer with a passion for human-centered solutions. Allen ensures our robots deliver exceptional user experiences while maintaining technical excellence.",
       expertise: ['Product Design', 'User Experience', 'Interaction Design'],
     },
     {
       name: 'Danush Krishna',
-      role: 'CFO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Financial strategist with extensive startup experience. Danush developed our unique revenue model and leads our financial planning for sustainable growth.",
       expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling'],
@@ -384,7 +384,7 @@ const About = () => {
                   <Button to="/contact" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Contact Us
                   </Button>
-                  <Button to="/product" variant="outline" className="border-white text-white hover:bg-white/10" size="lg">
+                  <Button to="/product" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Explore Our Product
                   </Button>
                 </div>

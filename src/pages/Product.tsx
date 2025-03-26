@@ -355,7 +355,7 @@ const Product = () => {
                   <Button to="/contact" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Request a Demo
                   </Button>
-                  <Button to="/service" variant="outline" className="border-white text-white hover:bg-white/10" size="lg">
+                  <Button to="/service" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
                     Learn About Pricing
                   </Button>
                 </div>

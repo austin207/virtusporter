@@ -85,7 +85,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
-                  <p className="text-gray-600">info@virtusco.com</p>
+                  <p className="text-gray-600">virtuscotech@gmail.com</p>
                 </div>
               </div>
               
@@ -97,7 +97,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Call Us</h3>
-                  <p className="text-gray-600">+91 123 456 7890</p>
+                  <p className="text-gray-600">+91 73568 44578</p>
                 </div>
               </div>
               

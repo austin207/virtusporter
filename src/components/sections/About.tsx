@@ -18,35 +18,35 @@ const About = () => {
   const team: TeamMember[] = [
     {
       name: 'Antony Austin',
-      role: 'CEO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Robotics engineer with extensive experience in autonomous systems and AI.",
       slug: '/founders/antony-austin'
     },
     {
       name: 'Alwin George Thomas',
-      role: 'CTO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Technology leader with expertise in hardware and software integration.",
       slug: '/founders/alwin-george-thomas'
     },
     {
       name: 'A.Azeem Kouther',
-      role: 'COO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Operations expert with deep knowledge of logistics and process optimization.",
       slug: '/founders/azeem-kouther'
     },
     {
       name: 'Allen George Thomas',
-      role: 'CDO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Product designer focused on creating intuitive user experiences.",
       slug: '/founders/allen-george-thomas'
     },
     {
       name: 'Danush Krishna',
-      role: 'CFO & Co-Founder',
+      role: 'Founder',
       image: '/placeholder.svg',
       bio: "Financial strategist with background in startup funding and revenue models.",
       slug: '/founders/danush-krishna'
