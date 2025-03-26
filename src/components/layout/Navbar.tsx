@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import AuthButtons from './AuthButtons';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -81,14 +82,15 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Contact Button */}
-          <div className="hidden md:flex">
+          {/* Contact Button and Auth */}
+          <div className="hidden md:flex items-center space-x-4">
             <NavLink
               to="/contact"
               className="inline-flex items-center justify-center px-5 py-2 bg-virtus-primary text-white rounded-full font-medium transition-all hover:bg-opacity-90 btn-hover-effect"
             >
               Get Demo
             </NavLink>
+            <AuthButtons />
           </div>
 
           {/* Mobile Menu Button */}
@@ -154,6 +156,9 @@ const Navbar = () => {
           >
             Get Demo
           </NavLink>
+          <div className="mt-2">
+            <AuthButtons />
+          </div>
         </div>
       </div>
     </nav>

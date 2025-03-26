@@ -49,7 +49,7 @@ const VirtueChat = () => {
   };
 
   return (
-    <div className="fixed bottom-0 right-0 z-50 p-6">
+    <div className="fixed bottom-5 right-5 z-50">
       <button
         onClick={toggleChat}
         className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all ${
