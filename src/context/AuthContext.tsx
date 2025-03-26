@@ -7,15 +7,18 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   signIn: (email: string, password: string) => Promise<{
-    error: Error | null;
-    data: Session | null;
+    error: any;
+    data: { session: Session | null; user: User | null } | null;
   }>;
   signUp: (email: string, password: string) => Promise<{
-    error: Error | null;
-    data: Session | null;
+    error: any;
+    data: { session: Session | null; user: User | null } | null;
   }>;
   signOut: () => Promise<void>;
   loading: boolean;
+  
+  // Add OAuth support
+  signInWithOAuth: (provider: 'google' | 'github' | 'facebook') => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,7 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     });
     setLoading(false);
-    return result;
+    return {
+      error: result.error,
+      data: result.data ? { 
+        session: result.data.session, 
+        user: result.data.user 
+      } : null
+    };
   };
 
   const signUp = async (email: string, password: string) => {
@@ -62,7 +71,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     });
     setLoading(false);
-    return result;
+    return {
+      error: result.error,
+      data: result.data ? { 
+        session: result.data.session, 
+        user: result.data.user 
+      } : null
+    };
   };
 
   const signOut = async () => {
@@ -71,8 +86,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
+  // OAuth sign in
+  const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
+    await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading }}>
+    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading, signInWithOAuth }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import Button from "@/components/ui/Button";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -18,7 +20,7 @@ type AuthFormValues = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const { signIn, signUp, loading } = useAuth();
+  const { signIn, signUp, signInWithOAuth, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -50,13 +52,25 @@ const Auth = () => {
             : "Please check your email for verification instructions.",
         });
         
-        if (result.data.session || (!isLogin && !result.error)) {
+        if (result.data?.session || (!isLogin && !result.error)) {
           navigate("/");
         }
       }
     } catch (error) {
       toast({
         title: "Something went wrong",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleOAuthSignIn = async (provider: 'google' | 'github' | 'facebook') => {
+    try {
+      await signInWithOAuth(provider);
+    } catch (error) {
+      toast({
+        title: "Authentication error",
         description: (error as Error).message,
         variant: "destructive",
       });
@@ -82,10 +96,9 @@ const Auth = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <input
+                      <Input
                         {...field}
                         type="email"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-virtus-primary focus:ring-virtus-primary sm:text-sm"
                         placeholder="you@example.com"
                       />
                     </FormControl>
@@ -101,10 +114,9 @@ const Auth = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <input
+                      <Input
                         {...field}
                         type="password"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-virtus-primary focus:ring-virtus-primary sm:text-sm"
                         placeholder="••••••••"
                       />
                     </FormControl>
@@ -132,9 +144,33 @@ const Auth = () => {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
-                  {isLogin ? "New to VirtusCo?" : "Already have an account?"}
+                  Or continue with
                 </span>
               </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => handleOAuthSignIn('google')}
+                className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <FaGoogle className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthSignIn('github')}
+                className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <FaGithub className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleOAuthSignIn('facebook')}
+                className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <FaFacebook className="h-5 w-5" />
+              </button>
             </div>
 
             <div className="mt-6">
