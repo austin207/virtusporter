@@ -169,22 +169,22 @@ const VirtueChat = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-      <button
-        onClick={toggleChat}
-        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all ${
-          isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 bg-virtus-primary text-white'
-        }`}
-        aria-label="Open chat"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </button>
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+      {!isOpen && (
+        <button
+          onClick={toggleChat}
+          className="flex items-center justify-center w-14 h-14 rounded-full shadow-lg bg-virtus-primary text-white hover:bg-virtus-primary/90 transition-all"
+          aria-label="Open chat"
+        >
+          <MessageCircle className="w-6 h-6" />
+        </button>
+      )}
 
       <div
         className={`bg-white rounded-2xl shadow-xl w-80 sm:w-96 overflow-hidden transition-all duration-300 ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
-            : 'opacity-0 scale-95 translate-y-10 pointer-events-none'
+            : 'opacity-0 scale-95 translate-y-10 pointer-events-none hidden'
         }`}
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >

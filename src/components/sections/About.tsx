@@ -1,5 +1,6 @@
 
 import { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
 interface TeamMember {
@@ -7,6 +8,7 @@ interface TeamMember {
   role: string;
   image: string;
   bio: string;
+  slug: string;
 }
 
 const About = () => {
@@ -19,30 +21,35 @@ const About = () => {
       role: 'CEO & Co-Founder',
       image: '/placeholder.svg',
       bio: "Robotics engineer with extensive experience in autonomous systems and AI.",
+      slug: '/founders/antony-austin'
     },
     {
       name: 'Alwin George Thomas',
       role: 'CTO & Co-Founder',
       image: '/placeholder.svg',
       bio: "Technology leader with expertise in hardware and software integration.",
+      slug: '/founders/alwin-george-thomas'
     },
     {
       name: 'A.Azeem Kouther',
       role: 'COO & Co-Founder',
       image: '/placeholder.svg',
       bio: "Operations expert with deep knowledge of logistics and process optimization.",
+      slug: '/founders/azeem-kouther'
     },
     {
       name: 'Allen George Thomas',
       role: 'CDO & Co-Founder',
       image: '/placeholder.svg',
       bio: "Product designer focused on creating intuitive user experiences.",
+      slug: '/founders/allen-george-thomas'
     },
     {
       name: 'Danush Krishna',
       role: 'CFO & Co-Founder',
       image: '/placeholder.svg',
       bio: "Financial strategist with background in startup funding and revenue models.",
+      slug: '/founders/danush-krishna'
     },
   ];
 
@@ -101,9 +108,10 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <div 
+              <Link 
+                to={member.slug}
                 key={index} 
-                className={`bg-white rounded-xl overflow-hidden shadow-md transition-all duration-500 transform ${
+                className={`bg-white rounded-xl overflow-hidden shadow-md transition-all duration-500 transform hover:shadow-lg ${
                   isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                 }`}
                 style={{ transitionDelay: `${150 * index}ms` }}
@@ -121,8 +129,14 @@ const About = () => {
                   <h4 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h4>
                   <p className="text-sm text-virtus-primary font-medium mb-3">{member.role}</p>
                   <p className="text-gray-600 text-sm">{member.bio}</p>
+                  <div className="mt-4 inline-flex items-center text-virtus-primary font-medium">
+                    Read more
+                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

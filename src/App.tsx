@@ -16,6 +16,12 @@ import Careers from "./pages/Careers";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import VirtueChat from "./components/chat/VirtueChat";
+import ScrollToTop from "./components/layout/ScrollToTop";
+import FounderAntony from "./pages/founders/FounderAntony";
+import FounderAlwinGeorge from "./pages/founders/FounderAlwinGeorge";
+import FounderAzeem from "./pages/founders/FounderAzeem";
+import FounderAllenGeorge from "./pages/founders/FounderAllenGeorge";
+import FounderDanush from "./pages/founders/FounderDanush";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +32,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/product" element={<Product />} />
@@ -36,6 +43,11 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/founders/antony-austin" element={<FounderAntony />} />
+            <Route path="/founders/alwin-george-thomas" element={<FounderAlwinGeorge />} />
+            <Route path="/founders/azeem-kouther" element={<FounderAzeem />} />
+            <Route path="/founders/allen-george-thomas" element={<FounderAllenGeorge />} />
+            <Route path="/founders/danush-krishna" element={<FounderDanush />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

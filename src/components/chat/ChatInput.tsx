@@ -53,7 +53,7 @@ const ChatInput = ({ onSendMessage, isLoading, inputRef }: ChatInputProps) => {
           className={`p-2 rounded-lg ${
             !input.trim() || isLoading
               ? 'bg-gray-100 text-gray-400'
-              : 'bg-virtus-primary text-white'
+              : 'bg-virtus-primary text-white hover:bg-virtus-primary/90'
           }`}
           aria-label="Send message"
         >
