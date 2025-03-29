@@ -28,7 +28,7 @@ const About = () => {
       name: 'Alwin George Thomas',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Financial strategist with extensive startup experience.",
+      bio: "Financial strategist.",
       expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling', 'Strategic Planning'],
     },
     {

@@ -47,7 +47,11 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="col-span-2">
             <NavLink to="/" className="text-xl font-bold text-virtus-primary tracking-tight flex items-center">
-              <span className="bg-virtus-primary text-white px-2 py-1 rounded mr-1">V</span>
+            <img 
+                src="/favicon.ico" 
+                alt="Logo" 
+                 className="w-10 h-10 mr-3" 
+              />
               <span>VirtusCo</span>
             </NavLink>
             <p className="mt-4 text-sm text-gray-600 max-w-xs">

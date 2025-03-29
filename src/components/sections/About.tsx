@@ -34,7 +34,7 @@ const About = () => {
       name: 'Alwin George Thomas',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Financial strategist with background in startup funding and revenue models.",
+      bio: "Financial strategist.",
       slug: '/founders/alwin-george-thomas'
     },
     {
