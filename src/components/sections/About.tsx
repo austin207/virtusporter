@@ -17,38 +17,38 @@ const About = () => {
 
   const team: TeamMember[] = [
     {
-      name: 'Antony Austin',
-      role: 'Founder',
-      image: '/placeholder.svg',
-      bio: "Robotics engineer with extensive experience in autonomous systems and AI.",
-      slug: '/founders/antony-austin'
-    },
-    {
-      name: 'Alwin George Thomas',
-      role: 'Founder',
-      image: '/placeholder.svg',
-      bio: "Technology leader with expertise in hardware and software integration.",
-      slug: '/founders/alwin-george-thomas'
-    },
-    {
       name: 'A.Azeem Kouther',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Operations expert with deep knowledge of logistics and process optimization.",
+      bio: "Robotics engineer with extensive experience in mechanical systems and hardware.",
       slug: '/founders/azeem-kouther'
     },
     {
       name: 'Allen George Thomas',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Product designer focused on creating intuitive user experiences.",
+      bio: "Product designer focused on creating intuitive user experiences and CAD models.",
       slug: '/founders/allen-george-thomas'
+    },
+    {
+      name: 'Alwin George Thomas',
+      role: 'Founder',
+      image: '/placeholder.svg',
+      bio: "Financial strategist with background in startup funding and revenue models.",
+      slug: '/founders/alwin-george-thomas'
+    },
+    {
+      name: 'Antony Austin',
+      role: 'Founder',
+      image: '/placeholder.svg',
+      bio: "Robotics engineer with extensive experience in autonomous systems, embedded systems and AI.",
+      slug: '/founders/antony-austin'
     },
     {
       name: 'Danush Krishna',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Financial strategist with background in startup funding and revenue models.",
+      bio: "Robotics engineer with expertise in hardware and embedded systems.",
       slug: '/founders/danush-krishna'
     },
   ];

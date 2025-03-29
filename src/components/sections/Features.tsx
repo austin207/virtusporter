@@ -55,7 +55,7 @@ const Features = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [features.length]);

@@ -21,36 +21,36 @@ const About = () => {
       name: 'Antony Austin',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Visionary leader with a background in robotics engineering and AI systems development. Antony's expertise in autonomous navigation systems forms the core of our product strategy.",
-      expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning'],
+      bio: "Pioneer with a background in robotics engineering, embedded systems and AI systems development.",
+      expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning', 'R&D Management'],
     },
     {
       name: 'Alwin George Thomas',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Technology innovator with deep experience in hardware-software integration. Alwin leads our technical development, ensuring cutting-edge solutions that meet real-world needs.",
-      expertise: ['Hardware Integration', 'Software Architecture', 'R&D Management'],
+      bio: "Financial strategist with extensive startup experience.",
+      expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling', 'Strategic Planning'],
     },
     {
       name: 'A.Azeem Kouther',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Operations expert specialized in logistics and process optimization. Azeem brings efficiency to every aspect of our business, from supply chain to deployment strategies.",
-      expertise: ['Operations Management', 'Supply Chain', 'Process Optimization'],
+      bio: "Visionary with a background in robotics engineering and mechanical systems development.",
+      expertise: ['Mechanical systems', 'Hardware modeling', 'Build Optimization', 'Strategic Planning'],
     },
     {
       name: 'Allen George Thomas',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Product designer with a passion for human-centered solutions. Allen ensures our robots deliver exceptional user experiences while maintaining technical excellence.",
-      expertise: ['Product Design', 'User Experience', 'Interaction Design'],
+      bio: "Product designer with a passion for human-centered solutions.",
+      expertise: ['Product Design', 'User Experience', 'Interaction Design', 'Strategic Planning'],
     },
     {
       name: 'Danush Krishna',
       role: 'Founder',
       image: '/placeholder.svg',
-      bio: "Financial strategist with extensive startup experience. Danush developed our unique revenue model and leads our financial planning for sustainable growth.",
-      expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling'],
+      bio: "Technology innovator with deep experience in hardware and embedded systems development.",
+      expertise: ['Hardware Integration', 'Embedded Architecture', 'Optimization techniques', 'Strategic Planning'],
     },
   ];
 
@@ -164,7 +164,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2019</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
                           <div className="text-xs text-gray-600">Concept development and initial research</div>
                         </div>
                       </div>
@@ -172,7 +172,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2020</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
                           <div className="text-xs text-gray-600">Prototype development and technical validation</div>
                         </div>
                       </div>
@@ -180,7 +180,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2021</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
                           <div className="text-xs text-gray-600">First airport pilot programs and user testing</div>
                         </div>
                       </div>
@@ -188,7 +188,7 @@ const About = () => {
                       <div className="relative pl-16">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2022</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
                           <div className="text-xs text-gray-600">Commercial launch and expansion</div>
                         </div>
                       </div>
