@@ -18,8 +18,6 @@ const Hero = () => {
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 to-purple-50"></div>
-        <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-virtus-primary opacity-5 animate-float"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-virtus-secondary opacity-5 animate-float" style={{ animationDelay: '2s' }}></div>
       </div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-32">

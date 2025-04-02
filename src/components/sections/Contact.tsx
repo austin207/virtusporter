@@ -61,8 +61,6 @@ const Contact = () => {
     <section ref={sectionRef} className="py-24 bg-white relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-virtus-primary opacity-5"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-virtus-secondary opacity-5"></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
