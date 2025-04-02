@@ -46,7 +46,7 @@ const LoadingScreen = () => {
         {/* Logo or Brand */}
         <div className="text-center mb-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">
-            <span className="text-red-500">Virtus</span>Porter
+            <span className="text-red-500">Virtus</span>Co
           </h1>
           <p className="text-gray-400 text-sm">Intelligent Robot Assistant</p>
         </div>
