@@ -46,7 +46,7 @@ const LoadingScreen = () => {
         {/* Logo or Brand */}
         <div className="text-center mb-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">
-            <span className="text-virtus-secondary">Virtus</span>Porter
+            <span className="text-red-500">Virtus</span>Porter
           </h1>
           <p className="text-gray-400 text-sm">Intelligent Robot Assistant</p>
         </div>
@@ -55,7 +55,7 @@ const LoadingScreen = () => {
         <div className="relative">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <LoaderCircle className="w-12 h-12 text-virtus-secondary animate-spin" />
+              <LoaderCircle className="w-12 h-12 text-red-500 animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-xs font-medium text-white">{Math.round(progress)}%</span>
               </div>
@@ -75,7 +75,8 @@ const LoadingScreen = () => {
                   style={{ 
                     animationDelay: `${i * 0.1}s`,
                     left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`
+                    top: `${Math.random() * 100}%`,
+                    backgroundColor: "#ea384c" // Changed from #32D74B (green) to #ea384c (red)
                   }}
                 />
               ))}
