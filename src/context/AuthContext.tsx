@@ -17,8 +17,11 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   loading: boolean;
   
-  // Add OAuth support
-  signInWithOAuth: (provider: 'google' | 'github' | 'facebook') => Promise<void>;
+  // Improved OAuth support with better error handling
+  signInWithOAuth: (provider: 'google' | 'github' | 'facebook') => Promise<{
+    error: any;
+    provider: 'google' | 'github' | 'facebook';
+  } | undefined>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log("Auth state changed:", event);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -86,18 +90,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
-  // OAuth sign in
+  // Improved OAuth sign in with better error handling
   const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
-    await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: window.location.origin
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            // Add additional parameters if needed
+            // access_type: 'offline', // For Google refresh tokens
+            // prompt: 'consent', // Force consent screen
+          }
+        }
+      });
+      
+      if (error) {
+        console.error(`Error signing in with ${provider}:`, error);
+        return { error, provider };
       }
-    });
+      
+      // If there's no error, the user is being redirected to OAuth provider
+      // We don't need to return anything as the page will reload
+      
+    } catch (err) {
+      console.error(`Exception during ${provider} sign in:`, err);
+      return { error: err, provider };
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading, signInWithOAuth }}>
+    <AuthContext.Provider value={{ 
+      session, 
+      user, 
+      signIn, 
+      signUp, 
+      signOut, 
+      loading, 
+      signInWithOAuth 
+    }}>
       {children}
     </AuthContext.Provider>
   );

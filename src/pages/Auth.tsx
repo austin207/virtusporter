@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -20,6 +22,7 @@ type AuthFormValues = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [oauthError, setOauthError] = useState<{message: string, provider: string} | null>(null);
   const { signIn, signUp, signInWithOAuth, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -66,8 +69,23 @@ const Auth = () => {
   };
 
   const handleOAuthSignIn = async (provider: 'google' | 'github' | 'facebook') => {
+    setOauthError(null);
     try {
-      await signInWithOAuth(provider);
+      const result = await signInWithOAuth(provider);
+      
+      if (result?.error) {
+        setOauthError({
+          message: `Error connecting to ${provider}. Please make sure your OAuth configuration is correct.`,
+          provider
+        });
+        
+        toast({
+          title: "Authentication error",
+          description: `Failed to connect with ${provider}. Please try again.`,
+          variant: "destructive",
+        });
+      }
+      // If no error, the user is being redirected to the OAuth provider
     } catch (error) {
       toast({
         title: "Authentication error",
@@ -75,6 +93,24 @@ const Auth = () => {
         variant: "destructive",
       });
     }
+  };
+
+  // Provider setup instructions
+  const getProviderInstructions = (provider: string) => {
+    if (provider === 'google') {
+      return (
+        <>
+          <p className="mb-2">To fix Google OAuth issues:</p>
+          <ol className="list-decimal pl-5 space-y-1 text-sm">
+            <li>Go to the <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Google Cloud Console</a></li>
+            <li>Ensure your OAuth consent screen has the correct authorized domains</li>
+            <li>Verify your OAuth credentials include the proper redirect URI: <code className="bg-gray-100 px-1 py-0.5 rounded text-xs">{window.location.origin}/auth/callback</code></li>
+            <li>Check that your Supabase project has the correct Google client ID and secret</li>
+          </ol>
+        </>
+      );
+    }
+    return null;
   };
 
   return (
@@ -87,6 +123,17 @@ const Auth = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {oauthError && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Authentication Error</AlertTitle>
+              <AlertDescription>
+                {oauthError.message}
+                {getProviderInstructions(oauthError.provider)}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
