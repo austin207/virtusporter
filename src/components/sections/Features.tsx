@@ -138,8 +138,6 @@ const Features = () => {
                     <div className="w-full h-full rounded-full bg-gradient-to-br from-virtus-primary/20 to-virtus-accent/20 flex items-center justify-center">
                       {/* Robot visualization - simplified for placeholder */}
                       <div className="w-3/5 h-4/5 bg-white rounded-2xl shadow-lg relative">
-                        {/* Robot head */}
-                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-virtus-primary rounded-full"></div>
                         
                         {/* Robot screen */}
                         <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-4/5 h-1/3 bg-gray-800 rounded-lg flex items-center justify-center">
