@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { useState, useEffect } from "react";
 import LoadingScreen from "./components/layout/LoadingScreen";
@@ -25,18 +25,33 @@ import FounderAzeem from "./pages/founders/FounderAzeem";
 import FounderAllenGeorge from "./pages/founders/FounderAllenGeorge";
 import FounderDanush from "./pages/founders/FounderDanush";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    // Simulate initial loading
+    // Simulate initial loading with a safety timeout
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 3000); // Adjust the timing as needed
     
-    return () => clearTimeout(timer);
+    // Safety fallback in case the loading screen gets stuck
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 8000); // Force loading to end after 8 seconds
+    
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   return (
@@ -58,6 +73,7 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/auth/callback" element={<Navigate to="/auth" />} />
               <Route path="/founders/antony-austin" element={<FounderAntony />} />
               <Route path="/founders/alwin-george-thomas" element={<FounderAlwinGeorge />} />
               <Route path="/founders/azeem-kouther" element={<FounderAzeem />} />

@@ -76,7 +76,7 @@ const LoadingScreen = () => {
                     animationDelay: `${i * 0.1}s`,
                     left: `${Math.random() * 100}%`,
                     top: `${Math.random() * 100}%`,
-                    backgroundColor: "#ea384c" // Changed from #32D74B (green) to #ea384c (red)
+                    backgroundColor: "#ea384c" // Red color
                   }}
                 />
               ))}

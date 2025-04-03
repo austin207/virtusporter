@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
   session: Session | null;
@@ -30,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -39,8 +41,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Show toast on successful sign in
+        if (event === 'SIGNED_IN') {
+          toast({
+            title: "Welcome back!",
+            description: "You've successfully logged in.",
+          });
+        }
       }
     );
+
+    // Check for URL error parameters that might indicate OAuth issues
+    const url = new URL(window.location.href);
+    const errorDescription = url.searchParams.get('error_description');
+    if (errorDescription) {
+      console.error("OAuth Error:", errorDescription);
+      toast({
+        title: "Authentication Error",
+        description: errorDescription,
+        variant: "destructive",
+      });
+      
+      // Remove error parameters from URL to prevent showing the error again on refresh
+      url.searchParams.delete('error_description');
+      url.searchParams.delete('error');
+      window.history.replaceState({}, document.title, url.toString());
+    }
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -50,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [toast]);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
@@ -97,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: window.location.origin + '/auth', // Explicitly set redirect to /auth page
           queryParams: {
             // Add additional parameters if needed
             // access_type: 'offline', // For Google refresh tokens
@@ -108,14 +135,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (error) {
         console.error(`Error signing in with ${provider}:`, error);
+        toast({
+          title: "Authentication Error",
+          description: `Error connecting to ${provider}: ${error.message}`,
+          variant: "destructive",
+        });
         return { error, provider };
       }
       
       // If there's no error, the user is being redirected to OAuth provider
-      // We don't need to return anything as the page will reload
+      toast({
+        title: "Redirecting...",
+        description: `Connecting to ${provider}. You'll be redirected.`,
+      });
       
     } catch (err) {
       console.error(`Exception during ${provider} sign in:`, err);
+      toast({
+        title: "Authentication Error",
+        description: `Unexpected error during ${provider} sign in.`,
+        variant: "destructive",
+      });
       return { error: err, provider };
     } finally {
       setLoading(false);

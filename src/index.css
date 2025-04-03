@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -45,6 +44,8 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    --virtus-red: 355 83% 57%;
   }
 
   .dark {
@@ -97,7 +98,6 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Improved responsive text scaling */
   h1 {
     @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
   }
@@ -197,7 +197,6 @@
     @apply scale-x-100 origin-bottom-left;
   }
   
-  /* Improved responsive layout classes */
   .responsive-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
   }
@@ -209,9 +208,32 @@
   .responsive-padding {
     @apply px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-14;
   }
+  
+  .text-virtus-red {
+    @apply text-red-500;
+  }
+  
+  .bg-virtus-red {
+    @apply bg-red-500;
+  }
+  
+  .border-virtus-red {
+    @apply border-red-500;
+  }
+  
+  .hover-virtus-red {
+    @apply hover:text-red-500;
+  }
+  
+  .heading-virtus {
+    @apply font-bold;
+  }
+  
+  .heading-virtus-accent {
+    @apply font-bold text-red-500;
+  }
 }
 
-/* Base transition for page changes */
 .page-transition-enter {
   opacity: 0;
   transform: translateY(10px);
@@ -234,7 +256,6 @@
   transition: opacity 300ms, transform 300ms;
 }
 
-/* Mobile-first responsive media queries */
 @media (max-width: 640px) {
   .hide-on-mobile {
     display: none;
@@ -251,7 +272,6 @@
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -270,7 +290,6 @@
   background: rgb(156, 163, 175);
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -284,7 +303,6 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Loading Screen Animations */
 @keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
@@ -304,7 +322,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background-color: #ea384c; /* Changed from #32D74B (green) to #ea384c (red) */
+  background-color: #ea384c;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   opacity: 0;
   transform: scale(0);
