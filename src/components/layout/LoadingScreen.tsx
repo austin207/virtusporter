@@ -46,7 +46,7 @@ const LoadingScreen = () => {
         {/* Logo or Brand */}
         <div className="text-center mb-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">
-            <span className="text-red-500">Virtus</span>Co
+            Virtus<span className="text-virtus-red">Co</span>
           </h1>
           <p className="text-gray-400 text-sm">Intelligent Robot Assistant</p>
         </div>
@@ -55,7 +55,7 @@ const LoadingScreen = () => {
         <div className="relative">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <LoaderCircle className="w-12 h-12 text-red-500 animate-spin" />
+              <LoaderCircle className="w-12 h-12 text-virtus-red animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-xs font-medium text-white">{Math.round(progress)}%</span>
               </div>
@@ -63,7 +63,7 @@ const LoadingScreen = () => {
           </div>
 
           {/* Progress bar */}
-          <Progress value={progress} className="h-1 bg-gray-800" />
+          <Progress value={progress} className="h-1 bg-gray-800" indicatorClassName="bg-virtus-red" />
           
           {/* Hexagon Grid Animation */}
           <div className="absolute -z-10 inset-0 overflow-hidden opacity-30">
@@ -86,7 +86,7 @@ const LoadingScreen = () => {
         
         {/* Loading Message */}
         <div className="text-center">
-          <p className="text-gray-500 text-sm">Initializing systems...</p>
+          <p className="text-gray-500 text-sm">Initializing <span className="text-virtus-red">VirtusCo</span> systems...</p>
         </div>
       </div>
     </div>

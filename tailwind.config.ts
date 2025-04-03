@@ -73,6 +73,9 @@ export default {
 					accent: '#5E5CE6',
 					neutral: '#F2F2F7',
 					dark: '#1C1C1E',
+					red: '#ea384c',
+					'red-dark': '#d02336',
+					'red-light': '#f15d6d',
 				}
 			},
 			borderRadius: {

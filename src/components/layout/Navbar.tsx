@@ -53,9 +53,9 @@ const Navbar = () => {
               <img 
                 src="/favicon.ico" 
                 alt="Logo" 
-                 className="w-10 h-10 mr-3" 
+                className="w-7 h-10 mr-3" 
               />
-              <span>VirtusCo</span>
+              <span>Virtus<span className="text-virtus-red">Co</span></span>
             </NavLink>
           </div>
 
@@ -69,12 +69,12 @@ const Navbar = () => {
                   className={({ isActive }) => `
                     relative text-sm font-medium transition-colors
                     ${isActive 
-                      ? 'text-virtus-primary' 
-                      : 'text-gray-700 hover:text-virtus-primary'
+                      ? 'text-virtus-red' 
+                      : 'text-gray-700 hover:text-virtus-red'
                     }
                     after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] 
                     after:w-full after:origin-bottom-right after:scale-x-0 
-                    after:bg-virtus-primary after:transition-transform 
+                    after:bg-virtus-red after:transition-transform 
                     after:duration-300 hover:after:origin-bottom-left 
                     hover:after:scale-x-100
                     ${isActive ? 'after:scale-x-100' : ''}
@@ -90,7 +90,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <NavLink
               to="/contact"
-              className="inline-flex items-center justify-center px-5 py-2 bg-virtus-primary text-white rounded-full font-medium transition-all hover:bg-opacity-90 btn-hover-effect"
+              className="inline-flex items-center justify-center px-5 py-2 bg-virtus-red text-white rounded-full font-medium transition-all hover:bg-virtus-red-dark btn-hover-effect"
             >
               Get Demo
             </NavLink>
@@ -146,8 +146,8 @@ const Navbar = () => {
               className={({ isActive }) => `
                 block py-2 px-3 rounded-lg text-base font-medium
                 ${isActive 
-                  ? 'text-white bg-virtus-primary' 
-                  : 'text-gray-700 hover:bg-virtus-primary/10'
+                  ? 'text-white bg-virtus-red' 
+                  : 'text-gray-700 hover:bg-virtus-red/10'
                 }
               `}
             >
@@ -156,7 +156,7 @@ const Navbar = () => {
           ))}
           <NavLink
             to="/contact"
-            className="block w-full text-center py-2 px-3 bg-virtus-primary text-white rounded-lg font-medium transition-all hover:bg-opacity-90"
+            className="block w-full text-center py-2 px-3 bg-virtus-red text-white rounded-lg font-medium transition-all hover:bg-virtus-red-dark"
           >
             Get Demo
           </NavLink>

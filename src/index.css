@@ -210,19 +210,27 @@
   }
   
   .text-virtus-red {
-    @apply text-red-500;
+    @apply text-[#ea384c];
   }
   
   .bg-virtus-red {
-    @apply bg-red-500;
+    @apply bg-[#ea384c];
   }
   
   .border-virtus-red {
-    @apply border-red-500;
+    @apply border-[#ea384c];
   }
   
   .hover-virtus-red {
-    @apply hover:text-red-500;
+    @apply hover:text-[#ea384c];
+  }
+  
+  .bg-virtus-red-dark {
+    @apply bg-[#d02336];
+  }
+  
+  .text-virtus-red-light {
+    @apply text-[#f15d6d];
   }
   
   .heading-virtus {
@@ -230,7 +238,7 @@
   }
   
   .heading-virtus-accent {
-    @apply font-bold text-red-500;
+    @apply font-bold text-[#ea384c];
   }
 }
 
@@ -346,4 +354,8 @@
     opacity: 0;
     transform: scale(0) rotate(360deg);
   }
+}
+
+.Progress .bg-primary {
+  @apply bg-virtus-red;
 }
