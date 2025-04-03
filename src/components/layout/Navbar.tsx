@@ -25,6 +25,19 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
+  // When mobile menu is open, prevent body scrolling
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Product', path: '/product' },
@@ -135,15 +148,17 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100 pb-4' : 'max-h-0 opacity-0'
-        } glass-nav mt-2`}
+        className={`md:hidden fixed top-[60px] left-0 right-0 bottom-0 transition-all duration-300 ease-in-out overflow-y-auto ${
+          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        } glass-nav`}
+        style={{ maxHeight: 'calc(100vh - 60px)' }}
       >
-        <div className="px-4 pt-3 pb-3 space-y-3">
+        <div className="px-4 pt-3 pb-3 space-y-3 max-h-full overflow-y-scroll">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
+              onClick={() => setIsMobileMenuOpen(false)}
               className={({ isActive }) => `
                 block py-2 px-3 rounded-lg text-base font-medium
                 ${isActive 
@@ -157,6 +172,7 @@ const Navbar = () => {
           ))}
           <NavLink
             to="/contact"
+            onClick={() => setIsMobileMenuOpen(false)}
             className="block w-full text-center py-2 px-3 bg-virtus-red text-white rounded-lg font-medium transition-all hover:bg-virtus-red-dark"
           >
             Get Demo

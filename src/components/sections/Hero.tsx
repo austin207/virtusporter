@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import Button from '../ui/Button';
+import AnimatedSection from '../ui/AnimatedSection';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,7 +24,11 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-32">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Hero Text Content */}
-          <div className={`w-full lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0 transition-all duration-1000 ease-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <AnimatedSection 
+            className="w-full lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0" 
+            direction="up"
+            delay={100}
+          >
             <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-virtus-primary/10 text-virtus-primary mb-6">
               Revolutionizing Airport Travel
             </div>
@@ -41,10 +46,14 @@ const Hero = () => {
               <Button to="/product" size="lg">Learn More</Button>
               <Button to="/contact" variant="outline" size="lg">Request a Demo</Button>
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Hero Image/Animation */}
-          <div className={`w-full lg:w-1/2 transition-all duration-1000 delay-300 ease-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <AnimatedSection 
+            className="w-full lg:w-1/2" 
+            direction="right"
+            delay={300}
+          >
             <div className="relative">
               <div className="glass-card rounded-2xl overflow-hidden shadow-xl">
                 <div className="aspect-w-16 aspect-h-9 bg-gradient-to-r from-virtus-primary/10 to-virtus-accent/10 relative">
@@ -63,7 +72,10 @@ const Hero = () => {
               </div>
               
               {/* Floating Stat Cards */}
-              <div className="absolute -top-10 -right-6 glass-card p-4 rounded-lg shadow-lg animate-float" style={{ animationDelay: '1s' }}>
+              <AnimatedSection 
+                className="absolute -top-10 -right-6 glass-card p-4 rounded-lg shadow-lg" 
+                delay={700}
+              >
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-full bg-virtus-secondary flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,9 +87,12 @@ const Hero = () => {
                     <div className="text-sm font-bold">+95%</div>
                   </div>
                 </div>
-              </div>
+              </AnimatedSection>
               
-              <div className="absolute bottom-10 -left-6 glass-card p-4 rounded-lg shadow-lg animate-float" style={{ animationDelay: '1.5s' }}>
+              <AnimatedSection 
+                className="absolute bottom-10 -left-6 glass-card p-4 rounded-lg shadow-lg" 
+                delay={900}
+              >
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-full bg-virtus-accent flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,9 +104,9 @@ const Hero = () => {
                     <div className="text-sm font-bold">42 min avg</div>
                   </div>
                 </div>
-              </div>
+              </AnimatedSection>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>
