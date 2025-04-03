@@ -42,6 +42,7 @@ const Navbar = () => {
           ? 'glass-nav py-3' 
           : 'bg-transparent py-5'
       }`}
+      style={{ position: 'fixed', width: '100%' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">

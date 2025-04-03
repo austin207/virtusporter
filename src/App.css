@@ -6,6 +6,18 @@
   text-align: center;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  min-height: 100vh;
+  padding-top: 80px; /* Add padding to account for fixed navbar */
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,4 +52,11 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Fix for mobile scrolling with fixed navbar */
+@media (max-width: 768px) {
+  main {
+    padding-top: 60px;
+  }
 }

@@ -2,6 +2,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TeamMember {
   name: string;
@@ -14,6 +15,7 @@ interface TeamMember {
 const About = () => {
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const team: TeamMember[] = [
     {
@@ -54,6 +56,12 @@ const About = () => {
   ];
 
   useEffect(() => {
+    // Set to visible immediately on mobile to ensure content appears
+    if (isMobile) {
+      setIsInView(true);
+      return;
+    }
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -61,7 +69,7 @@ const About = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 } // Reduced threshold to trigger earlier
     );
 
     if (sectionRef.current) {
@@ -69,7 +77,7 @@ const About = () => {
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile]);
 
   return (
     <section ref={sectionRef} className="py-24 bg-gray-50">
@@ -79,14 +87,14 @@ const About = () => {
           <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-virtus-primary/10 text-virtus-primary mb-6">
             Our Story
           </div>
-          <h2 className="heading-lg text-gray-900 mb-4">Democratizing Robotics</h2>
+          <h2 className="heading-lg text-gray-900 mb-4">Democratizing <span className="text-virtus-red">Robotics</span></h2>
           <p className="subtitle text-gray-600 mb-6">
             <strong>Bridging the gap between those with resources and those without, 
             while building tailored robotic solutions for any industry.</strong> 
             We believe automation should be accessible to businesses of all sizes, not just large corporations.
           </p>
           <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 mt-8 mb-8">
-            <h3 className="text-xl font-semibold text-virtus-primary mb-3">Our Vision</h3>
+            <h3 className="text-xl font-semibold text-virtus-red mb-3">Our Vision</h3>
             <p className="text-gray-700">
               <strong>At VirtusCo, we're committed to democratizing robotics and making automation 
               accessible to businesses of all sizes.</strong> Our innovative solutions emerged from years of research, 
@@ -99,7 +107,7 @@ const About = () => {
         {/* Team Section */}
         <div>
           <div className="text-center mb-16">
-            <h3 className="heading-md text-gray-900 mb-4">Meet Our Founding Team</h3>
+            <h3 className="heading-md text-gray-900 mb-4">Meet Our <span className="text-virtus-red">Founding Team</span></h3>
             <p className="subtitle text-gray-600 max-w-3xl mx-auto">
               The visionary minds behind VirtusCo, bringing together expertise in robotics, 
               design, operations, and strategic planning.
@@ -111,10 +119,10 @@ const About = () => {
               <Link 
                 to={member.slug}
                 key={index} 
-                className={`bg-white rounded-xl overflow-hidden shadow-md transition-all duration-500 transform hover:shadow-lg ${
+                className={`bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 transform hover:shadow-lg ${
                   isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                 }`}
-                style={{ transitionDelay: `${150 * index}ms` }}
+                style={{ transitionDelay: isMobile ? '0ms' : `${150 * index}ms` }}
               >
                 <div className="aspect-w-16 aspect-h-9 bg-gray-200">
                   <div className="flex items-center justify-center h-full bg-gradient-to-br from-virtus-primary/10 to-virtus-accent/10">
@@ -127,9 +135,9 @@ const About = () => {
                 </div>
                 <div className="p-6">
                   <h4 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h4>
-                  <p className="text-sm text-virtus-primary font-medium mb-3">{member.role}</p>
+                  <p className="text-sm text-virtus-red font-medium mb-3">{member.role}</p>
                   <p className="text-gray-600 text-sm">{member.bio}</p>
-                  <div className="mt-4 inline-flex items-center text-virtus-primary font-medium">
+                  <div className="mt-4 inline-flex items-center text-virtus-red font-medium">
                     Read more
                     <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
