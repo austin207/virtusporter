@@ -20,7 +20,7 @@ const FounderDanush = () => {
               <div className="text-3xl font-bold text-virtus-primary">DK</div>
             </div>
             <h1 className="heading-lg text-gray-900 mb-2">Danush Krishna</h1>
-            <p className="text-xl text-virtus-primary font-medium mb-6">CFO & Co-Founder</p>
+            <p className="text-xl text-virtus-primary font-medium mb-6">Founder</p>
           </div>
           
           <div className="prose prose-lg max-w-none">
