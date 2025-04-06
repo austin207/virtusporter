@@ -9,7 +9,16 @@ export interface CartItem {
   product_type: "employee" | "company"; // Strict union type
   quantity: number;
   created_at: string;
-  product?: Product; // For joined queries
+  product?: Product | SimplifiedProduct; // Allow for simplified product type
+}
+
+// Define a simplified product type for when we only need basic product info
+export interface SimplifiedProduct {
+  id: string;
+  name: string;
+  price: number;
+  image_url: string;
+  description: string;
 }
 
 export interface Product {
@@ -19,7 +28,7 @@ export interface Product {
   price: number;
   image_url: string;
   employee_id?: string; // Optional field for employee products
-  employee_name?: string; // Make optional to match database schema
+  employee_name?: string; // Optional to match database schema
   department?: string | null;
   created_at: string;
   active?: boolean;
@@ -74,7 +83,7 @@ class DatabaseService {
       throw error;
     }
     
-    return data;
+    return data as Product;
   }
   
   // Cart operations
@@ -207,37 +216,37 @@ class DatabaseService {
     const companyItems = typedCartItems.filter(item => item.product_type === 'company');
     
     // Fetch products
-    let employeeProductResult = { data: [] as Product[] };
-    let companyProductResult = { data: [] as Product[] };
+    let employeeProductData: Product[] = [];
+    let companyProductData: Product[] = [];
     
     if (employeeItems.length > 0) {
-      const result = await supabase
+      const { data, error } = await supabase
         .from('employee_products')
-        .select('id, name, price, image_url')
+        .select('id, name, price, image_url, description, created_at')
         .in('id', employeeItems.map(item => item.product_id));
       
-      if (result.error) throw result.error;
-      employeeProductResult = result;
+      if (error) throw error;
+      employeeProductData = data as Product[] || [];
     }
     
     if (companyItems.length > 0) {
-      const result = await supabase
+      const { data, error } = await supabase
         .from('products')
-        .select('id, name, price, image_url')
+        .select('id, name, price, image_url, description, created_at')
         .in('id', companyItems.map(item => item.product_id));
       
-      if (result.error) throw result.error;
-      companyProductResult = result;
+      if (error) throw error;
+      companyProductData = data as Product[] || [];
     }
     
     // Combine all products
     const allProducts = [
-      ...(employeeProductResult.data || []),
-      ...(companyProductResult.data || [])
+      ...employeeProductData,
+      ...companyProductData
     ];
     
     // Map products to cart items
-    return typedCartItems.map(item => {
+    const cartWithProducts = typedCartItems.map(item => {
       const product = allProducts.find(p => p.id === item.product_id);
       
       return {
@@ -247,10 +256,13 @@ class DatabaseService {
           name: "Product Not Found",
           price: 0,
           image_url: "/placeholder.svg",
-          description: ""
+          description: "",
+          created_at: new Date().toISOString()
         }
       };
     });
+    
+    return cartWithProducts;
   }
   
   // Press Kit
