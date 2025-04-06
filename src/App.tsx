@@ -24,6 +24,7 @@ import FounderAlwinGeorge from "./pages/founders/FounderAlwinGeorge";
 import FounderAzeem from "./pages/founders/FounderAzeem";
 import FounderAllenGeorge from "./pages/founders/FounderAllenGeorge";
 import FounderDanush from "./pages/founders/FounderDanush";
+import EmployeeProducts from "./pages/EmployeeProducts";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +80,7 @@ const App = () => {
               <Route path="/founders/azeem-kouther" element={<FounderAzeem />} />
               <Route path="/founders/allen-george-thomas" element={<FounderAllenGeorge />} />
               <Route path="/founders/danush-krishna" element={<FounderDanush />} />
+              <Route path="/employee-products" element={<EmployeeProducts />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

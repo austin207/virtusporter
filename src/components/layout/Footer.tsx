@@ -35,6 +35,7 @@ const Footer = () => {
         { name: 'Blog', path: '/blog' },
         { name: 'Investor Info', path: '/investor' },
         { name: 'Press Kit', path: '/press-kit' },
+        { name: 'Employee Products', path: '/employee-products' },
       ],
     },
   ];
@@ -43,10 +44,9 @@ const Footer = () => {
     <footer className="bg-gray-50 border-t border-gray-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Logo and Description */}
           <div className="col-span-2">
             <NavLink to="/" className="text-xl font-bold text-virtus-primary tracking-tight flex items-center">
-            <img 
+              <img 
                 src="/favicon.ico" 
                 alt="Logo" 
                 className="w-7 h-10 mr-3" 
@@ -76,7 +76,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Links */}
           {footerLinks.map((section) => (
             <div key={section.title} className="col-span-1">
               <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">{section.title}</h3>
