@@ -26,6 +26,7 @@ import FounderAllenGeorge from "./pages/founders/FounderAllenGeorge";
 import FounderDanush from "./pages/founders/FounderDanush";
 import EmployeeProducts from "./pages/EmployeeProducts";
 import Cart from "./pages/Cart";
+import PressKit from "./pages/PressKit";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,6 +84,7 @@ const App = () => {
               <Route path="/founders/danush-krishna" element={<FounderDanush />} />
               <Route path="/employee-products" element={<EmployeeProducts />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/press-kit" element={<PressKit />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -4,8 +4,9 @@ import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
+import { dbService } from "@/services/DatabaseService";
+import { supabase } from "@/integrations/supabase/client";
 
 const CartButton = () => {
   const navigate = useNavigate();
@@ -17,16 +18,8 @@ const CartButton = () => {
     
     const fetchCartCount = async () => {
       try {
-        const { data, error, count } = await supabase
-          .from('cart_items')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id);
-          
-        if (error) throw error;
-        
-        if (count !== null) {
-          setItemCount(count);
-        }
+        const count = await dbService.fetchCartItemCount(user.id);
+        setItemCount(count);
       } catch (error) {
         console.error('Error fetching cart count:', error);
       }

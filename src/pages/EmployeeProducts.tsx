@@ -9,18 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { dbService, Product } from "@/services/DatabaseService";
 import { supabase } from "@/integrations/supabase/client";
-
-// Product type definition
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image_url: string;
-  employee_name: string;
-  department: string | null;
-};
 
 const EmployeeProducts = () => {
   const { toast } = useToast();
@@ -35,21 +25,8 @@ const EmployeeProducts = () => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const { data, error } = await supabase
-          .from('employee_products')
-          .select('*')
-          .order('created_at', { ascending: false });
-          
-        if (error) {
-          throw error;
-        }
-        
-        if (data) {
-          setProducts(data.map(product => ({
-            ...product,
-            image: product.image_url || '/placeholder.svg'
-          })));
-        }
+        const data = await dbService.fetchEmployeeProducts();
+        setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
         toast({
@@ -71,19 +48,11 @@ const EmployeeProducts = () => {
     
     const fetchCartItems = async () => {
       try {
-        const { data, error } = await supabase
-          .from('cart_items')
-          .select('product_id, quantity')
-          .eq('user_id', user.id);
-          
-        if (error) throw error;
-        
-        if (data) {
-          setCartItems(data.map(item => ({
-            id: item.product_id,
-            quantity: item.quantity
-          })));
-        }
+        const cartItems = await dbService.fetchCartItems(user.id);
+        setCartItems(cartItems.map(item => ({
+          id: item.product_id,
+          quantity: item.quantity
+        })));
       } catch (error) {
         console.error('Error fetching cart:', error);
       }
@@ -102,37 +71,15 @@ const EmployeeProducts = () => {
     }
     
     try {
-      // Check if product is already in cart
-      const existingItem = cartItems.find(item => item.id === productId);
+      await dbService.addToCart(user.id, productId, 'employee', 1);
       
+      // Update local state
+      const existingItem = cartItems.find(item => item.id === productId);
       if (existingItem) {
-        // Update quantity
-        const { error } = await supabase
-          .from('cart_items')
-          .update({ quantity: existingItem.quantity + 1 })
-          .eq('user_id', user.id)
-          .eq('product_id', productId);
-          
-        if (error) throw error;
-        
-        // Update local state
         setCartItems(prev => prev.map(item => 
           item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
         ));
       } else {
-        // Add new item
-        const { error } = await supabase
-          .from('cart_items')
-          .insert({
-            user_id: user.id,
-            product_id: productId,
-            product_type: 'employee',
-            quantity: 1
-          });
-          
-        if (error) throw error;
-        
-        // Update local state
         setCartItems(prev => [...prev, { id: productId, quantity: 1 }]);
       }
       
@@ -161,26 +108,18 @@ const EmployeeProducts = () => {
     }
     
     try {
-      // Add product to Supabase
-      const { data, error } = await supabase
-        .from('employee_products')
-        .insert({
-          name: productData.name,
-          description: productData.description,
-          price: productData.price,
-          image_url: productData.image,
-          employee_id: user.id,
-          employee_name: user?.email?.split('@')[0] || 'Anonymous Employee',
-          department: 'Not Specified'
-        })
-        .select();
-        
-      if (error) throw error;
+      const newProduct = await dbService.createEmployeeProduct({
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        image_url: productData.image,
+        employee_id: user.id,
+        employee_name: user?.email?.split('@')[0] || 'Anonymous Employee',
+        department: 'Not Specified'
+      });
       
       // Add new product to state
-      if (data && data.length > 0) {
-        setProducts(prevProducts => [data[0], ...prevProducts]);
-      }
+      setProducts(prevProducts => [newProduct, ...prevProducts]);
       
       setOpen(false);
       

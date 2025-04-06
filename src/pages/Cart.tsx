@@ -8,21 +8,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Trash2, ShoppingCart, MinusCircle, PlusCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { dbService, CartItem } from "@/services/DatabaseService";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-type CartItem = {
-  id: string;
-  product_id: string;
-  product_type: string;
-  quantity: number;
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    image_url: string;
-  };
-};
 
 const Cart = () => {
   const { toast } = useToast();
@@ -47,69 +34,7 @@ const Cart = () => {
     
     try {
       setLoading(true);
-      
-      // First fetch cart items
-      const { data: cartData, error: cartError } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('user_id', user.id);
-        
-      if (cartError) throw cartError;
-      if (!cartData || cartData.length === 0) {
-        setCartItems([]);
-        setLoading(false);
-        return;
-      }
-      
-      // Separate items by product type for different fetches
-      const employeeItems = cartData.filter(item => item.product_type === 'employee');
-      const companyItems = cartData.filter(item => item.product_type === 'company');
-      
-      // Fetch employee products
-      const employeeProductPromise = employeeItems.length > 0 
-        ? supabase
-            .from('employee_products')
-            .select('id, name, price, image_url')
-            .in('id', employeeItems.map(item => item.product_id))
-        : Promise.resolve({ data: [] });
-        
-      // Fetch company products  
-      const companyProductPromise = companyItems.length > 0
-        ? supabase
-            .from('products')
-            .select('id, name, price, image_url')
-            .in('id', companyItems.map(item => item.product_id))
-        : Promise.resolve({ data: [] });
-        
-      // Get all products data
-      const [employeeResult, companyResult] = await Promise.all([
-        employeeProductPromise,
-        companyProductPromise
-      ]);
-      
-      if (employeeResult.error) throw employeeResult.error;
-      if (companyResult.error) throw companyResult.error;
-      
-      // Combine all products
-      const allProducts = [
-        ...(employeeResult.data || []),
-        ...(companyResult.data || [])
-      ];
-      
-      // Map products to cart items
-      const items = cartData.map(item => {
-        const product = allProducts.find(p => p.id === item.product_id);
-        return {
-          ...item,
-          product: product || {
-            id: item.product_id,
-            name: "Product Not Found",
-            price: 0,
-            image_url: "/placeholder.svg"
-          }
-        };
-      });
-      
+      const items = await dbService.getCartWithProducts(user.id);
       setCartItems(items);
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -134,12 +59,7 @@ const Cart = () => {
         await removeItem(itemId);
       } else {
         // Update quantity
-        const { error } = await supabase
-          .from('cart_items')
-          .update({ quantity: newQuantity })
-          .eq('id', itemId);
-          
-        if (error) throw error;
+        await dbService.updateCartItemQuantity(itemId, newQuantity);
         
         // Update local state
         setCartItems(prev => prev.map(item => 
@@ -169,12 +89,7 @@ const Cart = () => {
     try {
       setUpdating(true);
       
-      const { error } = await supabase
-        .from('cart_items')
-        .delete()
-        .eq('id', itemId);
-        
-      if (error) throw error;
+      await dbService.removeCartItem(itemId);
       
       // Remove from local state
       setCartItems(prev => prev.filter(item => item.id !== itemId));
@@ -197,7 +112,7 @@ const Cart = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((sum, item) => {
-      return sum + (item.product.price * item.quantity);
+      return sum + ((item.product?.price || 0) * item.quantity);
     }, 0);
   };
 
@@ -260,16 +175,16 @@ const Cart = () => {
                         <TableRow key={item.id}>
                           <TableCell>
                             <img 
-                              src={item.product.image_url || "/placeholder.svg"} 
-                              alt={item.product.name}
+                              src={item.product?.image_url || "/placeholder.svg"} 
+                              alt={item.product?.name || "Product"}
                               className="w-16 h-16 object-cover rounded" 
                               onError={(e) => {
                                 (e.target as HTMLImageElement).src = "/placeholder.svg";
                               }}
                             />
                           </TableCell>
-                          <TableCell className="font-medium">{item.product.name}</TableCell>
-                          <TableCell>${item.product.price.toFixed(2)}</TableCell>
+                          <TableCell className="font-medium">{item.product?.name || "Unknown Product"}</TableCell>
+                          <TableCell>${(item.product?.price || 0).toFixed(2)}</TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
                               <Button 
@@ -293,7 +208,7 @@ const Cart = () => {
                               </Button>
                             </div>
                           </TableCell>
-                          <TableCell>${(item.product.price * item.quantity).toFixed(2)}</TableCell>
+                          <TableCell>${((item.product?.price || 0) * item.quantity).toFixed(2)}</TableCell>
                           <TableCell>
                             <Button 
                               variant="destructive" 

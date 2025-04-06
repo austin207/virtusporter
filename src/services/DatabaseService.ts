@@ -1,0 +1,254 @@
+
+import { supabase } from "@/integrations/supabase/client";
+
+// Type definitions for our custom tables
+export interface CartItem {
+  id: string;
+  user_id: string;
+  product_id: string;
+  product_type: 'employee' | 'company';
+  quantity: number;
+  created_at: string;
+  product?: Product; // For joined queries
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  employee_name?: string;
+  department?: string | null;
+  created_at: string;
+  active?: boolean;
+}
+
+export interface PressKitItem {
+  id: string;
+  title: string;
+  description: string;
+  file_url: string;
+  thumbnail_url: string | null;
+  file_type: string;
+  category: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Database service class for working with our custom tables
+class DatabaseService {
+  // Employee Products
+  async fetchEmployeeProducts(): Promise<Product[]> {
+    const { data, error } = await supabase
+      .from('employee_products')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching employee products:', error);
+      throw error;
+    }
+    
+    return data || [];
+  }
+  
+  async createEmployeeProduct(product: Omit<Product, 'id' | 'created_at'>): Promise<Product> {
+    const { data, error } = await supabase
+      .from('employee_products')
+      .insert(product)
+      .select()
+      .single();
+      
+    if (error) {
+      console.error('Error creating employee product:', error);
+      throw error;
+    }
+    
+    return data;
+  }
+  
+  // Cart operations
+  async fetchCartItems(userId: string): Promise<CartItem[]> {
+    const { data, error } = await supabase
+      .from('cart_items')
+      .select('*')
+      .eq('user_id', userId);
+      
+    if (error) {
+      console.error('Error fetching cart items:', error);
+      throw error;
+    }
+    
+    return data || [];
+  }
+  
+  async fetchCartItemCount(userId: string): Promise<number> {
+    const { count, error } = await supabase
+      .from('cart_items')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+      
+    if (error) {
+      console.error('Error fetching cart count:', error);
+      throw error;
+    }
+    
+    return count || 0;
+  }
+  
+  async updateCartItemQuantity(itemId: string, quantity: number): Promise<void> {
+    const { error } = await supabase
+      .from('cart_items')
+      .update({ quantity })
+      .eq('id', itemId);
+      
+    if (error) {
+      console.error('Error updating cart item quantity:', error);
+      throw error;
+    }
+  }
+  
+  async removeCartItem(itemId: string): Promise<void> {
+    const { error } = await supabase
+      .from('cart_items')
+      .delete()
+      .eq('id', itemId);
+      
+    if (error) {
+      console.error('Error removing cart item:', error);
+      throw error;
+    }
+  }
+  
+  async addToCart(userId: string, productId: string, productType: 'employee' | 'company', quantity: number = 1): Promise<void> {
+    // Check if the item is already in cart
+    const { data: existingItems, error: fetchError } = await supabase
+      .from('cart_items')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('product_id', productId);
+      
+    if (fetchError) {
+      console.error('Error checking cart:', fetchError);
+      throw fetchError;
+    }
+    
+    if (existingItems && existingItems.length > 0) {
+      // Update existing item
+      const existingItem = existingItems[0];
+      const newQuantity = existingItem.quantity + quantity;
+      
+      const { error } = await supabase
+        .from('cart_items')
+        .update({ quantity: newQuantity })
+        .eq('id', existingItem.id);
+        
+      if (error) {
+        console.error('Error updating cart item:', error);
+        throw error;
+      }
+    } else {
+      // Add new item
+      const { error } = await supabase
+        .from('cart_items')
+        .insert({
+          user_id: userId,
+          product_id: productId,
+          product_type: productType,
+          quantity
+        });
+        
+      if (error) {
+        console.error('Error adding to cart:', error);
+        throw error;
+      }
+    }
+  }
+  
+  // Get cart with products
+  async getCartWithProducts(userId: string): Promise<CartItem[]> {
+    // Fetch cart items
+    const { data: cartItems, error: cartError } = await supabase
+      .from('cart_items')
+      .select('*')
+      .eq('user_id', userId);
+      
+    if (cartError) {
+      console.error('Error fetching cart:', cartError);
+      throw cartError;
+    }
+    
+    if (!cartItems || cartItems.length === 0) {
+      return [];
+    }
+    
+    // Separate by product type
+    const employeeItems = cartItems.filter(item => item.product_type === 'employee');
+    const companyItems = cartItems.filter(item => item.product_type === 'company');
+    
+    // Fetch products
+    const employeeProductPromise = employeeItems.length > 0 
+      ? supabase
+          .from('employee_products')
+          .select('id, name, price, image_url')
+          .in('id', employeeItems.map(item => item.product_id))
+      : Promise.resolve({ data: [] });
+      
+    const companyProductPromise = companyItems.length > 0
+      ? supabase
+          .from('products')
+          .select('id, name, price, image_url')
+          .in('id', companyItems.map(item => item.product_id))
+      : Promise.resolve({ data: [] });
+      
+    // Get all products data
+    const [employeeResult, companyResult] = await Promise.all([
+      employeeProductPromise,
+      companyProductPromise
+    ]);
+    
+    if (employeeResult.error) throw employeeResult.error;
+    if (companyResult.error) throw companyResult.error;
+    
+    // Combine all products
+    const allProducts = [
+      ...(employeeResult.data || []),
+      ...(companyResult.data || [])
+    ];
+    
+    // Map products to cart items
+    return cartItems.map(item => {
+      const product = allProducts.find(p => p.id === item.product_id);
+      
+      return {
+        ...item,
+        product: product || {
+          id: item.product_id,
+          name: "Product Not Found",
+          price: 0,
+          image_url: "/placeholder.svg",
+          description: ""
+        }
+      };
+    });
+  }
+  
+  // Press Kit
+  async fetchPressKitItems(): Promise<PressKitItem[]> {
+    const { data, error } = await supabase
+      .from('press_kit')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error('Error fetching press kit items:', error);
+      throw error;
+    }
+    
+    return data || [];
+  }
+}
+
+// Create and export singleton instance
+export const dbService = new DatabaseService();
