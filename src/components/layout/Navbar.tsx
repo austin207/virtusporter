@@ -45,7 +45,6 @@ const Navbar = () => {
     { name: 'Service', path: '/service' },
     { name: 'About', path: '/about' },
     { name: 'Investor', path: '/investor' },
-    { name: 'Press Kit', path: '/press-kit' },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -100,24 +99,6 @@ const Navbar = () => {
                 </NavLink>
               )
             ))}
-            <NavLink
-              to="/employee-products"
-              className={({ isActive }) => `
-                relative text-sm font-medium transition-colors
-                ${isActive 
-                  ? 'text-virtus-red' 
-                  : 'text-gray-700 hover:text-virtus-red'
-                }
-                after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] 
-                after:w-full after:origin-bottom-right after:scale-x-0 
-                after:bg-virtus-red after:transition-transform 
-                after:duration-300 hover:after:origin-bottom-left 
-                hover:after:scale-x-100
-                ${isActive ? 'after:scale-x-100' : ''}
-              `}
-            >
-              Employee Products
-            </NavLink>
           </div>
 
           {/* Contact Button and Auth */}
@@ -192,19 +173,6 @@ const Navbar = () => {
               {link.name}
             </NavLink>
           ))}
-          <NavLink
-            to="/employee-products"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className={({ isActive }) => `
-              block py-2 px-3 rounded-lg text-base font-medium
-              ${isActive 
-                ? 'text-white bg-virtus-red' 
-                : 'text-gray-700 hover:bg-virtus-red/10'
-              }
-            `}
-          >
-            Employee Products
-          </NavLink>
           <NavLink
             to="/contact"
             onClick={() => setIsMobileMenuOpen(false)}

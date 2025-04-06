@@ -41,7 +41,7 @@ const About = () => {
     },
     {
       name: 'Antony Austin',
-      role: 'Founder',
+      role: 'CTO',
       image: '/placeholder.svg',
       bio: "Robotics engineer with extensive experience in autonomous systems, embedded systems and AI.",
       slug: '/founders/antony-austin'

@@ -20,12 +20,12 @@ const FounderAntony = () => {
               <div className="text-3xl font-bold text-virtus-primary">AA</div>
             </div>
             <h1 className="heading-lg text-gray-900 mb-2">Antony Austin</h1>
-            <p className="text-xl text-virtus-primary font-medium mb-6">Founder</p>
+            <p className="text-xl text-virtus-primary font-medium mb-6">CTO</p>
           </div>
           
           <div className="prose prose-lg max-w-none">
             <p>
-              Antony Austin is a visionary leader in the field of robotics, with a deep passion for autonomous systems and artificial intelligence. As the CEO and Co-Founder of VirtusCo, Antony brings extensive experience in developing and deploying robotics solutions that address real-world challenges.
+              Antony Austin is a visionary leader in the field of robotics, with a deep passion for autonomous systems and artificial intelligence. As the CTO and Co-Founder of VirtusCo, Antony brings extensive experience in developing and deploying robotics solutions that address real-world challenges.
             </p>
             
             <h2>Background & Expertise</h2>
