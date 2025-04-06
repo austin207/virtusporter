@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -10,7 +9,6 @@ import { useAuth } from "@/context/AuthContext";
 import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { dbService, Product } from "@/services/DatabaseService";
-import { supabase } from "@/integrations/supabase/client";
 
 const EmployeeProducts = () => {
   const { toast } = useToast();
@@ -113,7 +111,6 @@ const EmployeeProducts = () => {
         description: productData.description,
         price: productData.price,
         image_url: productData.image,
-        employee_id: user.id,
         employee_name: user?.email?.split('@')[0] || 'Anonymous Employee',
         department: 'Not Specified'
       });

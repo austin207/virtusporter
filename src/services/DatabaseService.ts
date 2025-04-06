@@ -6,7 +6,7 @@ export interface CartItem {
   id: string;
   user_id: string;
   product_id: string;
-  product_type: 'employee' | 'company';
+  product_type: "employee" | "company"; // Strict union type
   quantity: number;
   created_at: string;
   product?: Product; // For joined queries
@@ -18,7 +18,8 @@ export interface Product {
   description: string;
   price: number;
   image_url: string;
-  employee_name?: string;
+  employee_id?: string; // Optional field for employee products
+  employee_name?: string; // Make optional to match database schema
   department?: string | null;
   created_at: string;
   active?: boolean;
@@ -53,7 +54,15 @@ class DatabaseService {
     return data || [];
   }
   
-  async createEmployeeProduct(product: Omit<Product, 'id' | 'created_at'>): Promise<Product> {
+  async createEmployeeProduct(product: {
+    name: string;
+    description: string;
+    price: number;
+    image_url: string;
+    employee_id?: string;
+    employee_name: string;
+    department?: string | null;
+  }): Promise<Product> {
     const { data, error } = await supabase
       .from('employee_products')
       .insert(product)
@@ -80,7 +89,11 @@ class DatabaseService {
       throw error;
     }
     
-    return data || [];
+    // Ensure product_type is of the correct type
+    return (data || []).map(item => ({
+      ...item,
+      product_type: item.product_type as "employee" | "company"
+    }));
   }
   
   async fetchCartItemCount(userId: string): Promise<number> {
@@ -121,7 +134,7 @@ class DatabaseService {
     }
   }
   
-  async addToCart(userId: string, productId: string, productType: 'employee' | 'company', quantity: number = 1): Promise<void> {
+  async addToCart(userId: string, productId: string, productType: "employee" | "company", quantity: number = 1): Promise<void> {
     // Check if the item is already in cart
     const { data: existingItems, error: fetchError } = await supabase
       .from('cart_items')
@@ -183,42 +196,48 @@ class DatabaseService {
       return [];
     }
     
+    // Ensure product_type is the correct type and cast it
+    const typedCartItems = cartItems.map(item => ({
+      ...item,
+      product_type: item.product_type as "employee" | "company"
+    }));
+    
     // Separate by product type
-    const employeeItems = cartItems.filter(item => item.product_type === 'employee');
-    const companyItems = cartItems.filter(item => item.product_type === 'company');
+    const employeeItems = typedCartItems.filter(item => item.product_type === 'employee');
+    const companyItems = typedCartItems.filter(item => item.product_type === 'company');
     
     // Fetch products
-    const employeeProductPromise = employeeItems.length > 0 
-      ? supabase
-          .from('employee_products')
-          .select('id, name, price, image_url')
-          .in('id', employeeItems.map(item => item.product_id))
-      : Promise.resolve({ data: [] });
-      
-    const companyProductPromise = companyItems.length > 0
-      ? supabase
-          .from('products')
-          .select('id, name, price, image_url')
-          .in('id', companyItems.map(item => item.product_id))
-      : Promise.resolve({ data: [] });
-      
-    // Get all products data
-    const [employeeResult, companyResult] = await Promise.all([
-      employeeProductPromise,
-      companyProductPromise
-    ]);
+    let employeeProductResult = { data: [] as Product[] };
+    let companyProductResult = { data: [] as Product[] };
     
-    if (employeeResult.error) throw employeeResult.error;
-    if (companyResult.error) throw companyResult.error;
+    if (employeeItems.length > 0) {
+      const result = await supabase
+        .from('employee_products')
+        .select('id, name, price, image_url')
+        .in('id', employeeItems.map(item => item.product_id));
+      
+      if (result.error) throw result.error;
+      employeeProductResult = result;
+    }
+    
+    if (companyItems.length > 0) {
+      const result = await supabase
+        .from('products')
+        .select('id, name, price, image_url')
+        .in('id', companyItems.map(item => item.product_id));
+      
+      if (result.error) throw result.error;
+      companyProductResult = result;
+    }
     
     // Combine all products
     const allProducts = [
-      ...(employeeResult.data || []),
-      ...(companyResult.data || [])
+      ...(employeeProductResult.data || []),
+      ...(companyProductResult.data || [])
     ];
     
     // Map products to cart items
-    return cartItems.map(item => {
+    return typedCartItems.map(item => {
       const product = allProducts.find(p => p.id === item.product_id);
       
       return {
