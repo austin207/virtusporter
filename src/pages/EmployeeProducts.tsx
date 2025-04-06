@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
@@ -8,83 +9,193 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 
-const SAMPLE_PRODUCTS = [
-  {
-    id: "1",
-    name: "Smart Luggage Tag",
-    description: "A digital luggage tag with GPS tracking and mobile notifications.",
-    price: 34.99,
-    image: "/placeholder.svg",
-    employee: "Antony Austin",
-    department: "Engineering"
-  },
-  {
-    id: "2",
-    name: "Travel Power Adapter",
-    description: "Universal travel adapter with USB-C fast charging capabilities.",
-    price: 29.99,
-    image: "/placeholder.svg",
-    employee: "Azeem Kouther",
-    department: "Product Design"
-  },
-  {
-    id: "3",
-    name: "Baggage Organizer Set",
-    description: "Set of 5 compression packing cubes for efficient travel packing.",
-    price: 42.50,
-    image: "/placeholder.svg",
-    employee: "Allen George Thomas",
-    department: "Operations"
-  },
-  {
-    id: "4",
-    name: "Neck Pillow Pro",
-    description: "Memory foam travel pillow with cooling gel technology.",
-    price: 24.99,
-    image: "/placeholder.svg",
-    employee: "Alwin George Thomas",
-    department: "Customer Experience"
-  },
-  {
-    id: "5",
-    name: "Airport Express Backpack",
-    description: "TSA-friendly laptop backpack with RFID protection pockets.",
-    price: 79.99,
-    image: "/placeholder.svg",
-    employee: "Danush Krishna",
-    department: "Engineering"
-  }
-];
+// Product type definition
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  employee_name: string;
+  department: string | null;
+};
 
 const EmployeeProducts = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [products, setProducts] = useState(SAMPLE_PRODUCTS);
-
-  const handleAddToCart = (productId: string) => {
-    toast({
-      title: "Added to cart",
-      description: "This product has been added to your cart.",
-    });
-  };
-
-  const handleNewProduct = (productData: any) => {
-    const newProduct = {
-      id: (products.length + 1).toString(),
-      ...productData,
-      employee: user?.email?.split('@')[0] || 'Anonymous Employee',
-      department: 'Not Specified'
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [cartItems, setCartItems] = useState<{id: string, quantity: number}[]>([]);
+  
+  // Fetch products from Supabase
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('employee_products')
+          .select('*')
+          .order('created_at', { ascending: false });
+          
+        if (error) {
+          throw error;
+        }
+        
+        if (data) {
+          setProducts(data.map(product => ({
+            ...product,
+            image: product.image_url || '/placeholder.svg'
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast({
+          title: "Failed to load products",
+          description: "Please try refreshing the page.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
     
-    setProducts([...products, newProduct]);
-    setOpen(false);
+    fetchProducts();
+  }, [toast]);
+  
+  // Fetch user's cart if logged in
+  useEffect(() => {
+    if (!user) return;
     
-    toast({
-      title: "Product submitted",
-      description: "Your product has been added to the marketplace.",
-    });
+    const fetchCartItems = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('cart_items')
+          .select('product_id, quantity')
+          .eq('user_id', user.id);
+          
+        if (error) throw error;
+        
+        if (data) {
+          setCartItems(data.map(item => ({
+            id: item.product_id,
+            quantity: item.quantity
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching cart:', error);
+      }
+    };
+    
+    fetchCartItems();
+  }, [user]);
+
+  const handleAddToCart = async (productId: string) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to add products to your cart.",
+      });
+      return;
+    }
+    
+    try {
+      // Check if product is already in cart
+      const existingItem = cartItems.find(item => item.id === productId);
+      
+      if (existingItem) {
+        // Update quantity
+        const { error } = await supabase
+          .from('cart_items')
+          .update({ quantity: existingItem.quantity + 1 })
+          .eq('user_id', user.id)
+          .eq('product_id', productId);
+          
+        if (error) throw error;
+        
+        // Update local state
+        setCartItems(prev => prev.map(item => 
+          item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+        ));
+      } else {
+        // Add new item
+        const { error } = await supabase
+          .from('cart_items')
+          .insert({
+            user_id: user.id,
+            product_id: productId,
+            product_type: 'employee',
+            quantity: 1
+          });
+          
+        if (error) throw error;
+        
+        // Update local state
+        setCartItems(prev => [...prev, { id: productId, quantity: 1 }]);
+      }
+      
+      toast({
+        title: "Added to cart",
+        description: "This product has been added to your cart.",
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Failed to add to cart",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleNewProduct = async (productData: any) => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "You need to be signed in to submit products.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      // Add product to Supabase
+      const { data, error } = await supabase
+        .from('employee_products')
+        .insert({
+          name: productData.name,
+          description: productData.description,
+          price: productData.price,
+          image_url: productData.image,
+          employee_id: user.id,
+          employee_name: user?.email?.split('@')[0] || 'Anonymous Employee',
+          department: 'Not Specified'
+        })
+        .select();
+        
+      if (error) throw error;
+      
+      // Add new product to state
+      if (data && data.length > 0) {
+        setProducts(prevProducts => [data[0], ...prevProducts]);
+      }
+      
+      setOpen(false);
+      
+      toast({
+        title: "Product submitted",
+        description: "Your product has been added to the marketplace.",
+      });
+    } catch (error) {
+      console.error('Error submitting product:', error);
+      toast({
+        title: "Failed to submit product",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -127,36 +238,54 @@ const EmployeeProducts = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-            {products.map((product) => (
-              <Card key={product.id} className="flex flex-col h-full card-animate">
-                <CardHeader>
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover rounded-md mb-4"
-                  />
-                  <CardTitle>{product.name}</CardTitle>
-                  <CardDescription className="flex justify-between">
-                    <span>By {product.employee}</span>
-                    <span className="text-virtus-primary">${product.price}</span>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-gray-600">{product.description}</p>
-                  <p className="text-sm text-gray-500 mt-2">Department: {product.department}</p>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    className="w-full" 
-                    onClick={() => handleAddToCart(product.id)}
-                  >
-                    <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-600">No products available yet. Be the first to submit your innovation!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+              {products.map((product) => (
+                <Card key={product.id} className="flex flex-col h-full card-animate">
+                  <CardHeader>
+                    <img 
+                      src={product.image_url || "/placeholder.svg"} 
+                      alt={product.name} 
+                      className="w-full h-48 object-cover rounded-md mb-4"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/placeholder.svg";
+                      }}
+                    />
+                    <CardTitle>{product.name}</CardTitle>
+                    <CardDescription className="flex justify-between">
+                      <span>By {product.employee_name}</span>
+                      <span className="text-virtus-primary">${product.price}</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p className="text-gray-600">{product.description}</p>
+                    {product.department && (
+                      <p className="text-sm text-gray-500 mt-2">Department: {product.department}</p>
+                    )}
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      className="w-full" 
+                      onClick={() => handleAddToCart(product.id)}
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" /> 
+                      {cartItems.find(item => item.id === product.id) 
+                        ? `In Cart (${cartItems.find(item => item.id === product.id)?.quantity})`
+                        : "Add to Cart"}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
       </main>
       <Footer />

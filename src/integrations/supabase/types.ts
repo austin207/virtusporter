@@ -140,6 +140,33 @@ export type Database = {
           },
         ]
       }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          product_type: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          product_type: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          product_type?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -190,6 +217,45 @@ export type Database = {
           },
         ]
       }
+      employee_products: {
+        Row: {
+          active: boolean
+          created_at: string
+          department: string | null
+          description: string
+          employee_id: string | null
+          employee_name: string
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          department?: string | null
+          description: string
+          employee_id?: string | null
+          employee_name: string
+          id?: string
+          image_url?: string | null
+          name: string
+          price: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          department?: string | null
+          description?: string
+          employee_id?: string | null
+          employee_name?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           created_at: string
@@ -214,6 +280,42 @@ export type Database = {
           message?: string
           name?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      press_kit: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          file_type: string
+          file_url: string
+          id: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          file_type: string
+          file_url: string
+          id?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          file_type?: string
+          file_url?: string
+          id?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
