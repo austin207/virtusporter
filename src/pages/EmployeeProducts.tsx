@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BriefcaseBusiness, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -10,7 +9,6 @@ import { useAuth } from "@/context/AuthContext";
 import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-// Sample employee products data
 const SAMPLE_PRODUCTS = [
   {
     id: "1",
@@ -73,7 +71,6 @@ const EmployeeProducts = () => {
   };
 
   const handleNewProduct = (productData: any) => {
-    // In a real implementation, this would send data to Supabase
     const newProduct = {
       id: (products.length + 1).toString(),
       ...productData,
