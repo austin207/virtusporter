@@ -46,6 +46,7 @@ const Navbar = () => {
     { name: 'About', path: '/about' },
     { name: 'Investor', path: '/investor' },
     { name: 'Blog', path: '/blog' },
+    { name: 'Careers', path: '/careers' },
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -76,28 +77,26 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            {navLinks.map((link, index) => (
-              index === 0 ? null : (
-                <NavLink
-                  key={link.name}
-                  to={link.path}
-                  className={({ isActive }) => `
-                    relative text-sm font-medium transition-colors
-                    ${isActive 
-                      ? 'text-virtus-red' 
-                      : 'text-gray-700 hover:text-virtus-red'
-                    }
-                    after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] 
-                    after:w-full after:origin-bottom-right after:scale-x-0 
-                    after:bg-virtus-red after:transition-transform 
-                    after:duration-300 hover:after:origin-bottom-left 
-                    hover:after:scale-x-100
-                    ${isActive ? 'after:scale-x-100' : ''}
-                  `}
-                >
-                  {link.name}
-                </NavLink>
-              )
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) => `
+                  relative text-sm font-medium transition-colors
+                  ${isActive 
+                    ? 'text-virtus-red' 
+                    : 'text-gray-700 hover:text-virtus-red'
+                  }
+                  after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] 
+                  after:w-full after:origin-bottom-right after:scale-x-0 
+                  after:bg-virtus-red after:transition-transform 
+                  after:duration-300 hover:after:origin-bottom-left 
+                  hover:after:scale-x-100
+                  ${isActive ? 'after:scale-x-100' : ''}
+                `}
+              >
+                {link.name}
+              </NavLink>
             ))}
           </div>
 
