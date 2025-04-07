@@ -20,8 +20,11 @@ import {
   fetchPressKitItems
 } from './pressKitService';
 
+// Import types
+import type { CartItem, SimplifiedProduct, Product, PressKitItem } from './types';
+
 // Re-export types using the proper "export type" syntax
-export type { CartItem, SimplifiedProduct, Product, PressKitItem } from './types';
+export type { CartItem, SimplifiedProduct, Product, PressKitItem };
 
 // Database service class for working with our custom tables
 class DatabaseService {
