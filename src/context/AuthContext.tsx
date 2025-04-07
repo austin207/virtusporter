@@ -27,6 +27,9 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Base site URL for redirects
+const BASE_URL = 'https://virtusco.in';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -101,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
       options: {
-        emailRedirectTo: 'https://virtusco.in/auth', // Set the redirect URL to virtusco.in domain
+        emailRedirectTo: `${BASE_URL}/auth`, // Set the redirect URL to virtusco.in domain
         data: {
           // Custom data for the user
           company_name: 'VirtusCo',
@@ -131,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: 'https://virtusco.in/auth', // Explicitly set redirect to virtusco.in domain
+          redirectTo: `${BASE_URL}/auth`, // Explicitly set redirect to virtusco.in domain
           queryParams: {
             // Add additional parameters if needed
             // access_type: 'offline', // For Google refresh tokens
