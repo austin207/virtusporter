@@ -100,6 +100,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const result = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: 'https://virtusco.in/auth', // Set the redirect URL to virtusco.in domain
+        data: {
+          // Custom data for the user
+          company_name: 'VirtusCo',
+        }
+      }
     });
     setLoading(false);
     return {
@@ -124,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: window.location.origin + '/auth', // Explicitly set redirect to /auth page
+          redirectTo: 'https://virtusco.in/auth', // Explicitly set redirect to virtusco.in domain
           queryParams: {
             // Add additional parameters if needed
             // access_type: 'offline', // For Google refresh tokens
