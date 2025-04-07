@@ -3,20 +3,25 @@
 // It re-exports all functionality from our modular services
 
 import { 
-  CartItem, 
-  Product, 
-  PressKitItem, 
-  SimplifiedProduct,
   fetchCartItems,
   fetchCartItemCount,
   updateCartItemQuantity,
   removeCartItem,
   addToCart,
   getCartWithProducts,
+} from './cartService';
+
+import {
   fetchEmployeeProducts,
   createEmployeeProduct,
+} from './productService';
+
+import {
   fetchPressKitItems
-} from './index';
+} from './pressKitService';
+
+// Re-export types using the proper "export type" syntax
+export type { CartItem, SimplifiedProduct, Product, PressKitItem } from './types';
 
 // Database service class for working with our custom tables
 class DatabaseService {
@@ -71,7 +76,3 @@ class DatabaseService {
 
 // Create and export singleton instance
 export const dbService = new DatabaseService();
-
-// Re-export types
-export { CartItem, Product, PressKitItem, SimplifiedProduct };
-
