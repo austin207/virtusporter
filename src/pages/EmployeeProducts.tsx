@@ -1,14 +1,12 @@
+
 import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BriefcaseBusiness, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
-import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { dbService, Product } from "@/services/DatabaseService";
+import ProductGrid from "@/components/employee-products/ProductGrid";
+import ProductHero from "@/components/employee-products/ProductHero";
 
 const EmployeeProducts = () => {
   const { toast } = useToast();
@@ -139,89 +137,18 @@ const EmployeeProducts = () => {
       <Navbar />
       <main className="flex-grow pt-24 bg-gray-50">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Employee Innovation Marketplace
-            </h1>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover innovative products created by VirtusCo employees and supported through our innovation nurturing program.
-            </p>
-            
-            {user && (
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button className="mt-6" size="lg">
-                    <BriefcaseBusiness className="mr-2 h-5 w-5" />
-                    Submit Your Innovation
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[550px]">
-                  <DialogHeader>
-                    <DialogTitle>Submit a New Product</DialogTitle>
-                  </DialogHeader>
-                  <EmployeeProductForm onSubmit={handleNewProduct} />
-                </DialogContent>
-              </Dialog>
-            )}
-            
-            {!user && (
-              <div className="mt-6">
-                <p className="text-sm text-gray-500 mb-2">Sign in to submit your own innovation</p>
-                <Button variant="outline" asChild>
-                  <a href="/auth">Sign In to Participate</a>
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-lg text-gray-600">No products available yet. Be the first to submit your innovation!</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-              {products.map((product) => (
-                <Card key={product.id} className="flex flex-col h-full card-animate">
-                  <CardHeader>
-                    <img 
-                      src={product.image_url || "/placeholder.svg"} 
-                      alt={product.name} 
-                      className="w-full h-48 object-cover rounded-md mb-4"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/placeholder.svg";
-                      }}
-                    />
-                    <CardTitle>{product.name}</CardTitle>
-                    <CardDescription className="flex justify-between">
-                      <span>By {product.employee_name}</span>
-                      <span className="text-virtus-primary">${product.price}</span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-gray-600">{product.description}</p>
-                    {product.department && (
-                      <p className="text-sm text-gray-500 mt-2">Department: {product.department}</p>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    <Button 
-                      className="w-full" 
-                      onClick={() => handleAddToCart(product.id)}
-                    >
-                      <ShoppingCart className="mr-2 h-4 w-4" /> 
-                      {cartItems.find(item => item.id === product.id) 
-                        ? `In Cart (${cartItems.find(item => item.id === product.id)?.quantity})`
-                        : "Add to Cart"}
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
+          <ProductHero 
+            open={open} 
+            setOpen={setOpen} 
+            onSubmit={handleNewProduct} 
+            isLoggedIn={!!user} 
+          />
+          <ProductGrid 
+            products={products} 
+            cartItems={cartItems} 
+            onAddToCart={handleAddToCart}
+            isLoading={isLoading}
+          />
         </section>
       </main>
       <Footer />
