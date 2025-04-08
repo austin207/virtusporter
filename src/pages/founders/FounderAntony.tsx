@@ -15,7 +15,7 @@ const FounderAntony = () => {
         <div className="flex flex-col md:flex-row gap-12 items-start">
           <div className="w-full md:w-1/3">
             <img 
-              src="/lovable-uploads/49c37b34-f743-40f7-b8d8-e19e1a02eece.png" 
+              src="public\placeholder.svg" 
               alt="Antony Austin" 
               className="rounded-xl shadow-lg w-full"
             />
@@ -27,20 +27,21 @@ const FounderAntony = () => {
             
             <div className="prose prose-lg max-w-none">
               <p>
-                Antony Austin serves as the Chief Technology Officer at VirtusCo, bringing more than 15 years of experience in robotics engineering and AI development. His expertise has been instrumental in developing the autonomous systems that power VirtusCo's innovative baggage handling robots.
+                Antony Austin serves as the Chief Technology Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots—designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
               </p>
               
               <p>
-                Before joining VirtusCo, Antony led AI research teams at prestigious institutions including MIT and Stanford, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him international recognition in the field.
+                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
               </p>
               
               <p>
-                Antony holds a Ph.D. in Robotics Engineering from MIT and has published numerous papers on machine learning and autonomous systems in leading academic journals. His vision for creating robots that enhance human capabilities rather than replace them has shaped VirtusCo's development philosophy.
+                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo's mission—empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
               </p>
               
-              <blockquote>
-                "The future of travel isn't just about getting from point A to point B faster. It's about creating seamless experiences that give people back their time and reduce stress. Our technology aims to make the journey as enjoyable as the destination."
+              <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700">
+                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds—regardless of where they come from—have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
               </blockquote>
+
               
               <p>
                 Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
