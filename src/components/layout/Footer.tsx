@@ -37,6 +37,8 @@ const Footer = () => {
         { name: 'Investor Info', path: '/investor' },
         { name: 'Press Kit', path: '/press-kit' },
         { name: 'Employee Products', path: '/employee-products' },
+        { name: 'Privacy Policy', path: '/privacy-policy' },
+        { name: 'Terms of Service', path: '/terms-of-service' },
       ],
     },
   ];
