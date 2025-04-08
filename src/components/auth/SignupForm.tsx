@@ -17,8 +17,8 @@ export const signupSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
   confirmPassword: z.string(),
-  acceptTerms: z.literal(true, {
-    errorMap: () => ({ message: "You must accept the terms and privacy policy" }),
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and privacy policy",
   }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
@@ -39,7 +39,7 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
       email: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false,
+      acceptTerms: false, // This is now allowed with our updated schema
     },
   });
 
