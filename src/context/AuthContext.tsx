@@ -1,7 +1,12 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { signInWithEmail, signUpWithEmail, signInWithOAuthProvider } from "@/services/authService";
+
+// Base site URL for redirects
+const BASE_URL = 'https://virtusco.in';
 
 type AuthContextType = {
   session: Session | null;
@@ -17,7 +22,7 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   loading: boolean;
   
-  // Improved OAuth support with better error handling
+  // OAuth support
   signInWithOAuth: (provider: 'google' | 'github' | 'facebook') => Promise<{
     error: any;
     provider: 'google' | 'github' | 'facebook';
@@ -25,9 +30,6 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Base site URL for redirects - updated to use virtusco.in consistently
-const BASE_URL = 'https://virtusco.in';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -83,41 +85,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
-    const result = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const result = await signInWithEmail(email, password);
     setLoading(false);
-    return {
-      error: result.error,
-      data: result.data ? { 
-        session: result.data.session, 
-        user: result.data.user 
-      } : null
-    };
+    return result;
   };
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
-    const result = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${BASE_URL}/auth`, // Set the redirect URL to virtusco.in domain
-        data: {
-          // Custom data for the user
-          company_name: 'VirtusCo',
-        }
-      }
-    });
+    const result = await signUpWithEmail(email, password, BASE_URL);
     setLoading(false);
-    return {
-      error: result.error,
-      data: result.data ? { 
-        session: result.data.session, 
-        user: result.data.user 
-      } : null
-    };
+    return result;
   };
 
   const signOut = async () => {
@@ -126,46 +103,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
-  // Updated OAuth sign in with consistent redirect URL
+  // OAuth sign in
   const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${BASE_URL}/auth`, // Consistently use virtusco.in domain
-          queryParams: {
-            // Add additional parameters if needed
-            // access_type: 'offline', // For Google refresh tokens
-            prompt: 'consent', // Force consent screen each time to ensure updated branding
-          }
-        }
-      });
-      
-      if (error) {
-        console.error(`Error signing in with ${provider}:`, error);
-        toast({
-          title: "Authentication Error",
-          description: `Error connecting to ${provider}: ${error.message}`,
-          variant: "destructive",
-        });
-        return { error, provider };
-      }
+      const result = await signInWithOAuthProvider(provider, BASE_URL);
       
       // If there's no error, the user is being redirected to OAuth provider
-      toast({
-        title: "Redirecting...",
-        description: `Connecting to ${provider}. You'll be redirected.`,
-      });
+      if (!result.error) {
+        toast({
+          title: "Redirecting...",
+          description: `Connecting to ${provider}. You'll be redirected.`,
+        });
+      }
       
-    } catch (err) {
-      console.error(`Exception during ${provider} sign in:`, err);
-      toast({
-        title: "Authentication Error",
-        description: `Unexpected error during ${provider} sign in.`,
-        variant: "destructive",
-      });
-      return { error: err, provider };
+      return result;
     } finally {
       setLoading(false);
     }
