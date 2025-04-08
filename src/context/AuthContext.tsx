@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,7 +26,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Base site URL for redirects
+// Base site URL for redirects - updated to use virtusco.in consistently
 const BASE_URL = 'https://virtusco.in';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -127,18 +126,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
-  // Improved OAuth sign in with better error handling
+  // Updated OAuth sign in with consistent redirect URL
   const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${BASE_URL}/auth`, // Explicitly set redirect to virtusco.in domain
+          redirectTo: `${BASE_URL}/auth`, // Consistently use virtusco.in domain
           queryParams: {
             // Add additional parameters if needed
             // access_type: 'offline', // For Google refresh tokens
-            // prompt: 'consent', // Force consent screen
+            prompt: 'consent', // Force consent screen each time to ensure updated branding
           }
         }
       });
