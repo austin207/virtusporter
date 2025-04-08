@@ -17,12 +17,12 @@ export const signInWithEmail = async (email: string, password: string) => {
   };
 };
 
-export const signUpWithEmail = async (email: string, password: string, redirectUrl: string) => {
+export const signUpWithEmail = async (email: string, password: string) => {
+  // Remove the redirect URL to prevent being directed to Supabase's domain
   const result = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${redirectUrl}/auth`, // Set the redirect URL to virtusco.in domain
       data: {
         // Custom data for the user
         company_name: 'VirtusCo',
@@ -39,12 +39,12 @@ export const signUpWithEmail = async (email: string, password: string, redirectU
   };
 };
 
-export const signInWithOAuthProvider = async (provider: 'google' | 'github' | 'facebook', redirectUrl: string) => {
+export const signInWithOAuthProvider = async (provider: 'google' | 'github' | 'facebook') => {
   try {
+    // Remove the redirectUrl parameter to use the default URL
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${redirectUrl}/auth`, // Use custom domain
         queryParams: {
           prompt: 'consent', // Force consent screen each time to ensure updated branding
         }

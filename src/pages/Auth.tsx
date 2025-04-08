@@ -59,6 +59,7 @@ const Auth = () => {
         });
         
         if (result.data?.session) {
+          // Ensure we stay on our app by explicitly navigating to home
           navigate("/");
         }
       }
@@ -87,7 +88,8 @@ const Auth = () => {
           description: "Please check your email for verification instructions.",
         });
         
-        if (result.data?.session || (!isLogin && !result.error)) {
+        if (result.data?.session) {
+          // Ensure we stay on our app by explicitly navigating to home
           navigate("/");
         }
       }
@@ -104,7 +106,7 @@ const Auth = () => {
     setOauthError(null);
     try {
       await signInWithOAuth(provider);
-      // Redirect will happen automatically
+      // Redirect will happen automatically via OAuth flow
     } catch (error) {
       toast({
         title: "Authentication error",

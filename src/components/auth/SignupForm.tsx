@@ -39,7 +39,7 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
       email: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false, // This is now allowed with our updated schema
+      acceptTerms: false, // This is allowed with our updated schema
     },
   });
 

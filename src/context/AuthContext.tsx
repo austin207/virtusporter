@@ -5,9 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { signInWithEmail, signUpWithEmail, signInWithOAuthProvider } from "@/services/authService";
 
-// Base site URL for redirects
-const BASE_URL = 'https://virtusco.in';
-
 type AuthContextType = {
   session: Session | null;
   user: User | null;
@@ -92,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
-    const result = await signUpWithEmail(email, password, BASE_URL);
+    const result = await signUpWithEmail(email, password);
     setLoading(false);
     return result;
   };
@@ -107,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
     try {
       setLoading(true);
-      const result = await signInWithOAuthProvider(provider, BASE_URL);
+      const result = await signInWithOAuthProvider(provider);
       
       // If there's no error, the user is being redirected to OAuth provider
       if (!result.error) {
