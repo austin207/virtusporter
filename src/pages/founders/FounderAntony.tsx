@@ -27,7 +27,7 @@ const FounderAntony = () => {
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                Antony Austin leads VirtusCo with exceptional expertise in artificial intelligence, machine learning, and advanced robotics. His commanding knowledge of ROS (Robot Operating System) and full-stack development drives the company's technological innovation, establishing VirtusCo as a pioneer in autonomous systems.
+                Antony Austin serves as a Founder at VirtusCo, where he channels his expertise in AI/ML, robotics, and full-stack development into creating intelligent, autonomous systems. His versatile technical background spans ROS (Robot Operating System), mobile app development, circuit design, and high-tech leadership, making him a driving force behind VirtusCo's innovative solutions.
               </p>
               
               <p>
