@@ -27,15 +27,15 @@ const FounderAntony = () => {
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                Antony Austin serves as a Founder at VirtusCo, where he channels his expertise in AI/ML, robotics, and full-stack development into creating intelligent, autonomous systems. His versatile technical background spans ROS (Robot Operating System), mobile app development, circuit design, and high-tech leadership, making him a driving force behind VirtusCo's innovative solutions.
+                Antony Austin leads VirtusCo with exceptional expertise in artificial intelligence, machine learning, and advanced robotics. His commanding knowledge of ROS (Robot Operating System) and full-stack development drives the company's technological innovation, establishing VirtusCo as a pioneer in autonomous systems.
               </p>
               
               <p>
-                Before founding VirtusCo, Antony developed his extensive technical knowledge at Rajagiri School of Engineering & Technology, where he collaborated with his fellow founders. His multidisciplinary approach to technology allows him to bridge hardware and software development, creating cohesive systems that address real-world challenges.
+                With technical mastery developed throughout his life's journey, Antony has cultivated a rare combination of skills spanning hardware architecture, AI implementation, and system integration. This self-driven expertise enables him to orchestrate complex technological ecosystems that solve real-world challenges with unprecedented efficiency.
               </p>
               
               <p>
-                Antony's passion for making cutting-edge technology accessible drives VirtusCo's mission to democratize robotics. His ability to work across the full technology stack—from circuit design to AI implementation—has been instrumental in developing VirtusCo's advanced baggage handling robots and other innovative systems.
+                Antony's strategic vision for democratizing cutting-edge technology drives VirtusCo's mission. His ability to seamlessly bridge multiple technical domains—from circuit design to artificial intelligence—positions the company at the forefront of innovation in autonomous robotics and intelligent systems.
               </p>
               
               <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">

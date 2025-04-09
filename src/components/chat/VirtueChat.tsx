@@ -128,22 +128,52 @@ const VirtueChat = () => {
           });
       }
 
-      // Simulate AI response (in a real app, you would call an AI API here)
-      setTimeout(async () => {
-        // Generate a random response from placeholder responses
+      try {
+        // Call the Gemini API
+        const response = await fetch("/api/generate-with-gemini", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: content }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const botMessage: Message = { 
+          role: 'assistant', 
+          content: data.generatedText || "I'm sorry, I couldn't generate a response at the moment." 
+        };
+        
+        // If user is authenticated, save the assistant message to Supabase
+        if (user && conversationId) {
+          await supabase
+            .from('chat_messages')
+            .insert({
+              conversation_id: conversationId,
+              role: 'assistant',
+              content: botMessage.content
+            });
+        }
+        
+        setMessages(prev => [...prev, botMessage]);
+      } catch (error) {
+        console.error('Error calling Gemini API:', error);
+        // Fallback to placeholder responses if API call fails
         const placeholderResponses = [
           "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
           "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
           "Our services include custom ROS development, robot prototyping, and full robotics implementation.",
           "We're currently hiring for several positions! Check out our Careers page for more details.",
-          "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions.",
-          "I can help you navigate our website or provide detailed information about our products and services."
+          "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions."
         ];
         
         const randomResponse = placeholderResponses[Math.floor(Math.random() * placeholderResponses.length)];
         const botMessage: Message = { role: 'assistant', content: randomResponse };
         
-        // If user is authenticated, save the assistant message to Supabase
         if (user && conversationId) {
           await supabase
             .from('chat_messages')
@@ -155,8 +185,14 @@ const VirtueChat = () => {
         }
         
         setMessages(prev => [...prev, botMessage]);
-        setIsLoading(false);
-      }, 1000);
+        toast({
+          title: "API Error",
+          description: "Using fallback response system",
+          variant: "destructive",
+        });
+      }
+      
+      setIsLoading(false);
     } catch (error) {
       console.error('Error in chat message handling:', error);
       toast({
