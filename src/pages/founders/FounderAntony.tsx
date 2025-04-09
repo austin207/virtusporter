@@ -17,17 +17,17 @@ const FounderAntony = () => {
             <img 
               src="/placeholder.svg" 
               alt="Antony Austin" 
-              className="rounded-xl shadow-lg w-full"
+              className="rounded-xl shadow-lg w-full object-cover"
             />
           </div>
           
           <div className="w-full md:w-2/3">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Antony Austin</h1>
-            <p className="text-xl text-virtus-red font-medium mb-6">Chief Technology Officer</p>
+            <p className="text-xl text-virtus-red font-medium mb-6">Chief Technology Officer & Founder</p>
             
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                Antony Austin serves as the Chief Technology Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots—designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+                Antony Austin serves as the Chief Technology Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
               </p>
               
               <p>
@@ -35,11 +35,11 @@ const FounderAntony = () => {
               </p>
               
               <p>
-                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo's mission—empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
               </p>
               
-              <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700">
-                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds—regardless of where they come from—have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+              <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
+                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
               </blockquote>
 
               

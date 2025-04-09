@@ -1,4 +1,3 @@
-
 import { useRef, useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -10,6 +9,7 @@ interface TeamMember {
   image: string;
   bio: string;
   expertise: string[];
+  slug: string;
 }
 
 const About = () => {
@@ -23,6 +23,7 @@ const About = () => {
       image: '/placeholder.svg',
       bio: "Pioneer with a background in robotics engineering, embedded systems and AI systems development.",
       expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning', 'R&D Management'],
+      slug: '/founders/antony-austin'
     },
     {
       name: 'Alwin George Thomas',
@@ -30,6 +31,7 @@ const About = () => {
       image: '/placeholder.svg',
       bio: "Financial strategist.",
       expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling', 'Strategic Planning'],
+      slug: '/founders/alwin-george-thomas'
     },
     {
       name: 'A.Azeem Kouther',
@@ -37,6 +39,7 @@ const About = () => {
       image: '/placeholder.svg',
       bio: "Visionary with a background in robotics engineering and mechanical systems development.",
       expertise: ['Mechanical systems', 'Hardware modeling', 'Build Optimization', 'Strategic Planning'],
+      slug: '/founders/azeem-kouther'
     },
     {
       name: 'Allen George Thomas',
@@ -44,6 +47,7 @@ const About = () => {
       image: '/placeholder.svg',
       bio: "Product designer with a passion for human-centered solutions.",
       expertise: ['Product Design', 'User Experience', 'Interaction Design', 'Strategic Planning'],
+      slug: '/founders/allen-george-thomas'
     },
     {
       name: 'Danush Krishna',
@@ -51,6 +55,7 @@ const About = () => {
       image: '/placeholder.svg',
       bio: "Technology innovator with deep experience in hardware and embedded systems development.",
       expertise: ['Hardware Integration', 'Embedded Architecture', 'Optimization techniques', 'Strategic Planning'],
+      slug: '/founders/danush-krishna'
     },
   ];
 
@@ -231,7 +236,7 @@ const About = () => {
         </section>
 
         {/* Team Section */}
-        <section ref={sectionRef} id="team" className="py-20">
+        <section id="team" className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-virtus-primary/10 text-virtus-primary mb-6">
@@ -242,15 +247,11 @@ const About = () => {
                 Our founding team brings together diverse expertise in robotics, design, operations, and business strategy.
               </p>
             </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {team.map((member, index) => (
                 <div 
                   key={index}
-                  className={`bg-white rounded-xl overflow-hidden shadow-md transition-all duration-500 transform ${
-                    isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${150 * index}ms` }}
+                  className="bg-white rounded-xl overflow-hidden shadow-md"
                 >
                   <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-virtus-primary/10 to-virtus-accent/10">
                     <div className="flex items-center justify-center">
@@ -267,6 +268,7 @@ const About = () => {
                     <p className="text-sm text-virtus-primary font-medium mb-4">{member.role}</p>
                     <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
                     
+                    
                     <div className="flex flex-wrap gap-2">
                       {member.expertise.map((skill, skillIndex) => (
                         <span 
@@ -277,12 +279,21 @@ const About = () => {
                         </span>
                       ))}
                     </div>
+                    <div className="mt-4">
+                      <Button to={member.slug} variant="link" className="text-virtus-red">
+                        Read more
+                        <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
+        
 
         {/* Vision Section */}
         <section className="py-20 bg-gray-50">

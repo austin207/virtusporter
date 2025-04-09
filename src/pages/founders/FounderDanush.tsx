@@ -1,65 +1,55 @@
 
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FounderDanush = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Link to="/about" className="inline-flex items-center text-virtus-primary hover:underline mb-8">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to About
-          </Link>
-          
-          <div className="text-center mb-12">
-            <div className="w-32 h-32 mx-auto bg-virtus-primary/10 rounded-full flex items-center justify-center mb-6">
-              <div className="text-3xl font-bold text-virtus-primary">DK</div>
-            </div>
-            <h1 className="heading-lg text-gray-900 mb-2">Danush Krishna</h1>
-            <p className="text-xl text-virtus-primary font-medium mb-6">Founder</p>
+    <div className="bg-white py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Link to="/about" className="inline-flex items-center text-virtus-primary hover:text-virtus-primary-dark mb-8">
+          <ArrowLeft size={20} className="mr-2" />
+          Back to About
+        </Link>
+        
+        <div className="flex flex-col md:flex-row gap-12 items-start">
+          <div className="w-full md:w-1/3">
+            <img 
+              src="/placeholder.svg" 
+              alt="Danush krishna" 
+              className="rounded-xl shadow-lg w-full object-cover"
+            />
           </div>
           
-          <div className="prose prose-lg max-w-none">
-            <p>
-              Danush Krishna is the financial architect behind VirtusCo's sustainable growth and operational stability. As the Chief Financial Officer and Co-Founder, Danush brings strategic financial insight and business acumen to the company's leadership team.
-            </p>
+          <div className="w-full md:w-2/3">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Danush krishna</h1>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
             
-            <h2>Financial Leadership</h2>
-            <p>
-              With a background in finance and venture capital, Danush has developed a deep understanding of the unique financial challenges and opportunities in the technology sector. Prior to co-founding VirtusCo, he worked with several successful startups, helping them navigate funding rounds and establish sustainable business models.
-            </p>
-            
-            <h2>Investment Strategy</h2>
-            <p>
-              At VirtusCo, Danush has been instrumental in securing the capital needed to fuel the company's growth while maintaining strategic independence. His approach to investor relations emphasizes transparency, realistic projections, and a clear vision for long-term value creation.
-            </p>
-            <p>
-              This measured approach has attracted investors who share VirtusCo's vision for democratizing robotics technology and are committed to supporting the company's long-term goals rather than seeking quick returns.
-            </p>
-            
-            <h2>Pricing Innovation</h2>
-            <p>
-              One of Danush's most significant contributions to VirtusCo has been the development of innovative pricing models that make advanced robotics solutions accessible to a broader range of customers. These include subscription-based options, flexible leasing arrangements, and outcome-based pricing structures.
-            </p>
-            <p>
-              These alternatives to traditional high-capital-expenditure purchases have been particularly attractive to small and medium-sized businesses, enabling VirtusCo to reach markets that were previously underserved by robotics providers.
-            </p>
-            
-            <h2>Sustainable Growth Vision</h2>
-            <p>
-              Looking forward, Danush is focused on balancing VirtusCo's ambitious growth targets with financial sustainability. He believes that responsible financial management is essential for the company to fulfill its mission over the long term.
-            </p>
-            <p>
-              To this end, he continues to refine VirtusCo's financial strategy, exploring new revenue streams and operational efficiencies while ensuring that the company maintains the financial flexibility to respond to emerging opportunities and challenges in the rapidly evolving robotics market.
-            </p>
+            <div className="prose prose-lg max-w-none space-y-6">
+              <p>
+                Danush krishna serves as the Founder at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+              </p>
+              
+              <p>
+                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
+              </p>
+              
+              <p>
+                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+              </p>
+              
+              <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
+                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+              </blockquote>
+
+              
+              <p>
+                Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
+              </p>
+            </div>
           </div>
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };

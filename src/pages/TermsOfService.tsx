@@ -123,7 +123,12 @@ const TermsOfService = () => {
             <address className="not-italic mt-3">
               <div className="font-semibold">VirtusCo, Ltd.</div>
               <div>Email: legal@virtusco.in</div>
-              <div>Address: 123 Innovation Drive, Tech Valley, CA 94025</div>
+              <div>Address: <p className="text-gray-600">
+                          VirtusCo Headquarters<br />
+                          100 Tripunithara<br />
+                          Kochi, Kerala 682301<br />
+                          India
+                        </p></div>
             </address>
           </section>
         </div>

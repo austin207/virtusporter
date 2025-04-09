@@ -258,7 +258,7 @@ const Careers = () => {
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">Alwin George Thomas</div>
-                      <div className="text-xs text-gray-600">Senior Robotics Engineer</div>
+                      <div className="text-xs text-gray-600">Financial Strategist</div>
                     </div>
                   </div>
                 </div>

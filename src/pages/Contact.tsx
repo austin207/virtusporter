@@ -83,7 +83,7 @@ const Contact = () => {
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Email</h3>
                         <p className="text-gray-600 mb-1">General Inquiries:</p>
-                        <a href="mailto:info@virtusco.com" className="text-virtus-primary hover:underline">virtuscotech@gmail.com</a>
+                        <a href="mailto:info@virtusco.com" className="text-virtus-primary hover:underline">virtusco.tech@gmail.com</a>
                         <p className="text-gray-600 mb-1 mt-2">Investor Relations:</p>
                         <a href="mailto:investors@virtusco.com" className="text-virtus-primary hover:underline">investors@virtusco.com</a>
                       </div>

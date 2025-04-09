@@ -1,67 +1,57 @@
 
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const FounderAllenGeorge = () => {
+const FounderAllen = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Link to="/about" className="inline-flex items-center text-virtus-primary hover:underline mb-8">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to About
-          </Link>
-          
-          <div className="text-center mb-12">
-            <div className="w-32 h-32 mx-auto bg-virtus-primary/10 rounded-full flex items-center justify-center mb-6">
-              <div className="text-3xl font-bold text-virtus-primary">AGT</div>
-            </div>
-            <h1 className="heading-lg text-gray-900 mb-2">Allen George Thomas</h1>
-            <p className="text-xl text-virtus-primary font-medium mb-6">Founder</p>
+    <div className="bg-white py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Link to="/about" className="inline-flex items-center text-virtus-primary hover:text-virtus-primary-dark mb-8">
+          <ArrowLeft size={20} className="mr-2" />
+          Back to About
+        </Link>
+        
+        <div className="flex flex-col md:flex-row gap-12 items-start">
+          <div className="w-full md:w-1/3">
+            <img 
+              src="/placeholder.svg" 
+              alt="A. Azeem Kouther" 
+              className="rounded-xl shadow-lg w-full object-cover"
+            />
           </div>
           
-          <div className="prose prose-lg max-w-none">
-            <p>
-              Allen George Thomas is the creative force behind VirtusCo's product design and user experience. As the Chief Design Officer and Co-Founder, Allen combines aesthetic sensibility with functional design to create robotics solutions that are not only technically advanced but also intuitive and accessible.
-            </p>
+          <div className="w-full md:w-2/3">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Allen George Thomas</h1>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
             
-            <h2>Design Philosophy</h2>
-            <p>
-              With a background in industrial design and human-computer interaction, Allen approaches robotics design with a human-centered perspective. He believes that even the most advanced technology should be approachable and easy to use, particularly in professional environments where efficiency and reliability are paramount.
-            </p>
-            
-            <h2>User Experience Innovation</h2>
-            <p>
-              At VirtusCo, Allen has pioneered innovative approaches to user interface design for robotics systems. His work has focused on simplifying complex controls and creating intuitive interaction models that reduce the learning curve for users at all technical levels.
-            </p>
-            <p>
-              This focus on accessibility has been a key differentiator for VirtusCo in the marketplace, enabling the company to reach customers who might otherwise find robotics technology intimidating or overly complex.
-            </p>
-            
-            <h2>Product Design Achievements</h2>
-            <p>
-              Allen has led the design of VirtusCo's flagship products, bringing together form and function in solutions that are both aesthetically pleasing and highly practical. His designs have been recognized for their elegance and usability, winning several industry awards for innovation.
-            </p>
-            <p>
-              Beyond aesthetics, Allen's designs prioritize manufacturability and serviceability, ensuring that VirtusCo's products can be produced efficiently and maintained easily throughout their lifecycle.
-            </p>
-            
-            <h2>Future Design Direction</h2>
-            <p>
-              Looking ahead, Allen is exploring new frontiers in robotics design, including adaptive interfaces that learn from user behavior and more natural interaction modalities such as voice and gesture control.
-            </p>
-            <p>
-              He is particularly interested in the intersection of physical and digital design, creating cohesive experiences that bridge the gap between hardware, software, and services. Through continued innovation in this space, Allen aims to further enhance the accessibility and usability of VirtusCo's solutions.
-            </p>
+            <div className="prose prose-lg max-w-none space-y-6">
+              <p>
+                Allen George Thomas serves as the Chief Mechanical Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+              </p>
+              
+              <p>
+                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
+              </p>
+              
+              <p>
+                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+              </p>
+              
+              <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
+                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+              </blockquote>
+
+              
+              <p>
+                Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
+              </p>
+            </div>
           </div>
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };
 
-export default FounderAllenGeorge;
+export default FounderAllen;
