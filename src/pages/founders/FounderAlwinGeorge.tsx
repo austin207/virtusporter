@@ -16,35 +16,34 @@ const FounderAlwin = () => {
           <div className="w-full md:w-1/3">
             <img 
               src="/placeholder.svg" 
-              alt="A. Azeem Kouther" 
+              alt="Alwin George Thomas" 
               className="rounded-xl shadow-lg w-full object-cover"
             />
           </div>
           
           <div className="w-full md:w-2/3">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Alwin George Thomas</h1>
-            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder & Strategy Director</p>
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                Alwin George Thomas serves as the Chief Mechanical Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+                Alwin George Thomas is a founding member of VirtusCo, bringing strategic vision and operational expertise to the team. His analytical approach to problem-solving and ability to synthesize complex technical considerations into coherent business strategies have been vital to VirtusCo's development from concept to market-ready solutions.
               </p>
               
               <p>
-                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
+                At Rajagiri School of Engineering & Technology, Alwin collaborated closely with his fellow founders, contributing his unique perspective to the interdisciplinary challenges of robotics innovation. His educational background, combined with natural leadership abilities, enables him to bridge the gap between technical development and practical implementation.
               </p>
               
               <p>
-                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+                Alwin's methodical approach to project planning and execution has helped establish robust operational frameworks within VirtusCo. His contributions to the team dynamics and organizational structure have created an environment where innovation can flourish while maintaining focus on the company's core mission of democratizing access to robotics technology.
               </p>
               
               <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
-                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+                "Innovation requires more than just great ideas—it demands careful planning, strategic resource allocation, and unwavering commitment to the vision. At VirtusCo, we're building systems that will fundamentally transform how businesses interact with robotics, creating new possibilities for efficiency and growth across industries."
               </blockquote>
-
               
               <p>
-                Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
+                As VirtusCo continues to expand, Alwin's strategic oversight ensures that the company maintains its core values while adapting to new market opportunities. His collaborative leadership style fosters an environment of continuous improvement and collective problem-solving that is essential to VirtusCo's mission of making advanced robotics accessible to all.
               </p>
             </div>
           </div>

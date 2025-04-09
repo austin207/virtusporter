@@ -16,35 +16,34 @@ const FounderDanush = () => {
           <div className="w-full md:w-1/3">
             <img 
               src="/placeholder.svg" 
-              alt="Danush krishna" 
+              alt="Danush Krishna" 
               className="rounded-xl shadow-lg w-full object-cover"
             />
           </div>
           
           <div className="w-full md:w-2/3">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Danush krishna</h1>
-            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Danush Krishna</h1>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder & Sales Director</p>
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                Danush krishna serves as the Founder at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+                Danush Krishna serves as a Founder and Sales Director at VirtusCo, where he combines his technical knowledge of robotics with exceptional communication skills to bridge the gap between complex technology and practical business applications. His ability to translate technical capabilities into tangible business benefits has been crucial in VirtusCo's market penetration strategy.
               </p>
               
               <p>
-                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
+                A graduate of Rajagiri School of Engineering & Technology alongside his fellow founders, Danush developed both technical expertise in robotics and a keen understanding of customer needs. This dual perspective allows him to identify the perfect intersection between technological possibility and market demand, guiding VirtusCo's product development to address real-world challenges.
               </p>
               
               <p>
-                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+                Danush's talent for building relationships with stakeholders across industries has opened doors for VirtusCo in competitive markets. His customer-centric approach ensures that the company's innovative solutions are always aligned with actual user needs, rather than pursuing technology for its own sake.
               </p>
               
               <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
-                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+                "The most advanced robotics solution in the world is worthless if it doesn't solve a real problem for real people. My passion is finding those perfect matches—where our technology can transform operations, reduce costs, or create new opportunities for businesses that might otherwise be left behind in the automation revolution."
               </blockquote>
-
               
               <p>
-                Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
+                As VirtusCo continues to expand its market presence, Danush's insights into customer needs and market trends guide the company's strategic direction. His commitment to ensuring that advanced robotics technology becomes accessible to businesses of all sizes aligns perfectly with VirtusCo's core mission of democratizing automation.
               </p>
             </div>
           </div>

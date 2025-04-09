@@ -27,24 +27,23 @@ const FounderAzeem = () => {
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
-                A. Azeem Kouther serves as the Chief Mechanical Officer at VirtusCo, where he channels over four years of hands-on experience in robotics and AI into building intelligent, autonomous systems. His deep passion for innovation and equitable access has shaped the development of VirtusCo’s advanced baggage handling robots designed not just for efficiency, but to embody the company's mission of making cutting-edge technology accessible to all.
+                A. Azeem Kouther serves as the Chief Mechanical Officer at VirtusCo, where he applies his extensive expertise in mechanical engineering to design and implement robust hardware solutions for the company's innovative robotics systems. His meticulous approach to mechanical design ensures that VirtusCo's robots deliver reliable performance in real-world conditions.
               </p>
               
               <p>
-                Before joining VirtusCo, Antony led AI & Robotics research teams at prestigious institution Rajagiri School of Engineering & Technology, focusing on machine learning applications in robotics. His groundbreaking work in computer vision systems for autonomous navigation has earned him institutional recognition in the field.
+                As a graduate of Rajagiri School of Engineering & Technology alongside his co-founders, Azeem developed a deep understanding of mechanical systems and structural design principles. His engineering insights have been instrumental in translating theoretical concepts into functional prototypes and production-ready hardware that meets the rigorous demands of industrial applications.
               </p>
               
               <p>
-                Antony Austin is an undergraduate in Applied Electronics & Instrumentation at Rajagiri, with a strong track record in machine learning and autonomous systems, developed through hands-on projects at leading academic institutions. His deep commitment to bridging the gap for underrepresented talent drives VirtusCo’s mission empowering skilled individuals who lack resources by building systems that create real opportunities for growth and innovation.
+                Azeem's contributions to VirtusCo extend beyond pure engineering; his practical understanding of manufacturing constraints and material science informs the company's approach to scalable production. By designing with both performance and manufacturability in mind, he ensures that VirtusCo's solutions can be produced efficiently without compromising on quality or functionality.
               </p>
               
               <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">
-                The future of innovation isn’t just about advanced systems or smarter machines. It’s about making sure the brightest minds regardless of where they come from have a real shot at shaping that future. At VirtusCo, I’m building more than just technology; I’m building pathways for potential to rise, even when the odds are against it.
+                "Mechanical engineering is where theory meets reality. The most elegant algorithm means nothing if the physical system can't execute it reliably. At VirtusCo, we're creating robotics hardware that doesn't just work in the lab but thrives in the unpredictable environments of the real world."
               </blockquote>
-
               
               <p>
-                Under Antony's technical leadership, VirtusCo continues to push the boundaries of what's possible in autonomous robotics, with a focus on creating sustainable solutions that transform the passenger experience in airports worldwide.
+                Under Azeem's technical leadership, VirtusCo continues to push the boundaries of mechanical design in robotics, developing systems that combine durability, precision, and cost-effectiveness. His commitment to engineering excellence ensures that the company's hardware platforms provide the solid foundation necessary for advanced automation solutions across various industries.
               </p>
             </div>
           </div>
