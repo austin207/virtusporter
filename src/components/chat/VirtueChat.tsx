@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -129,23 +128,18 @@ const VirtueChat = () => {
       }
 
       try {
-        // Call the Gemini API
-        const response = await fetch("/api/generate-with-gemini", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: content }),
+        // Call the Supabase edge function instead of a direct API
+        const { data, error } = await supabase.functions.invoke("generate-with-gemini", {
+          body: { prompt: content }
         });
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+        if (error) {
+          throw new Error(`Error: ${error.message}`);
         }
 
-        const data = await response.json();
         const botMessage: Message = { 
           role: 'assistant', 
-          content: data.generatedText || "I'm sorry, I couldn't generate a response at the moment." 
+          content: data?.generatedText || "I'm sorry, I couldn't generate a response at the moment." 
         };
         
         // If user is authenticated, save the assistant message to Supabase
