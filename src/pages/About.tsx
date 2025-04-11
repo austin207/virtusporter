@@ -169,7 +169,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">January 2025</div>
                           <div className="text-xs text-gray-600">Concept development and initial research</div>
                         </div>
                       </div>
@@ -177,7 +177,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">February 2025</div>
                           <div className="text-xs text-gray-600">Prototype development and technical validation</div>
                         </div>
                       </div>
@@ -185,7 +185,7 @@ const About = () => {
                       <div className="relative pl-16 pb-8">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">March 2025</div>
                           <div className="text-xs text-gray-600">First airport pilot programs and user testing</div>
                         </div>
                       </div>
@@ -193,7 +193,7 @@ const About = () => {
                       <div className="relative pl-16">
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">2025</div>
+                          <div className="text-sm font-semibold text-gray-900 mb-1">April 2025</div>
                           <div className="text-xs text-gray-600">Commercial launch and expansion</div>
                         </div>
                       </div>
