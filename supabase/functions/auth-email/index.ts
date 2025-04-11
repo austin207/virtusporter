@@ -1,5 +1,5 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { Resend } from "npm:resend@2.0.0"
 
 // CORS headers for public access
 const corsHeaders = {
@@ -336,6 +336,8 @@ const confirmationEmailTemplate = `
 </html>
 `
 
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"))
+
 serve(async (req) => {
   // Handle CORS preflight request
   if (req.method === "OPTIONS") {
@@ -407,13 +409,28 @@ serve(async (req) => {
 
     console.log(`Email prepared for ${email} with type: ${type}`)
     
-    return new Response(JSON.stringify({ success: true, response }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders,
-      },
-    })
+    const { data: resendData, error: resendError } = await resend.emails.send({
+      from: "VirtusCo <no-reply@virtusco.in>", // Update with your domain
+      to: [email],
+      subject: response.subject,
+      html: response.html,
+    });
+
+    if (resendError) {
+      throw new Error(`Failed to send email: ${resendError.message}`);
+    }
+
+    console.log(`Email sent to ${email} with type: ${type}`);
+    return new Response(
+      JSON.stringify({ success: true, id: resendData?.id }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      }
+    );
 
   } catch (error) {
     console.error("Error processing email request:", error)
