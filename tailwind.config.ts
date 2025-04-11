@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -70,7 +69,7 @@ export default {
 				virtus: {
 					primary: '#000000',
 					secondary: '#32D74B',
-					accent: '#5E5CE6',
+					accent: '#ea384c',
 					neutral: '#F2F2F7',
 					dark: '#1C1C1E',
 					red: '#ea384c',

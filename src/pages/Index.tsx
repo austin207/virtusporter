@@ -1,8 +1,8 @@
-
 import Hero from '@/components/sections/Hero';
 import Features from '@/components/sections/Features';
 import About from '@/components/sections/About';
 import Contact from '@/components/sections/Contact';
+import JoinOurJourney from '@/components/sections/Joinourjourney';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -15,6 +15,7 @@ const Index = () => {
         <Features />
         <About />
         <Contact />
+        <JoinOurJourney />
       </main>
       <Footer />
     </div>
