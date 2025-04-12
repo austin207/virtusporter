@@ -15,7 +15,7 @@ const FounderAntony = () => {
         <div className="flex flex-col md:flex-row gap-12 items-start">
           <div className="w-full md:w-1/3">
             <img 
-              src="/placeholder.svg" 
+              src="/Austin.jpeg" 
               alt="Antony Austin" 
               className="rounded-xl shadow-lg w-full object-cover"
             />
