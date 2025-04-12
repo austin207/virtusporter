@@ -35,7 +35,7 @@ const FounderAntony = () => {
               </p>
               
               <p>
-                Antony's strategic vision for democratizing cutting-edge technology drives VirtusCo's mission. His ability to seamlessly bridge multiple technical domains—from circuit design to artificial intelligence—positions the company at the forefront of innovation in autonomous robotics and intelligent systems.
+                Antony's strategic vision for democratizing cutting-edge technology drives VirtusCo's mission. His ability to seamlessly bridge multiple technical domains from circuit design to artificial intelligence positions the company at the forefront of innovation in autonomous robotics and intelligent systems.
               </p>
               
               <blockquote className="text-lg italic border-l-4 border-gray-400 pl-4 text-gray-700 my-6">

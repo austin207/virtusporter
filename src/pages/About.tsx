@@ -170,7 +170,7 @@ const About = () => {
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
                           <div className="text-sm font-semibold text-gray-900 mb-1">January 2025</div>
-                          <div className="text-xs text-gray-600">Concept development and initial research</div>
+                          <div className="text-xs text-gray-600">Initial Brainstorming and Market Research</div>
                         </div>
                       </div>
                       
@@ -178,7 +178,7 @@ const About = () => {
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
                           <div className="text-sm font-semibold text-gray-900 mb-1">February 2025</div>
-                          <div className="text-xs text-gray-600">Prototype development and technical validation</div>
+                          <div className="text-xs text-gray-600">Requirements Gathering and Concept Design</div>
                         </div>
                       </div>
                       
@@ -186,7 +186,7 @@ const About = () => {
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
                           <div className="text-sm font-semibold text-gray-900 mb-1">March 2025</div>
-                          <div className="text-xs text-gray-600">First airport pilot programs and user testing</div>
+                          <div className="text-xs text-gray-600">Early Proof of Concept and Design Validation</div>
                         </div>
                       </div>
                       
@@ -194,7 +194,7 @@ const About = () => {
                         <div className="absolute left-[29px] top-0 w-4 h-4 rounded-full bg-virtus-primary border-2 border-white"></div>
                         <div className="glass-card p-4 rounded-lg shadow-sm">
                           <div className="text-sm font-semibold text-gray-900 mb-1">April 2025</div>
-                          <div className="text-xs text-gray-600">Commercial launch and expansion</div>
+                          <div className="text-xs text-gray-600">Initial stages of prototyping</div>
                         </div>
                       </div>
                     </div>

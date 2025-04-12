@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import Product from "./pages/Product";
 import Service from "./pages/Service";
 import About from "./pages/About";
-import Blog from "./pages/Blog";
+//import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Careers from "./pages/Careers";
 import Auth from "./pages/Auth";
@@ -72,7 +72,7 @@ const App = () => {
               <Route path="/product" element={<Product />} />
               <Route path="/service" element={<Service />} />
               <Route path="/about" element={<About />} />
-              <Route path="/blog" element={<Blog />} />
+
               <Route path="/contact" element={<Contact />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/auth" element={<Auth />} />

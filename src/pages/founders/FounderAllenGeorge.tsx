@@ -23,7 +23,7 @@ const FounderAllen = () => {
           
           <div className="w-full md:w-2/3">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Allen George Thomas</h1>
-            <p className="text-xl text-virtus-red font-medium mb-6">Founder & Financial Strategist</p>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>

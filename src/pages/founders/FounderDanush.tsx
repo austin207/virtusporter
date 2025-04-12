@@ -23,7 +23,7 @@ const FounderDanush = () => {
           
           <div className="w-full md:w-2/3">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Danush Krishna</h1>
-            <p className="text-xl text-virtus-red font-medium mb-6">Founder & Sales Director</p>
+            <p className="text-xl text-virtus-red font-medium mb-6">Founder</p>
             
             <div className="prose prose-lg max-w-none space-y-6">
               <p>
@@ -31,7 +31,7 @@ const FounderDanush = () => {
               </p>
               
               <p>
-                A graduate of Rajagiri School of Engineering & Technology alongside his fellow founders, Danush developed both technical expertise in robotics and a keen understanding of customer needs. This dual perspective allows him to identify the perfect intersection between technological possibility and market demand, guiding VirtusCo's product development to address real-world challenges.
+                An undergraduate of Rajagiri School of Engineering & Technology alongside his fellow founders, Danush developed both technical expertise in robotics and a keen understanding of customer needs. This dual perspective allows him to identify the perfect intersection between technological possibility and market demand, guiding VirtusCo's product development to address real-world challenges.
               </p>
               
               <p>
