@@ -361,7 +361,7 @@ const Contact = () => {
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How does the revenue model work?</h3>
                 <p className="text-gray-600">
-                  Our hybrid revenue model combines profit-sharing from porter services with fixed maintenance fees. We also offer opportunities for additional revenue through digital advertising and data services. Detailed financials are available upon request.
+                  We follow a B2B purchasing model with direct sales to airports. Data and maintenance charges are additional, as per contract. Detailed financials are available upon request.
                 </p>
               </div>
               
