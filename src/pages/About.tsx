@@ -20,7 +20,7 @@ const About = () => {
     {
       name: 'Antony Austin',
       role: 'Founder',
-      image: '/placeholder.svg',
+      image: '/Austin.jpeg',
       bio: "Pioneer with a background in robotics engineering, embedded systems and AI systems development.",
       expertise: ['Robotics Engineering', 'AI Systems', 'Strategic Planning', 'R&D Management'],
       slug: '/founders/antony-austin'
@@ -28,7 +28,7 @@ const About = () => {
     {
       name: 'Alwin George Thomas',
       role: 'Founder',
-      image: '/placeholder.svg',
+      image: '/Alwin.jpg',
       bio: "Financial strategist.",
       expertise: ['Financial Strategy', 'Investment Planning', 'Revenue Modeling', 'Strategic Planning'],
       slug: '/founders/alwin-george-thomas'
@@ -36,7 +36,7 @@ const About = () => {
     {
       name: 'A.Azeem Kouther',
       role: 'Founder',
-      image: '/placeholder.svg',
+      image: '/Azeem.jpg',
       bio: "Visionary with a background in robotics engineering and mechanical systems development.",
       expertise: ['Mechanical systems', 'Hardware modeling', 'Build Optimization', 'Strategic Planning'],
       slug: '/founders/azeem-kouther'
@@ -44,7 +44,7 @@ const About = () => {
     {
       name: 'Allen George Thomas',
       role: 'Founder',
-      image: '/placeholder.svg',
+      image: '/Allen.jpg',
       bio: "Product designer with a passion for human-centered solutions.",
       expertise: ['Product Design', 'User Experience', 'Interaction Design', 'Strategic Planning'],
       slug: '/founders/allen-george-thomas'
@@ -52,7 +52,7 @@ const About = () => {
     {
       name: 'Danush Krishna',
       role: 'Founder',
-      image: '/placeholder.svg',
+      image: '/Danush.jpg',
       bio: "Technology innovator with deep experience in hardware and embedded systems development.",
       expertise: ['Hardware Integration', 'Embedded Architecture', 'Optimization techniques', 'Strategic Planning'],
       slug: '/founders/danush-krishna'
