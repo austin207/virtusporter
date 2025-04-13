@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from "@/integrations/supabase/client";
+import { VirtueChatClient } from "@/lib/VirtueChatClient";
 import ChatHeader from './ChatHeader';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import { Message } from './types';
+
+// Initialize the client once (singleton pattern)
+const chatClient = new VirtueChatClient();
 
 const VirtueChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,82 +26,23 @@ const VirtueChat = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Load conversation for authenticated users
-    const loadConversation = async () => {
-      if (!user) return;
-      
+    // Initialize or load conversation
+    const initializeChat = async () => {
       try {
-        // Try to get the most recent conversation
-        const { data: existingConversation, error: fetchError } = await supabase
-          .from('chat_conversations')
-          .select('id')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+        const { conversationId: chatId, messages: chatHistory } = 
+          await chatClient.initializeConversation(user?.id);
         
-        if (fetchError && fetchError.code !== 'PGRST116') {
-          console.error('Error fetching conversation:', fetchError);
-          return;
-        }
+        setConversationId(chatId);
         
-        if (existingConversation) {
-          setConversationId(existingConversation.id);
-          
-          // Fetch messages for this conversation
-          const { data: messageData, error: messageError } = await supabase
-            .from('chat_messages')
-            .select('*')
-            .eq('conversation_id', existingConversation.id)
-            .order('created_at', { ascending: true });
-            
-          if (messageError) {
-            console.error('Error fetching messages:', messageError);
-            return;
-          }
-          
-          if (messageData && messageData.length > 0) {
-            setMessages(messageData.map(msg => ({
-              role: msg.role as 'user' | 'assistant',
-              content: msg.content
-            })));
-          }
-        } else {
-          // Create a new conversation
-          const { data: newConversation, error: createError } = await supabase
-            .from('chat_conversations')
-            .insert({ user_id: user.id })
-            .select()
-            .single();
-            
-          if (createError) {
-            console.error('Error creating conversation:', createError);
-            return;
-          }
-          
-          if (newConversation) {
-            setConversationId(newConversation.id);
-            
-            // Save the welcome message
-            const { error: welcomeError } = await supabase
-              .from('chat_messages')
-              .insert({
-                conversation_id: newConversation.id,
-                role: 'assistant',
-                content: messages[0].content
-              });
-              
-            if (welcomeError) {
-              console.error('Error saving welcome message:', welcomeError);
-            }
-          }
+        if (chatHistory && chatHistory.length > 0) {
+          setMessages(chatHistory);
         }
       } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error('Failed to initialize chat:', error);
       }
     };
     
-    loadConversation();
+    initializeChat();
   }, [user]);
 
   const toggleChat = () => {
@@ -111,82 +55,30 @@ const VirtueChat = () => {
   };
 
   const handleSendMessage = async (content: string) => {
+    if (!content.trim()) return;
+    
     const userMessage: Message = { role: 'user', content };
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
     try {
-      // If user is authenticated, save the message to Supabase
-      if (user && conversationId) {
-        await supabase
-          .from('chat_messages')
-          .insert({
-            conversation_id: conversationId,
-            role: 'user',
-            content
-          });
-      }
-
-      try {
-        // Call the Supabase edge function instead of a direct API
-        const { data, error } = await supabase.functions.invoke("generate-with-gemini", {
-          body: { prompt: content }
-        });
-
-        if (error) {
-          throw new Error(`Error: ${error.message}`);
-        }
-
-        const botMessage: Message = { 
-          role: 'assistant', 
-          content: data?.generatedText || "I'm sorry, I couldn't generate a response at the moment." 
-        };
-        
-        // If user is authenticated, save the assistant message to Supabase
-        if (user && conversationId) {
-          await supabase
-            .from('chat_messages')
-            .insert({
-              conversation_id: conversationId,
-              role: 'assistant',
-              content: botMessage.content
-            });
-        }
-        
-        setMessages(prev => [...prev, botMessage]);
-      } catch (error) {
-        console.error('Error calling Gemini API:', error);
-        // Fallback to placeholder responses if API call fails
-        const placeholderResponses = [
-          "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
-          "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
-          "Our services include custom ROS development, robot prototyping, and full robotics implementation.",
-          "We're currently hiring for several positions! Check out our Careers page for more details.",
-          "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions."
-        ];
-        
-        const randomResponse = placeholderResponses[Math.floor(Math.random() * placeholderResponses.length)];
-        const botMessage: Message = { role: 'assistant', content: randomResponse };
-        
-        if (user && conversationId) {
-          await supabase
-            .from('chat_messages')
-            .insert({
-              conversation_id: conversationId,
-              role: 'assistant',
-              content: randomResponse
-            });
-        }
-        
-        setMessages(prev => [...prev, botMessage]);
-        toast({
-          title: "API Error",
-          description: "Using fallback response system",
-          variant: "destructive",
-        });
+      // Use the chat client to handle the message
+      const response = await chatClient.sendMessage({
+        conversationId: conversationId as string,
+        message: content,
+        userId: user?.id
+      });
+      
+      if (response.error) {
+        throw new Error(response.errorDetails || 'Unknown error');
       }
       
-      setIsLoading(false);
+      const botMessage: Message = { 
+        role: 'assistant', 
+        content: response.message
+      };
+      
+      setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error in chat message handling:', error);
       toast({
@@ -194,6 +86,20 @@ const VirtueChat = () => {
         description: "There was a problem sending your message",
         variant: "destructive",
       });
+      
+      // Add fallback response
+      const placeholderResponses = [
+        "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
+        "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
+        "Our services include custom ROS development, robot prototyping, and full robotics implementation.",
+        "We're currently hiring for several positions! Check out our Careers page for more details.",
+        "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions."
+      ];
+      
+      const randomResponse = placeholderResponses[Math.floor(Math.random() * placeholderResponses.length)];
+      const botMessage: Message = { role: 'assistant', content: randomResponse };
+      setMessages(prev => [...prev, botMessage]);
+    } finally {
       setIsLoading(false);
     }
   };
