@@ -7,6 +7,7 @@ import ChatHeader from './ChatHeader';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import { Message } from './types';
+import { MemoizedMarkdown } from './MemoizedMarkdown'; // Import markdown renderer
 
 // Initialize the client once (singleton pattern)
 const chatClient = new VirtueChatClient();
@@ -26,7 +27,6 @@ const VirtueChat = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Initialize or load conversation
     const initializeChat = async () => {
       try {
         const { conversationId: chatId, messages: chatHistory } = 
@@ -62,16 +62,13 @@ const VirtueChat = () => {
     setIsLoading(true);
 
     try {
-      // Use the chat client to handle the message
       const response = await chatClient.sendMessage({
         conversationId: conversationId as string,
         message: content,
         userId: user?.id
       });
       
-      if (response.error) {
-        throw new Error(response.errorDetails || 'Unknown error');
-      }
+      if (response.error) throw new Error(response.errorDetails || 'Unknown error');
       
       const botMessage: Message = { 
         role: 'assistant', 
@@ -87,7 +84,6 @@ const VirtueChat = () => {
         variant: "destructive",
       });
       
-      // Add fallback response
       const placeholderResponses = [
         "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
         "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
@@ -117,7 +113,7 @@ const VirtueChat = () => {
       )}
 
       <div
-        className={`bg-white rounded-2xl shadow-xl w-80 sm:w-96 overflow-hidden transition-all duration-300 ${
+        className={`bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-xl w-80 sm:w-96 overflow-hidden transition-all duration-300 ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
             : 'opacity-0 scale-95 translate-y-10 pointer-events-none hidden'
@@ -125,7 +121,44 @@ const VirtueChat = () => {
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >
         <ChatHeader onClose={toggleChat} />
-        <MessageList messages={messages} isLoading={isLoading} />
+        <div className="p-4 overflow-y-auto" style={{ maxHeight: '400px' }}>
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div 
+                key={index} 
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === 'user' 
+                      ? 'bg-virtus-primary text-white rounded-tr-none'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none'
+                  }`}
+                >
+                  {message.role === 'assistant' ? (
+                    <MemoizedMarkdown 
+                      content={message.content} 
+                      id={`msg-${index}`} 
+                    />
+                  ) : (
+                    <div>{message.content}</div>
+                  )}
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg rounded-tl-none">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} inputRef={inputRef} />
       </div>
     </div>
