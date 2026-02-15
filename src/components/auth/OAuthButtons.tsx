@@ -10,10 +10,10 @@ const OAuthButtons = ({ onOAuthSignIn }: OAuthButtonsProps) => {
     <div>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300" />
+          <div className="w-full border-t border-[#d2d2d7]" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">
+          <span className="px-2 bg-[#f5f5f7] text-[#86868b]">
             Or continue with
           </span>
         </div>
@@ -23,23 +23,23 @@ const OAuthButtons = ({ onOAuthSignIn }: OAuthButtonsProps) => {
         <button
           type="button"
           onClick={() => onOAuthSignIn('google')}
-          className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex justify-center py-2.5 px-4 border border-[#d2d2d7] rounded-xl bg-white text-sm font-medium text-[#86868b] hover:bg-[#f5f5f7] transition-colors"
         >
-          <FaGoogle className="h-5 w-5 text-red-500" />
+          <FaGoogle className="h-5 w-5 text-[#1d1d1f]" />
         </button>
         <button
           type="button"
           onClick={() => onOAuthSignIn('github')}
-          className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex justify-center py-2.5 px-4 border border-[#d2d2d7] rounded-xl bg-white text-sm font-medium text-[#86868b] hover:bg-[#f5f5f7] transition-colors"
         >
           <FaGithub className="h-5 w-5" />
         </button>
         <button
           type="button"
           onClick={() => onOAuthSignIn('facebook')}
-          className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          className="inline-flex justify-center py-2.5 px-4 border border-[#d2d2d7] rounded-xl bg-white text-sm font-medium text-[#86868b] hover:bg-[#f5f5f7] transition-colors"
         >
-          <FaFacebook className="h-5 w-5 text-blue-600" />
+          <FaFacebook className="h-5 w-5 text-[#1d1d1f]" />
         </button>
       </div>
     </div>

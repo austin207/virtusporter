@@ -57,7 +57,7 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
                   {...field}
                   type="email"
                   placeholder="you@example.com"
-                  className="bg-gray-50 border-gray-300 focus:ring-red-500 focus:border-red-500"
+                  className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
                 />
               </FormControl>
               <FormMessage />
@@ -77,12 +77,12 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  className="data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
+                  className="data-[state=checked]:bg-[#1d1d1f] data-[state=checked]:border-[#1d1d1f]"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel className="font-normal">
-                  I accept the <Link to="/terms-of-service" className="text-red-500 hover:underline">Terms of Service</Link> and <Link to="/privacy-policy" className="text-red-500 hover:underline">Privacy Policy</Link>
+                  I accept the <Link to="/terms-of-service" className="text-[#1d1d1f] font-medium hover:underline">Terms of Service</Link> and <Link to="/privacy-policy" className="text-[#1d1d1f] font-medium hover:underline">Privacy Policy</Link>
                 </FormLabel>
                 <FormMessage />
               </div>
@@ -93,7 +93,7 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
         <div>
           <Button
             type="submit"
-            className={cn("w-full bg-red-500 hover:bg-red-600")}
+            className={cn("w-full bg-[#1d1d1f] hover:bg-[#424245] rounded-full")}
             isLoading={loading}
           >
             Sign up

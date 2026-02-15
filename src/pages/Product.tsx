@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
 
 interface Feature {
   icon: React.ReactNode;
@@ -155,74 +154,59 @@ const Product = () => {
     return () => observer.disconnect();
   }, []);
 
+  const renderFeatureGrid = (items: Feature[]) => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {items.map((feature, index) => (
+        <div
+          key={index}
+          className={`bg-white rounded-2xl transition-all duration-300 ${
+            index === 0
+              ? 'md:col-span-2 p-9 flex flex-col md:flex-row items-start gap-6'
+              : 'p-7'
+          }`}
+        >
+          <div className={`flex items-center justify-center bg-[#f5f5f7] text-[#1d1d1f] flex-shrink-0 ${
+            index === 0 ? 'w-14 h-14 rounded-2xl' : 'w-10 h-10 rounded-xl mb-4'
+          }`}>
+            {feature.icon}
+          </div>
+          <div>
+            <h3 className={`font-semibold text-[#1d1d1f] ${index === 0 ? 'text-xl mb-3' : 'text-lg mb-2'}`}>
+              {feature.title}
+            </h3>
+            <p className={`text-[#86868b] leading-relaxed ${index === 0 ? 'text-sm' : 'text-sm'}`}>
+              {feature.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-grow pt-16">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center lg:space-x-16">
-              <div className="lg:w-1/2 lg:pr-8 mb-10 lg:mb-0 text-center lg:text-left">
-                <h1 className="heading-lg text-gray-900 mb-6">
-                  Meet the <span className="text-virtus-primary">Autonomous Porter</span> Robot
-                </h1>
-                <p className="subtitle text-gray-600 mb-8">
-                  Our state-of-the-art autonomous porter robot combines cutting-edge technology with thoughtful design to transform the airport experience for travelers and create new revenue opportunities for airports.
-                </p>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-                  <Button to="/contact" size="lg">Request a Demo</Button>
-                  <Button to="/service" variant="outline" size="lg">Revenue Model</Button>
-                </div>
-              </div>
-              
-              <div className="lg:w-1/2">
-                <div className="aspect-w-4 aspect-h-3 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                  <div className="bg-gradient-to-r from-virtus-primary/10 to-virtus-accent/10 w-full h-full flex items-center justify-center p-8">
-                    <div className="relative w-full max-w-md">
-                      <div className="w-full h-64 bg-gray-100 rounded-xl shadow-sm flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-virtus-primary mb-2">Autonomous Porter</div>
-                          <div className="text-gray-600 text-sm">Interactive 3D Model Coming Soon</div>
-                        </div>
-                      </div>
-                      
-                      {/* Feature callouts */}
-                      <div className="absolute -top-4 -right-4 bg-white p-2 rounded-lg shadow-md border border-gray-100">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 rounded-full bg-virtus-primary flex items-center justify-center text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                            </svg>
-                          </div>
-                          <div className="text-xs font-medium">Smart Navigation</div>
-                        </div>
-                      </div>
-                      
-                      <div className="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-white p-2 rounded-lg shadow-md border border-gray-100">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 rounded-full bg-virtus-secondary flex items-center justify-center text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                          </div>
-                          <div className="text-xs font-medium">High Capacity</div>
-                        </div>
-                      </div>
-                      
-                      <div className="absolute -bottom-4 right-1/3 bg-white p-2 rounded-lg shadow-md border border-gray-100">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 rounded-full bg-virtus-accent flex items-center justify-center text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                          </div>
-                          <div className="text-xs font-medium">Smart Display</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        <section className="relative py-24 lg:py-32 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="heading-lg text-[#1d1d1f] mb-6">
+              Meet the Autonomous Porter Robot
+            </h1>
+            <p className="subtitle mx-auto mb-10">
+              Our state-of-the-art autonomous porter robot combines cutting-edge technology with thoughtful design to transform the airport experience.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+              <Button to="/contact" size="lg">Request a Demo</Button>
+              <Button to="/service" variant="outline" size="lg">Revenue Model</Button>
+            </div>
+
+            <div className="mt-16">
+              <div className="bg-[#f5f5f7] rounded-2xl p-12 max-w-3xl mx-auto">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#1d1d1f] mb-2">Autonomous Porter</div>
+                  <div className="text-[#86868b] text-sm">Interactive 3D Model Coming Soon</div>
                 </div>
               </div>
             </div>
@@ -230,21 +214,21 @@ const Product = () => {
         </section>
 
         {/* Product Details Section */}
-        <section ref={sectionRef} id="features" className="py-20">
+        <section ref={sectionRef} id="features" className="py-24 lg:py-32 bg-[#f5f5f7]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-gray-900 mb-4">Designed for Excellence</h2>
-              <p className="subtitle text-gray-600">
+              <h2 className="heading-lg text-[#1d1d1f] mb-4">Designed for Excellence</h2>
+              <p className="subtitle mx-auto">
                 Our autonomous porter robots combine cutting-edge technology with thoughtful design to transform the airport experience.
               </p>
             </div>
 
             {/* Tab Navigation */}
             <div className="flex justify-center mb-12">
-              <div className="inline-flex p-1 bg-gray-100 rounded-full">
+              <div className="inline-flex p-1 bg-white rounded-full">
                 <button
                   className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'features' ? 'bg-white shadow-sm text-virtus-primary' : 'text-gray-600 hover:text-gray-900'
+                    activeTab === 'features' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
                   }`}
                   onClick={() => handleTabChange('features')}
                 >
@@ -252,7 +236,7 @@ const Product = () => {
                 </button>
                 <button
                   className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'technology' ? 'bg-white shadow-sm text-virtus-primary' : 'text-gray-600 hover:text-gray-900'
+                    activeTab === 'technology' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
                   }`}
                   onClick={() => handleTabChange('technology')}
                 >
@@ -260,7 +244,7 @@ const Product = () => {
                 </button>
                 <button
                   className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'sustainability' ? 'bg-white shadow-sm text-virtus-primary' : 'text-gray-600 hover:text-gray-900'
+                    activeTab === 'sustainability' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
                   }`}
                   onClick={() => handleTabChange('sustainability')}
                 >
@@ -271,100 +255,40 @@ const Product = () => {
 
             {/* Tab Content */}
             <div className={`transition-all duration-500 ${isInView ? 'opacity-100' : 'opacity-0'}`}>
-              {/* Features Tab */}
               <div className={`transition-opacity duration-500 ${activeTab === 'features' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {features.map((feature, index) => (
-                    <div 
-                      key={index} 
-                      className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex">
-                        <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-virtus-primary/10 text-virtus-primary mr-4">
-                          {feature.icon}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                          <p className="text-gray-600 text-sm">{feature.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {renderFeatureGrid(features)}
               </div>
-
-              {/* Technology Tab */}
               <div className={`transition-opacity duration-500 ${activeTab === 'technology' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {techFeatures.map((feature, index) => (
-                    <div 
-                      key={index} 
-                      className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex">
-                        <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-virtus-accent/10 text-virtus-accent mr-4">
-                          {feature.icon}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                          <p className="text-gray-600 text-sm">{feature.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {renderFeatureGrid(techFeatures)}
               </div>
-
-              {/* Sustainability Tab */}
               <div className={`transition-opacity duration-500 ${activeTab === 'sustainability' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {sustainabilityFeatures.map((feature, index) => (
-                    <div 
-                      key={index} 
-                      className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex">
-                        <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-virtus-secondary/10 text-virtus-secondary mr-4">
-                          {feature.icon}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                          <p className="text-gray-600 text-sm">{feature.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {renderFeatureGrid(sustainabilityFeatures)}
               </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gray-50 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-virtus-primary to-virtus-accent rounded-2xl shadow-lg overflow-hidden">
-              <div className="px-6 py-12 md:p-12 text-center md:text-left md:flex items-center justify-between">
-                <div className="md:max-w-2xl mb-8 md:mb-0">
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to transform your airport experience?</h2>
-                  <p className="text-white/80 text-lg">
-                    Schedule a demo to see our autonomous porter robots in action.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
-                  <Button to="/contact" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
-                    Request a Demo
-                  </Button>
-                  <Button to="/service" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
-                    Learn About Pricing
-                  </Button>
-                </div>
-              </div>
+        <section className="py-24 lg:py-32 bg-[#1d1d1f]">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
+              Ready to transform your airport experience?
+            </h2>
+            <p className="text-[#86868b] text-lg mb-10 max-w-2xl mx-auto">
+              Schedule a demo to see our autonomous porter robots in action.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+              <Button to="/contact" className="bg-white text-[#1d1d1f] hover:bg-[#f5f5f7]" size="lg">
+                Request a Demo
+              </Button>
+              <Button to="/service" className="bg-transparent text-white border border-white hover:bg-white hover:text-[#1d1d1f]" size="lg">
+                Learn About Pricing
+              </Button>
             </div>
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );

@@ -109,82 +109,62 @@ const Service = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-grow pt-16">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center lg:space-x-16">
-              <div className="lg:w-1/2 lg:pr-8 mb-10 lg:mb-0 text-center lg:text-left">
-                <h1 className="heading-lg text-gray-900 mb-6">
-                  Custom <span className="text-virtus-primary">Robotics Solutions</span> for Your Business
-                </h1>
-                <p className="subtitle text-gray-600 mb-8">
-                  VirtusCo specializes in creating tailored robotics solutions that address your unique business challenges. From ROS development to complete robotics systems, we adapt our approach to your needs and budget.
-                </p>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-                  <Button to="/contact" size="lg">Get a Consultation</Button>
-                  <Button to="/product" variant="outline" size="lg">Explore Our Products</Button>
-                </div>
-              </div>
-              
-              <div className="lg:w-1/2">
-                <div className="aspect-w-4 aspect-h-3 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                  <div className="bg-gradient-to-r from-virtus-primary/10 to-virtus-accent/10 w-full h-full flex items-center justify-center p-8">
-                    <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-                      {services.slice(0, 4).map((service, index) => (
-                        <div key={index} className="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
-                          <div className="w-12 h-12 rounded-full bg-virtus-primary/10 flex items-center justify-center text-virtus-primary mb-3">
-                            {service.icon}
-                          </div>
-                          <h3 className="text-sm font-semibold text-gray-900">{service.title}</h3>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <section className="relative py-24 lg:py-32 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="heading-lg text-[#1d1d1f] mb-6">
+              Custom Robotics Solutions for Your Business
+            </h1>
+            <p className="subtitle mx-auto mb-10">
+              VirtusCo specializes in creating tailored robotics solutions that address your unique business challenges. From ROS development to complete robotics systems, we adapt our approach to your needs and budget.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+              <Button to="/contact" size="lg">Get a Consultation</Button>
+              <Button to="/product" variant="outline" size="lg">Explore Our Products</Button>
             </div>
           </div>
         </section>
 
         {/* Services Section */}
-        <section ref={sectionRef} id="services" className="py-20">
+        <section ref={sectionRef} id="services" className="py-24 lg:py-32 bg-[#f5f5f7]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-gray-900 mb-4">Our Services</h2>
-              <p className="subtitle text-gray-600">
+              <h2 className="heading-lg text-[#1d1d1f] mb-4">Our Services</h2>
+              <p className="subtitle mx-auto">
                 We offer a comprehensive range of robotics solutions, from specialized development to complete systems.
               </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div className="space-y-4">
               {services.map((service, index) => (
-                <div 
-                  key={index} 
-                  className={`bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-700 transform ${
+                <div
+                  key={index}
+                  className={`bg-white rounded-2xl transition-all duration-700 transform ${
                     isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-                  }`}
+                  } ${index % 2 === 0 ? 'p-8 md:p-10' : 'p-7 md:p-8'}`}
                   style={{ transitionDelay: `${150 * index}ms` }}
                 >
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-virtus-primary/10 flex items-center justify-center text-virtus-primary mr-4">
+                  <div className="flex flex-col md:flex-row md:items-start gap-5">
+                    <div className={`flex-shrink-0 flex items-center justify-center text-[#1d1d1f] ${
+                      index % 2 === 0
+                        ? 'w-14 h-14 rounded-2xl bg-[#f5f5f7]'
+                        : 'w-11 h-11 rounded-xl bg-[#f5f5f7]'
+                    }`}>
                       {service.icon}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h3>
-                      <p className="text-gray-600 text-sm mb-4">{service.description}</p>
-                      
-                      <ul className="space-y-2">
+                    <div className="flex-1">
+                      <h3 className={`font-semibold text-[#1d1d1f] mb-2 ${index % 2 === 0 ? 'text-xl' : 'text-lg'}`}>{service.title}</h3>
+                      <p className="text-[#86868b] text-sm mb-4">{service.description}</p>
+
+                      <div className="flex flex-wrap gap-2">
                         {service.features.map((feature, i) => (
-                          <li key={i} className="flex items-start">
-                            <svg className="h-5 w-5 text-virtus-primary flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span className="text-sm text-gray-600">{feature}</span>
-                          </li>
+                          <span key={i} className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[#f5f5f7] text-[#3c3c43]">
+                            {feature}
+                          </span>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -194,35 +174,35 @@ const Service = () => {
         </section>
 
         {/* Process Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-24 lg:py-32 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-gray-900 mb-4">Our Approach</h2>
-              <p className="subtitle text-gray-600">
+              <h2 className="heading-lg text-[#1d1d1f] mb-4">Our Approach</h2>
+              <p className="subtitle mx-auto">
                 We adapt our process to your specific needs and budget constraints, ensuring maximum value for your investment.
               </p>
             </div>
-            
+
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-gray-200 transform md:translate-x-0 translate-x-6"></div>
-              
+              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-[2px] bg-[#d2d2d7] transform md:translate-x-0 translate-x-6"></div>
+
               <div className="space-y-12">
                 {processSteps.map((step, index) => (
                   <div key={index} className={`relative flex flex-col md:flex-row items-start md:even:flex-row-reverse`}>
-                    <div className="w-12 h-12 rounded-full bg-white border-4 border-virtus-primary/20 absolute left-0 md:left-1/2 transform translate-x-0 md:-translate-x-1/2 z-10 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-virtus-primary/10 flex items-center justify-center text-virtus-primary">
+                    <div className="w-12 h-12 rounded-full bg-white border-2 border-[#d2d2d7] absolute left-0 md:left-1/2 transform translate-x-0 md:-translate-x-1/2 z-10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-[#f5f5f7] flex items-center justify-center text-[#1d1d1f]">
                         {step.icon}
                       </div>
                     </div>
-                    
+
                     <div className={`pl-16 md:pl-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16 text-right' : 'md:pl-16'}`}>
-                      <div className={`bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-lg ${index % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
-                        <p className="text-gray-600 text-sm">{step.description}</p>
+                      <div className={`bg-[#f5f5f7] p-6 rounded-2xl max-w-lg ${index % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}>
+                        <h3 className="text-xl font-semibold text-[#1d1d1f] mb-2">{step.title}</h3>
+                        <p className="text-[#86868b] text-sm">{step.description}</p>
                       </div>
                     </div>
-                    
+
                     <div className="md:w-1/2"></div>
                   </div>
                 ))}
@@ -232,77 +212,77 @@ const Service = () => {
         </section>
 
         {/* Case Studies Section */}
-        <section className="py-20">
+        <section className="py-24 lg:py-32 bg-[#f5f5f7]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-gray-900 mb-4">Tailored to Your Budget</h2>
-              <p className="subtitle text-gray-600">
+              <h2 className="heading-lg text-[#1d1d1f] mb-4">Tailored to Your Budget</h2>
+              <p className="subtitle mx-auto">
                 We understand that every business has different financial constraints. Our approach ensures you get the most value within your budget.
               </p>
             </div>
-            
-            <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+
+            <div className="bg-white rounded-2xl overflow-hidden">
               <div className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="md:col-span-1">
-                    <h3 className="text-xl font-semibold text-virtus-primary mb-4">Flexible Scope</h3>
-                    <p className="text-gray-600 text-sm mb-6">
+                    <h3 className="text-xl font-semibold text-[#1d1d1f] mb-4">Flexible Scope</h3>
+                    <p className="text-[#86868b] text-sm mb-6">
                       Whether you need a targeted ROS development project or a complete robotics solution, we tailor our services to match your requirements and budget constraints.
                     </p>
                     <div className="space-y-3">
                       <div className="flex items-center">
-                        <svg className="h-5 w-5 text-virtus-primary flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        <span className="text-sm text-gray-600">Feature prioritization</span>
+                        <span className="text-sm text-[#86868b]">Feature prioritization</span>
                       </div>
                       <div className="flex items-center">
-                        <svg className="h-5 w-5 text-virtus-primary flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        <span className="text-sm text-gray-600">Phased implementation</span>
+                        <span className="text-sm text-[#86868b]">Phased implementation</span>
                       </div>
                       <div className="flex items-center">
-                        <svg className="h-5 w-5 text-virtus-primary flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        <span className="text-sm text-gray-600">Technology selection</span>
+                        <span className="text-sm text-[#86868b]">Technology selection</span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="md:col-span-2">
-                    <div className="bg-gray-50 p-6 rounded-lg">
-                      <h4 className="text-lg font-medium text-gray-900 mb-4">Example: Budget-Based Approaches</h4>
-                      
+                    <div className="bg-[#f5f5f7] p-6 rounded-2xl">
+                      <h4 className="text-lg font-medium text-[#1d1d1f] mb-4">Budget-Based Approaches</h4>
+
                       <div className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div className="bg-white p-4 rounded shadow-sm">
-                            <div className="text-sm font-semibold text-virtus-primary mb-2">Focused Solution</div>
-                            <div className="text-xs text-gray-600 mb-3">For smaller budgets</div>
-                            <div className="text-xs text-gray-600">
+                          <div className="bg-white p-5 rounded-xl">
+                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Focused Solution</div>
+                            <div className="text-xs text-[#86868b] mb-3">For smaller budgets</div>
+                            <div className="text-xs text-[#86868b]">
                               Targeted ROS development for specific functionality, with potential for future expansion.
                             </div>
                           </div>
-                          
-                          <div className="bg-white p-4 rounded shadow-sm">
-                            <div className="text-sm font-semibold text-virtus-primary mb-2">Balanced Approach</div>
-                            <div className="text-xs text-gray-600 mb-3">For medium budgets</div>
-                            <div className="text-xs text-gray-600">
+
+                          <div className="bg-white p-5 rounded-xl">
+                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Balanced Approach</div>
+                            <div className="text-xs text-[#86868b] mb-3">For medium budgets</div>
+                            <div className="text-xs text-[#86868b]">
                               Core robotics solution with essential features and reasonable customization options.
                             </div>
                           </div>
-                          
-                          <div className="bg-white p-4 rounded shadow-sm">
-                            <div className="text-sm font-semibold text-virtus-primary mb-2">Comprehensive System</div>
-                            <div className="text-xs text-gray-600 mb-3">For larger budgets</div>
-                            <div className="text-xs text-gray-600">
+
+                          <div className="bg-white p-5 rounded-xl">
+                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Comprehensive System</div>
+                            <div className="text-xs text-[#86868b] mb-3">For larger budgets</div>
+                            <div className="text-xs text-[#86868b]">
                               Complete end-to-end solution with advanced features, integrations, and ongoing support.
                             </div>
                           </div>
                         </div>
-                        
-                        <div className="text-sm text-gray-600">
+
+                        <div className="text-sm text-[#86868b]">
                           Every project is unique, and we'll work with you to find the right balance between your requirements, timeline, and budget. Our goal is to deliver maximum value regardless of project size.
                         </div>
                       </div>
@@ -315,30 +295,26 @@ const Service = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-virtus-primary to-virtus-accent rounded-2xl shadow-lg overflow-hidden">
-              <div className="px-6 py-12 md:p-12 text-center md:text-left md:flex items-center justify-between">
-                <div className="md:max-w-2xl mb-8 md:mb-0">
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to discuss your project?</h2>
-                  <p className="text-white/80 text-lg">
-                    Contact us for a free consultation to explore how our robotics solutions can address your business challenges.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
-                  <Button to="/contact" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
-                    Contact Us
-                  </Button>
-                  <Button to="/product" className="bg-white text-virtus-primary hover:bg-white/90" size="lg">
-                    Explore Products
-                  </Button>
-                </div>
-              </div>
+        <section className="py-24 lg:py-32 bg-[#1d1d1f]">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
+              Ready to discuss your project?
+            </h2>
+            <p className="text-[#86868b] text-lg mb-10 max-w-2xl mx-auto">
+              Contact us for a free consultation to explore how our robotics solutions can address your business challenges.
+            </p>
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+              <Button to="/contact" className="bg-white text-[#1d1d1f] hover:bg-[#f5f5f7]" size="lg">
+                Contact Us
+              </Button>
+              <Button to="/product" className="bg-transparent text-white border border-white hover:bg-white hover:text-[#1d1d1f]" size="lg">
+                Explore Products
+              </Button>
             </div>
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );

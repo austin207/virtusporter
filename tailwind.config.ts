@@ -67,11 +67,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				virtus: {
-					primary: '#000000',
-					secondary: '#32D74B',
+					primary: '#1d1d1f',
+					secondary: '#86868b',
 					accent: '#ea384c',
-					neutral: '#F2F2F7',
-					dark: '#1C1C1E',
+					neutral: '#f5f5f7',
+					dark: '#1d1d1f',
 					red: '#ea384c',
 					'red-dark': '#d02336',
 					'red-light': '#f15d6d',

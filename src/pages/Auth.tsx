@@ -117,18 +117,21 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          <span className="text-red-500">Virtus</span>Co
+        <div className="flex justify-center mb-4">
+          <img src="/favicon.ico" alt="VirtusCo" className="w-10 h-10" />
+        </div>
+        <h2 className="text-center text-2xl font-semibold text-[#1d1d1f]" style={{ letterSpacing: '-0.02em' }}>
+          {isLogin ? "Sign in to VirtusCo" : "Create your account"}
         </h2>
-        <h3 className="mt-2 text-center text-2xl font-bold text-gray-900">
-          {isLogin ? "Sign in to your account" : "Create a new account"}
-        </h3>
+        <p className="mt-2 text-center text-sm text-[#86868b]">
+          {isLogin ? "Welcome back" : "Get started with VirtusCo"}
+        </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-[#f5f5f7] py-8 px-6 rounded-2xl sm:px-10">
           {oauthError && (
             <Alert variant="destructive" className="mb-6">
               <AlertCircle className="h-4 w-4" />
@@ -149,22 +152,22 @@ const Auth = () => {
             <div className="mt-6">
               <button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="w-full inline-flex justify-center py-2.5 px-4 border border-[#d2d2d7] rounded-full bg-white text-sm font-medium text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors"
                 onClick={() => setIsLogin(!isLogin)}
               >
                 {isLogin ? "Create a new account" : "Sign in to your account"}
               </button>
             </div>
           </div>
-          
+
           {isLogin && (
             <div className="mt-4 text-center">
-              <Link to="/forgot-password" className="text-sm text-red-500 hover:underline">
+              <Link to="/forgot-password" className="text-sm text-[#86868b] hover:text-[#1d1d1f] hover:underline">
                 Forgot your password?
               </Link>
             </div>
           )}
-          
+
           <AuthSecurity />
         </div>
       </div>

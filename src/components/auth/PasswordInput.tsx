@@ -34,7 +34,7 @@ const PasswordInput = ({
                 {...field}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="bg-gray-50 border-gray-300 focus:ring-red-500 focus:border-red-500"
+                className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
               />
               <button
                 type="button"

@@ -1,6 +1,5 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
 
 interface Feature {
   icon: React.ReactNode;
@@ -9,7 +8,6 @@ interface Feature {
 }
 
 const Features = () => {
-  const [activeFeature, setActiveFeature] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -53,14 +51,6 @@ const Features = () => {
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % features.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [features.length]);
-
-  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -68,7 +58,7 @@ const Features = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -79,108 +69,72 @@ const Features = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-white py-24">
+    <section ref={sectionRef} className="bg-[#f5f5f7] py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="heading-lg text-gray-900 mb-4">Designed for Exceptional Experience</h2>
-          <p className="subtitle text-gray-600">
+          <h2 className="heading-lg text-[#1d1d1f] mb-4">Designed for Exceptional Experience</h2>
+          <p className="subtitle mx-auto">
             Our autonomous porter robots combine cutting-edge technology with thoughtful design to transform the airport experience.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Feature Showcase */}
-          <div className="order-2 lg:order-1">
-            <div className={`transition-all duration-700 ease-out transform ${isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <ul className="space-y-8">
-                {features.map((feature, index) => (
-                  <li 
-                    key={index} 
-                    className={cn(
-                      "flex p-6 rounded-xl transition-all duration-300 cursor-pointer",
-                      activeFeature === index 
-                        ? "bg-virtus-primary/5 border-l-4 border-virtus-primary" 
-                        : "hover:bg-gray-50"
-                    )}
-                    onClick={() => setActiveFeature(index)}
-                  >
-                    <div className={cn(
-                      "flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full mr-4 transition-colors",
-                      activeFeature === index 
-                        ? "bg-virtus-primary text-white" 
-                        : "bg-gray-100 text-gray-600"
-                    )}>
-                      {feature.icon}
-                    </div>
-                    <div>
-                      <h3 className={cn(
-                        "text-lg font-semibold mb-1 transition-colors",
-                        activeFeature === index ? "text-virtus-primary" : "text-gray-900"
-                      )}>
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm">{feature.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Featured card - wide horizontal */}
+          <div
+            className={`md:col-span-2 bg-white rounded-2xl p-10 flex flex-col md:flex-row items-start gap-6 transition-all duration-700 ease-out ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#f5f5f7] text-[#1d1d1f] flex-shrink-0">
+              {features[0].icon}
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold text-[#1d1d1f] mb-3">{features[0].title}</h3>
+              <p className="text-[#86868b] text-base leading-relaxed">{features[0].description}</p>
             </div>
           </div>
 
-          {/* Visual Representation */}
-          <div className="order-1 lg:order-2">
-            <div className={`transition-all duration-700 delay-300 ease-out transform ${isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <div className="relative aspect-square max-w-md mx-auto">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {/* Circle background */}
-                  <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-                    {/* Inner circle with gradient */}
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-virtus-primary/20 to-virtus-accent/20 flex items-center justify-center">
-                      {/* Robot visualization - simplified for placeholder */}
-                      <div className="w-3/5 h-4/5 bg-white rounded-2xl shadow-lg relative">
-                        
-                        {/* Robot screen */}
-                        <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-4/5 h-1/3 bg-gray-800 rounded-lg flex items-center justify-center">
-                          <div className="text-white text-xs text-center">Interactive Display</div>
-                        </div>
-                        
-                        {/* Robot body details */}
-                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-4/5 h-1/3 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <div className="w-1/2 h-2/3 bg-virtus-primary/20 rounded-md mx-1"></div>
-                          <div className="w-1/2 h-2/3 bg-virtus-accent/20 rounded-md mx-1"></div>
-                        </div>
-                        
-                        {/* Robot wheels */}
-                        <div className="absolute -bottom-3 left-6 w-8 h-8 bg-gray-800 rounded-full"></div>
-                        <div className="absolute -bottom-3 right-6 w-8 h-8 bg-gray-800 rounded-full"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Feature highlights */}
-                {features.map((feature, index) => (
-                  <div 
-                    key={index}
-                    className={cn(
-                      "absolute glass-card p-3 rounded-lg shadow-md transition-all duration-500",
-                      activeFeature === index ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                    )}
-                    style={{
-                      top: index === 0 ? '10%' : index === 1 ? '30%' : index === 2 ? '70%' : '90%',
-                      left: index === 0 || index === 2 ? '-10%' : 'auto',
-                      right: index === 1 || index === 3 ? '-10%' : 'auto',
-                    }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-virtus-primary flex items-center justify-center text-white">
-                        {feature.icon}
-                      </div>
-                      <div className="text-sm font-medium">{feature.title}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Tall right card */}
+          <div
+            className={`bg-white rounded-2xl p-7 transition-all duration-700 ease-out ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+            style={{ transitionDelay: '150ms' }}
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#f5f5f7] text-[#1d1d1f] flex items-center justify-center mb-4">
+              {features[1].icon}
+            </div>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mb-2">{features[1].title}</h3>
+            <p className="text-[#86868b] text-sm leading-relaxed">{features[1].description}</p>
+          </div>
+
+          {/* Bottom left card */}
+          <div
+            className={`bg-white rounded-2xl p-7 transition-all duration-700 ease-out ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+            style={{ transitionDelay: '300ms' }}
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#f5f5f7] text-[#1d1d1f] flex items-center justify-center mb-4">
+              {features[2].icon}
+            </div>
+            <h3 className="text-lg font-semibold text-[#1d1d1f] mb-2">{features[2].title}</h3>
+            <p className="text-[#86868b] text-sm leading-relaxed">{features[2].description}</p>
+          </div>
+
+          {/* Bottom wide card - horizontal */}
+          <div
+            className={`md:col-span-2 bg-white rounded-2xl p-8 flex flex-col md:flex-row items-start gap-5 transition-all duration-700 ease-out ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+            style={{ transitionDelay: '450ms' }}
+          >
+            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#f5f5f7] text-[#1d1d1f] flex-shrink-0">
+              {features[3].icon}
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-[#1d1d1f] mb-2">{features[3].title}</h3>
+              <p className="text-[#86868b] text-sm leading-relaxed">{features[3].description}</p>
             </div>
           </div>
         </div>

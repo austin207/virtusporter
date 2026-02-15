@@ -13,7 +13,7 @@ import Service from "./pages/Service";
 import About from "./pages/About";
 //import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
-import Careers from "./pages/Careers";
+
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import VirtueChat from "./components/chat/VirtueChat";
@@ -75,7 +75,7 @@ const App = () => {
               <Route path="/about" element={<About />} />
 
               <Route path="/contact" element={<Contact />} />
-              <Route path="/careers" element={<Careers />} />
+
               <Route path="/auth" element={<Auth />} />
               <Route path="/auth/callback" element={<Navigate to="/auth" />} />
               <Route path="/founders/antony-austin" element={<FounderAntony />} />

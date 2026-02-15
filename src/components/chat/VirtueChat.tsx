@@ -88,7 +88,7 @@ const VirtueChat = () => {
         "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
         "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
         "Our services include custom ROS development, robot prototyping, and full robotics implementation.",
-        "We're currently hiring for several positions! Check out our Careers page for more details.",
+        "Our team of talented engineers is dedicated to pushing the boundaries of autonomous robotics.",
         "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions."
       ];
       

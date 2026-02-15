@@ -45,7 +45,7 @@ const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
                   {...field}
                   type="email"
                   placeholder="you@example.com"
-                  className="bg-gray-50 border-gray-300 focus:ring-red-500 focus:border-red-500"
+                  className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
                 />
               </FormControl>
               <FormMessage />
@@ -58,7 +58,7 @@ const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
         <div>
           <Button
             type="submit"
-            className={cn("w-full bg-red-500 hover:bg-red-600")}
+            className={cn("w-full bg-[#1d1d1f] hover:bg-[#424245] rounded-full")}
             isLoading={loading}
           >
             Sign in
