@@ -120,7 +120,7 @@ const Auth = () => {
     <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-4">
-          <img src="/favicon.ico" alt="VirtusCo" className="w-10 h-10" />
+          <img src="/favicon.ico" alt="VirtusCo" className="w-7 h-10" />
         </div>
         <h2 className="text-center text-2xl font-semibold text-[#1d1d1f]" style={{ letterSpacing: '-0.02em' }}>
           {isLogin ? "Sign in to VirtusCo" : "Create your account"}
