@@ -1,7 +1,5 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
@@ -12,10 +10,10 @@ type PasswordInputProps = {
   showStrengthIndicator?: boolean;
 };
 
-const PasswordInput = ({ 
-  name, 
-  label, 
-  showStrengthIndicator = false 
+const PasswordInput = ({
+  name,
+  label,
+  showStrengthIndicator = false
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const form = useFormContext();
@@ -26,26 +24,27 @@ const PasswordInput = ({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <div className="relative">
-              <Input
+        <FormItem className="space-y-0">
+          <FormLabel className="field-label">{label}</FormLabel>
+          <div className="relative">
+            <FormControl>
+              <input
                 {...field}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
+                className="field pr-12"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </FormControl>
-          <FormMessage />
+            </FormControl>
+            <button
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-quiet transition-colors hover:text-ink"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+          <FormMessage className="mt-1.5 font-mono text-[11px] font-normal tracking-wide text-accent-ink" />
           {showStrengthIndicator && <PasswordStrengthIndicator password={passwordValue} />}
         </FormItem>
       )}

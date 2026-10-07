@@ -10,7 +10,7 @@ export async function fetchEmployeeProducts(): Promise<Product[]> {
     .order('created_at', { ascending: false });
     
   if (error) {
-    console.error('Error fetching employee products:', error);
+    console.warn('Error fetching employee products:', error);
     throw error;
   }
   
@@ -33,7 +33,7 @@ export async function createEmployeeProduct(product: {
     .single();
     
   if (error) {
-    console.error('Error creating employee product:', error);
+    console.warn('Error creating employee product:', error);
     throw error;
   }
   

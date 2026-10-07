@@ -1,12 +1,9 @@
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/Button";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "./PasswordInput";
 
@@ -32,6 +29,8 @@ type SignupFormProps = {
   loading: boolean;
 };
 
+const errorText = "mt-1.5 font-mono text-[11px] font-normal tracking-wide text-accent-ink";
+
 const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -45,22 +44,23 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-5">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className="space-y-0">
+              <FormLabel className="field-label">Email</FormLabel>
               <FormControl>
-                <Input
+                <input
                   {...field}
                   type="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
-                  className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
+                  className="field"
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={errorText} />
             </FormItem>
           )}
         />
@@ -72,30 +72,26 @@ const SignupForm = ({ onSubmit, loading }: SignupFormProps) => {
           control={form.control}
           name="acceptTerms"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 py-2">
+            <FormItem className="flex flex-row items-start gap-3 space-y-0 py-1">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  className="data-[state=checked]:bg-[#1d1d1f] data-[state=checked]:border-[#1d1d1f]"
+                  className="mt-0.5 rounded-none border-ink/40 data-[state=checked]:border-ink data-[state=checked]:bg-ink data-[state=checked]:text-paper"
                 />
               </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel className="font-normal">
-                  I accept the <Link to="/terms-of-service" className="text-[#1d1d1f] font-medium hover:underline">Terms of Service</Link> and <Link to="/privacy-policy" className="text-[#1d1d1f] font-medium hover:underline">Privacy Policy</Link>
+              <div className="space-y-1 leading-snug">
+                <FormLabel className="font-serif text-[0.95rem] font-normal text-body">
+                  I accept the <Link to="/terms-of-service" className="ulink text-ink">Terms of Service</Link> and <Link to="/privacy-policy" className="ulink text-ink">Privacy Policy</Link>
                 </FormLabel>
-                <FormMessage />
+                <FormMessage className={errorText} />
               </div>
             </FormItem>
           )}
         />
 
-        <div>
-          <Button
-            type="submit"
-            className={cn("w-full bg-[#1d1d1f] hover:bg-[#424245] rounded-full")}
-            isLoading={loading}
-          >
+        <div className="pt-2">
+          <Button type="submit" size="lg" className="w-full" isLoading={loading}>
             Sign up
           </Button>
         </div>

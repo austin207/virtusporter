@@ -62,7 +62,7 @@ export class VirtueChatClient {
         .single();
       
       if (fetchError && fetchError.code !== 'PGRST116') {
-        console.error('Error fetching conversation:', fetchError);
+        console.warn('Error fetching conversation:', fetchError);
         throw new Error('Failed to fetch existing conversations');
       }
       
@@ -75,7 +75,7 @@ export class VirtueChatClient {
           .order('created_at', { ascending: true });
           
         if (messageError) {
-          console.error('Error fetching messages:', messageError);
+          console.warn('Error fetching messages:', messageError);
           throw new Error('Failed to fetch messages');
         }
         
@@ -105,7 +105,7 @@ export class VirtueChatClient {
           .single();
           
         if (createError) {
-          console.error('Error creating conversation:', createError);
+          console.warn('Error creating conversation:', createError);
           throw new Error('Failed to create new conversation');
         }
         
@@ -124,7 +124,7 @@ export class VirtueChatClient {
           });
           
         if (welcomeError) {
-          console.error('Error saving welcome message:', welcomeError);
+          console.warn('Error saving welcome message:', welcomeError);
         }
         
         // Store in memory
@@ -138,7 +138,7 @@ export class VirtueChatClient {
         };
       }
     } catch (error) {
-      console.error('Error initializing conversation:', error);
+      console.warn('Error initializing conversation:', error);
       
       // Fallback to in-memory conversation
       const conversationId = uuidv4();
@@ -220,8 +220,10 @@ export class VirtueChatClient {
           apiResponse = data;
           break; // Success, exit retry loop
         } catch (err) {
-          console.error(`API call attempt ${attempt + 1} failed:`, err);
+          console.warn(`Virtue API attempt ${attempt + 1} failed:`, err);
           apiError = err;
+          // Network-level failure (host unreachable): retrying will not help, fail fast
+          if (err instanceof TypeError || /fetch|network|Failed to send/i.test(String((err as Error)?.message))) break;
           
           // Only wait if we're going to retry
           if (attempt < this.retryCount) {
@@ -261,7 +263,7 @@ export class VirtueChatClient {
         messages: [...conversation.messages]
       };
     } catch (error) {
-      console.error('Error in sendMessage:', error);
+      console.warn('Error in sendMessage:', error);
       return {
         conversationId,
         error: true,
@@ -307,7 +309,7 @@ export class VirtueChatClient {
       
       return true;
     } catch (error) {
-      console.error('Error clearing conversation:', error);
+      console.warn('Error clearing conversation:', error);
       return false;
     }
   }

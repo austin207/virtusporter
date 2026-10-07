@@ -1,104 +1,107 @@
+import { Link, useLocation } from 'react-router-dom';
+import { company, footerLinks, addressLine } from '@/content/company';
+import { OxLink } from '@/components/ox/primitives';
+import ParticleWordmark from '@/components/ox/ParticleWordmark';
+import NewsletterSignup from '@/components/forms/NewsletterSignup';
+import { Logo } from './Logo';
 
-import { NavLink } from 'react-router-dom';
-import { XIcon } from "@/components/icons/x-icon"
+// Pages that already end with their own call to action (or a contact form) skip the footer CTA.
+const OWN_CTA = ['/', '/service', '/product', '/about', '/contact'];
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const footerLinks = [
-    {
-      title: 'Product',
-      links: [
-        { name: 'Features', path: '/product#features' },
-        { name: 'Technology', path: '/product#technology' },
-        { name: 'Sustainability', path: '/product#sustainability' },
-      ],
-    },
-    {
-      title: 'Service',
-      links: [
-        { name: 'Revenue Model', path: '/service#revenue-model' },
-        { name: 'Maintenance', path: '/service#maintenance' },
-        { name: 'Partnerships', path: '/service#partnerships' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { name: 'About Us', path: '/about' },
-        { name: 'Our Team', path: '/about#team' },
-        { name: 'Contact', path: '/contact' },
-      ],
-    },
-    {
-      title: 'Resources',
-      links: [
-        { name: 'Blog', path: '/blog' },
-        { name: 'Investor Info', path: '/investor' },
-        { name: 'Press Kit', path: '/press-kit' },
-        { name: 'Employee Products', path: '/employee-products' },
-        { name: 'Privacy Policy', path: '/privacy-policy' },
-        { name: 'Terms of Service', path: '/terms-of-service' },
-      ],
-    },
-  ];
+  const year = new Date().getFullYear();
+  const { pathname } = useLocation();
+  const showCta = !OWN_CTA.includes(pathname.replace(/\/$/, '') || '/');
 
   return (
-    <footer className="bg-[#f5f5f7]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          <div className="col-span-2">
-            <NavLink to="/" className="flex items-center space-x-2">
-              <img src="/favicon.ico" alt="VirtusCo" className="w-6 h-9" />
-              <span className="text-lg font-semibold text-[#1d1d1f] tracking-tight">VirtusCo</span>
-            </NavLink>
-            <p className="mt-4 text-xs text-[#86868b] max-w-xs leading-relaxed">
-              Revolutionizing airport baggage handling with autonomous porter robots for a seamless travel experience.
+    <footer id="footer" data-tone="dark" className="on-dark relative bg-ink text-soft">
+      <div className="wrap pb-[clamp(40px,6vh,72px)] pt-[clamp(64px,11vh,140px)]">
+        {/* CTA */}
+        {showCta && (
+        <>
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <p className="h-serif max-w-[22ch] text-light">
+            The clearest way to see how we work is to put a real robotics problem in front of us.
+          </p>
+          <OxLink to="/contact" variant="cream" className="self-start md:self-auto">
+            Start a conversation
+          </OxLink>
+        </div>
+
+        <hr className="my-[clamp(40px,7vh,80px)] h-px border-0 bg-light/15" />
+        </>
+        )}
+
+        {/* Columns */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
+          <div className="col-span-2 lg:col-span-1">
+            <Link to="/" aria-label="VirtusCo home" className="text-light">
+              <Logo />
+            </Link>
+            <p className="mt-5 max-w-xs font-serif text-[0.98rem] leading-relaxed text-soft">
+              Robotics engineering company in {company.address.city}, {company.address.region}. Custom robots, ROS, integration and AI,
+              plus the autonomous porter robot, in development.
             </p>
-            <div className="mt-6 flex space-x-4">
-              <a href="https://x.com/VirtuscoTech" target="_blank" className="text-[#86868b] hover:text-[#1d1d1f] transition-colors">
-                <XIcon className="h-5 w-5" />
-                <span className="sr-only">X (formerly Twitter)</span>
-              </a>
-              <a href="https://www.linkedin.com/company/virtusco/" target="_blank" className="text-[#86868b] hover:text-[#1d1d1f] transition-colors">
-                <span className="sr-only">LinkedIn</span>
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-              </a>
-              <a href="https://www.instagram.com/virtuscotech/" target="_blank" className="text-[#86868b] hover:text-[#1d1d1f] transition-colors">
-                <span className="sr-only">Instagram</span>
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
-                </svg>
-              </a>
+            <div className="mt-8">
+              <NewsletterSignup />
             </div>
           </div>
 
-          {footerLinks.map((section) => (
-            <div key={section.title} className="col-span-1">
-              <h3 className="text-xs font-semibold text-[#1d1d1f] tracking-wider uppercase">{section.title}</h3>
-              <ul className="mt-4 space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <NavLink
-                      to={link.path}
-                      className="text-xs text-[#86868b] hover:text-[#1d1d1f] transition-colors"
-                    >
-                      {link.name}
-                    </NavLink>
+          {footerLinks.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <p className="eyebrow mb-5 text-quiet">{col.title}</p>
+              <ul className="space-y-2.5">
+                {col.links.map((l) => (
+                  <li key={l.path}>
+                    <Link to={l.path} className="font-sans text-[0.92rem] text-soft transition-colors hover:text-white">
+                      {l.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#d2d2d7]">
-          <p className="text-xs text-[#86868b] text-center">
-            &copy; {currentYear} VirtusCo. All rights reserved.
-          </p>
-        </div>
+        <hr className="my-[clamp(40px,6vh,64px)] h-px border-0 bg-light/15" />
+
+        {/* Contact strip */}
+        <address className="grid grid-cols-1 gap-6 not-italic sm:grid-cols-3">
+          <div>
+            <p className="eyebrow mb-3 text-quiet">Email</p>
+            <a href={`mailto:${company.email}`} className="ulink text-light">
+              {company.email}
+            </a>
+          </div>
+          <div>
+            <p className="eyebrow mb-3 text-quiet">Phone</p>
+            <a href={`tel:${company.phones[0].tel}`} className="ulink text-light">
+              {company.phones[0].display}
+            </a>
+          </div>
+          <div>
+            <p className="eyebrow mb-3 text-quiet">Office</p>
+            <p className="text-light">{addressLine}</p>
+          </div>
+        </address>
+      </div>
+
+      {/* Particle wordmark */}
+      <div className="wrap">
+        <ParticleWordmark className="block h-[clamp(90px,17vw,300px)] w-full" />
+      </div>
+
+      <div className="wrap flex flex-col items-center justify-between gap-4 border-t border-light/10 py-6 font-mono text-[11px] uppercase tracking-[0.14em] text-quiet sm:flex-row">
+        <p>© {year} VirtusCo. All rights reserved.</p>
+        <ul className="flex flex-wrap items-center gap-5">
+          {company.socials.map((s) => (
+            <li key={s.id}>
+              <a href={s.url} target="_blank" rel="noopener noreferrer me" className="transition-colors hover:text-white">
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
   );

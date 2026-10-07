@@ -1,12 +1,25 @@
 // components/chat/MemoizedMarkdown.tsx
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { oneLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+// PrismLight + a curated language set (robotics chat) instead of the full Prism bundle,
+// and no KaTeX math pipeline: keeps the chat chunk small.
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
+import cpp from 'react-syntax-highlighter/dist/esm/languages/prism/cpp';
+import c from 'react-syntax-highlighter/dist/esm/languages/prism/c';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
+import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
+import yaml from 'react-syntax-highlighter/dist/esm/languages/prism/yaml';
+import markup from 'react-syntax-highlighter/dist/esm/languages/prism/markup';
 import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
+
+Object.entries({ python, py: python, cpp, 'c++': cpp, c, bash, sh: bash, shell: bash, javascript, js: javascript, typescript, ts: typescript, json, yaml, yml: yaml, xml: markup, html: markup }).forEach(
+  ([name, lang]) => SyntaxHighlighter.registerLanguage(name, lang),
+);
+import { cn } from '@/lib/utils';
 
 // Define component props interface
 interface CodeProps {
@@ -16,40 +29,73 @@ interface CodeProps {
   children: React.ReactNode;
 }
 
+/** Token classes per surface: `light` renders on paper, `dark` on ink. */
+const tones = {
+  light: {
+    text: 'text-ink',
+    body: 'text-body',
+    line: 'border-ink/15',
+    divide: 'divide-ink/15',
+    codeBg: 'bg-paper-2',
+    codeBar: 'bg-paper-3 text-body',
+    copyBtn: 'bg-card text-body border border-ink/15 hover:bg-paper-2',
+    link: 'text-ink hover:text-accent-ink',
+    thead: 'bg-paper-2',
+    blockBg: 'rgb(var(--paper-2))',
+    blockLine: 'rgb(var(--ink) / 0.15)',
+  },
+  dark: {
+    text: 'text-light',
+    body: 'text-soft',
+    line: 'border-light/15',
+    divide: 'divide-light/15',
+    codeBg: 'bg-light/10',
+    codeBar: 'bg-ink-3 text-soft',
+    copyBtn: 'bg-ink-3 text-light border border-light/15 hover:bg-ink-2',
+    link: 'text-light hover:text-accent-ink',
+    thead: 'bg-light/5',
+    blockBg: 'rgb(var(--ink-2))',
+    blockLine: 'rgb(var(--light) / 0.15)',
+  },
+} as const;
+
 export const MemoizedMarkdown = memo(
-  ({ content, id, variant = 'dark' }: { content: string; id: string; variant?: 'light' | 'dark' }) => {
+  ({ content, id, variant = 'dark', className }: { content: string; id: string; variant?: 'light' | 'dark'; className?: string }) => {
     const isLight = variant === 'light';
+    const t = tones[variant];
 
     return (
-      <div className={`prose prose-sm max-w-none ${isLight ? 'prose-neutral' : 'prose-invert'}`}>
+      <div
+        data-md-id={id}
+        className={cn('prose prose-sm max-w-none font-serif', isLight ? 'prose-neutral' : 'prose-invert', t.body, className)}
+      >
         <ReactMarkdown
-          remarkPlugins={[remarkGfm, remarkMath]}
-          rehypePlugins={[rehypeKatex]}
+          remarkPlugins={[remarkGfm]}
           components={{
             code({ node, inline, className, children, ...props }: CodeProps) {
               const match = /language-(\w+)/.exec(className || '');
 
               return !inline && match ? (
-                <div className="relative group my-4">
-                  <div className={`text-xs px-3 py-1.5 font-mono ${isLight ? 'bg-[#f6f8fa] text-[#57606a] border border-[#d0d7de] rounded-t-lg' : 'bg-gray-700 text-gray-400 rounded-t-md'}`}>
-                    {match[1]}
-                  </div>
+                <div className="not-prose group relative my-4">
+                  <div className={cn('mono-tag border border-b-0 px-3 py-2', t.line, t.codeBar)}>{match[1]}</div>
                   <SyntaxHighlighter
                     style={(isLight ? oneLight : oneDark) as any}
                     language={match[1]}
                     PreTag="div"
                     customStyle={{
                       margin: 0,
-                      borderTopLeftRadius: 0,
-                      borderTopRightRadius: 0,
-                      ...(isLight ? { border: '1px solid #d0d7de', borderTop: 'none', background: '#f6f8fa' } : {}),
+                      borderRadius: 0,
+                      border: `1px solid ${t.blockLine}`,
+                      background: t.blockBg,
                     }}
                     {...props}
                   >
                     {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
                   <button
-                    className={`absolute top-10 right-2 p-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity ${isLight ? 'bg-white text-[#57606a] border border-[#d0d7de] hover:bg-[#f3f4f6]' : 'bg-gray-700 text-white'}`}
+                    type="button"
+                    aria-label="Copy code"
+                    className={cn('absolute right-2 top-10 p-1.5 opacity-0 transition-opacity group-hover:opacity-100', t.copyBtn)}
                     onClick={() => {
                       navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
                     }}
@@ -60,38 +106,38 @@ export const MemoizedMarkdown = memo(
                   </button>
                 </div>
               ) : (
-                <code className={`rounded px-1.5 py-0.5 text-sm ${isLight ? 'bg-[#eff1f3] text-[#1f2328]' : 'bg-gray-700'}`} {...props}>
+                <code className={cn('px-1.5 py-0.5 font-mono text-[0.85em] before:content-none after:content-none', t.codeBg, t.text)} {...props}>
                   {children}
                 </code>
               );
             },
-            h1: ({ children }) => <h1 className={`text-2xl font-semibold mt-6 mb-4 pb-2 border-b ${isLight ? 'border-[#d0d7de] text-[#1f2328]' : 'border-gray-700'}`}>{children}</h1>,
-            h2: ({ children }) => <h2 className={`text-xl font-semibold mt-5 mb-3 pb-2 border-b ${isLight ? 'border-[#d0d7de] text-[#1f2328]' : 'border-gray-700'}`}>{children}</h2>,
-            h3: ({ children }) => <h3 className={`text-lg font-semibold mt-4 mb-2 ${isLight ? 'text-[#1f2328]' : ''}`}>{children}</h3>,
-            p: ({ children }) => <p className={`mb-3 leading-relaxed ${isLight ? 'text-[#1f2328]' : ''}`}>{children}</p>,
-            ul: ({ children }) => <ul className="list-disc pl-6 mb-3 space-y-1">{children}</ul>,
-            ol: ({ children }) => <ol className="list-decimal pl-6 mb-3 space-y-1">{children}</ol>,
-            li: ({ children }) => <li className="mb-0.5">{children}</li>,
+            h1: ({ children }) => <h1 className={cn('mb-4 mt-6 border-b pb-2 font-sans text-2xl font-semibold', t.line, t.text)}>{children}</h1>,
+            h2: ({ children }) => <h2 className={cn('mb-3 mt-5 border-b pb-2 font-sans text-xl font-semibold', t.line, t.text)}>{children}</h2>,
+            h3: ({ children }) => <h3 className={cn('mb-2 mt-4 font-sans text-lg font-semibold', t.text)}>{children}</h3>,
+            p: ({ children }) => <p className={cn('mb-3 leading-relaxed', t.body)}>{children}</p>,
+            ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-6">{children}</ul>,
+            ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-6">{children}</ol>,
+            li: ({ children }) => <li className={cn('mb-0.5', t.body)}>{children}</li>,
             a: ({ href, children }) => (
-              <a href={href} className={`hover:underline ${isLight ? 'text-[#0969da]' : 'text-virtus-red'}`} target="_blank" rel="noopener noreferrer">
+              <a href={href} className={cn('ulink', t.link)} target="_blank" rel="noopener noreferrer">
                 {children}
               </a>
             ),
             blockquote: ({ children }) => (
-              <blockquote className={`border-l-4 pl-4 my-3 ${isLight ? 'border-[#d0d7de] text-[#656d76]' : 'border-gray-600 italic'}`}>{children}</blockquote>
+              <blockquote className={cn('my-3 border-l-2 border-accent pl-4 not-italic', t.body)}>{children}</blockquote>
             ),
             table: ({ children }) => (
-              <div className="overflow-x-auto my-3">
-                <table className={`min-w-full mb-0 ${isLight ? 'border border-[#d0d7de]' : 'divide-y divide-gray-700'}`}>{children}</table>
+              <div className="my-3 overflow-x-auto">
+                <table className={cn('mb-0 min-w-full border', t.line)}>{children}</table>
               </div>
             ),
-            thead: ({ children }) => <thead className={isLight ? 'bg-[#f6f8fa]' : 'bg-gray-700'}>{children}</thead>,
-            tbody: ({ children }) => <tbody className={`divide-y ${isLight ? 'divide-[#d0d7de]' : 'divide-gray-700'}`}>{children}</tbody>,
+            thead: ({ children }) => <thead className={t.thead}>{children}</thead>,
+            tbody: ({ children }) => <tbody className={cn('divide-y', t.divide)}>{children}</tbody>,
             tr: ({ children }) => <tr>{children}</tr>,
-            th: ({ children }) => <th className={`px-4 py-2 text-left text-sm font-semibold ${isLight ? 'text-[#1f2328] border border-[#d0d7de]' : 'text-gray-200'}`}>{children}</th>,
-            td: ({ children }) => <td className={`px-4 py-2 text-sm ${isLight ? 'border border-[#d0d7de]' : ''}`}>{children}</td>,
-            hr: () => <hr className={`my-4 ${isLight ? 'border-[#d0d7de]' : 'border-gray-700'}`} />,
-            strong: ({ children }) => <strong className={`font-semibold ${isLight ? 'text-[#1f2328]' : ''}`}>{children}</strong>,
+            th: ({ children }) => <th className={cn('border px-4 py-2 text-left font-mono text-[11px] font-medium uppercase tracking-[0.1em]', t.line, t.text)}>{children}</th>,
+            td: ({ children }) => <td className={cn('border px-4 py-2 text-sm', t.line)}>{children}</td>,
+            hr: () => <hr className={cn('my-4', t.line)} />,
+            strong: ({ children }) => <strong className={cn('font-semibold', t.text)}>{children}</strong>,
           }}
         >
           {content}

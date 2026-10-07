@@ -3,12 +3,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '@/integrations/supabase/client';
+import { getSupabase } from '@/integrations/supabase/lazy';
 import { useToast } from '@/hooks/use-toast';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import Button from '@/components/ui/Button';
 
 const newsletterSchema = z.object({
   email: z.string().email('Please enter a valid email address')
@@ -31,6 +27,7 @@ const NewsletterSignup = () => {
     setIsSubmitting(true);
     
     try {
+      const supabase = await getSupabase();
       const { error } = await supabase
         .from('subscribers')
         .insert({ email: values.email });
@@ -52,7 +49,7 @@ const NewsletterSignup = () => {
         form.reset();
       }
     } catch (error) {
-      console.error('Error subscribing to newsletter:', error);
+      console.warn('Error subscribing to newsletter:', error);
       toast({
         title: 'Subscription failed',
         description: 'Unable to subscribe. Please try again later.',
@@ -64,45 +61,42 @@ const NewsletterSignup = () => {
   };
   
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Stay Updated</CardTitle>
-        <CardDescription>
-          Subscribe to our newsletter for the latest news and updates.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="flex space-x-2">
-                      <Input 
-                        placeholder="Enter your email" 
-                        type="email" 
-                        {...field} 
-                        className="flex-1"
-                      />
-                      <Button 
-                        type="submit" 
-                        isLoading={isSubmitting}
-                      >
-                        Subscribe
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="w-full max-w-sm">
+      <label htmlFor="nl-email" className="eyebrow mb-3 block text-quiet">
+        Stay updated
+      </label>
+      <div className="flex border border-light/25 focus-within:border-accent focus-within:shadow-[0_0_0_2px_rgb(var(--accent))]">
+        <input
+          id="nl-email"
+          type="email"
+          autoComplete="email"
+          placeholder="Enter your email"
+          aria-invalid={!!form.formState.errors.email}
+          aria-describedby={form.formState.errors.email ? 'nl-email-error' : undefined}
+          className="min-w-0 flex-1 bg-transparent px-4 py-3 font-sans text-[0.92rem] text-light placeholder:text-quiet focus:outline-none"
+          {...form.register('email')}
+        />
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="group shrink-0 border-l border-light/25 px-4 font-mono text-[11.5px] uppercase tracking-[0.1em] text-light transition-colors hover:bg-light hover:text-ink disabled:opacity-60"
+        >
+          {isSubmitting ? '…' : 'Subscribe'}
+        </button>
+      </div>
+      {form.formState.errors.email && (
+        <p id="nl-email-error" role="alert" className="mt-2 font-mono text-[11px] text-accent-ink">
+          {form.formState.errors.email.message}
+        </p>
+      )}
+      <p className="mt-2 font-serif text-[0.82rem] text-quiet">
+        By subscribing you agree to our{' '}
+        <a href="/privacy-policy" className="ulink text-soft">
+          privacy policy
+        </a>
+        .
+      </p>
+    </form>
   );
 };
 

@@ -9,6 +9,9 @@ import LoginForm, { LoginFormValues } from "@/components/auth/LoginForm";
 import SignupForm, { SignupFormValues } from "@/components/auth/SignupForm";
 import OAuthButtons from "@/components/auth/OAuthButtons";
 import AuthSecurity from "@/components/auth/AuthSecurity";
+import AuthShell from "@/components/auth/AuthShell";
+import Seo from "@/seo/Seo";
+import { company } from "@/content/company";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -117,61 +120,65 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center mb-4">
-          <img src="/favicon.ico" alt="VirtusCo" className="w-7 h-10" />
-        </div>
-        <h2 className="text-center text-2xl font-semibold text-[#1d1d1f]" style={{ letterSpacing: '-0.02em' }}>
-          {isLogin ? "Sign in to VirtusCo" : "Create your account"}
-        </h2>
-        <p className="mt-2 text-center text-sm text-[#86868b]">
-          {isLogin ? "Welcome back" : "Get started with VirtusCo"}
-        </p>
-      </div>
+    <AuthShell
+      eyebrow="Account"
+      ink={isLogin ? "Welcome back." : "Join VirtusCo."}
+      mut={company.tagline}
+    >
+      <Seo path="/auth" title="Sign in" description="Sign in to VirtusCo." noindex />
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#f5f5f7] py-8 px-6 rounded-2xl sm:px-10">
-          {oauthError && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Authentication Error</AlertTitle>
-              <AlertDescription>{oauthError.message}</AlertDescription>
-            </Alert>
-          )}
+      <p className="eyebrow mb-4 text-quiet">{isLogin ? "Sign in" : "Sign up"}</p>
+      <h2 className="h-section text-ink">
+        {isLogin ? "Sign in to VirtusCo" : "Create your account"}
+      </h2>
+      <p className="mt-3 font-serif text-[1.02rem] text-body">
+        {isLogin ? "Welcome back" : "Get started with VirtusCo"}
+      </p>
 
-          {isLogin ? (
-            <LoginForm onSubmit={onLoginSubmit} loading={loading} />
-          ) : (
-            <SignupForm onSubmit={onSignupSubmit} loading={loading} />
-          )}
+      <div className="mt-10">
+        {oauthError && (
+          <Alert variant="destructive" className="mb-6 rounded-none border-accent/40 bg-card text-ink [&>svg]:text-accent-ink">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle className="eyebrow text-accent-ink">Authentication Error</AlertTitle>
+            <AlertDescription className="mt-2 font-serif text-[0.95rem] text-body">{oauthError.message}</AlertDescription>
+          </Alert>
+        )}
+
+        {isLogin ? (
+          <LoginForm onSubmit={onLoginSubmit} loading={loading} />
+        ) : (
+          <SignupForm onSubmit={onSignupSubmit} loading={loading} />
+        )}
+
+        {isLogin && (
+          <div className="mt-4">
+            <Link
+              to="/forgot-password"
+              className="font-mono text-[11.5px] uppercase tracking-[0.12em] text-quiet transition-colors hover:text-accent-ink"
+            >
+              Forgot your password?
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-8">
+          <OAuthButtons onOAuthSignIn={handleOAuthSignIn} />
 
           <div className="mt-6">
-            <OAuthButtons onOAuthSignIn={handleOAuthSignIn} />
-
-            <div className="mt-6">
-              <button
-                type="button"
-                className="w-full inline-flex justify-center py-2.5 px-4 border border-[#d2d2d7] rounded-full bg-white text-sm font-medium text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors"
-                onClick={() => setIsLogin(!isLogin)}
-              >
-                {isLogin ? "Create a new account" : "Sign in to your account"}
-              </button>
-            </div>
+            <button
+              type="button"
+              className="group inline-flex w-full items-center justify-center gap-3 border border-ink/25 px-5 py-[14px] font-mono text-[12px] uppercase leading-none tracking-[0.08em] text-ink transition-colors hover:bg-ink hover:text-paper"
+              onClick={() => setIsLogin(!isLogin)}
+            >
+              {isLogin ? "Create a new account" : "Sign in to your account"}
+              <span aria-hidden className="arw">→</span>
+            </button>
           </div>
-
-          {isLogin && (
-            <div className="mt-4 text-center">
-              <Link to="/forgot-password" className="text-sm text-[#86868b] hover:text-[#1d1d1f] hover:underline">
-                Forgot your password?
-              </Link>
-            </div>
-          )}
-
-          <AuthSecurity />
         </div>
+
+        <AuthSecurity />
       </div>
-    </div>
+    </AuthShell>
   );
 };
 

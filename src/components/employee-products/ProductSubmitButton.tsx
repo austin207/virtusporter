@@ -1,8 +1,6 @@
-
 import React from "react";
-import { BriefcaseBusiness } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { OxLink } from "@/components/ox/primitives";
 import EmployeeProductForm from "@/components/forms/EmployeeProductForm";
 
 interface ProductSubmitButtonProps {
@@ -15,11 +13,11 @@ interface ProductSubmitButtonProps {
 const ProductSubmitButton = ({ open, setOpen, onSubmit, isLoggedIn }: ProductSubmitButtonProps) => {
   if (!isLoggedIn) {
     return (
-      <div className="mt-6">
-        <p className="text-sm text-gray-500 mb-2">Sign in to submit your own innovation</p>
-        <Button variant="outline" asChild>
-          <a href="/auth">Sign In to Participate</a>
-        </Button>
+      <div className="flex flex-col items-start gap-4">
+        <p className="eyebrow text-quiet">Sign in to submit your own innovation</p>
+        <OxLink to="/auth" variant="outline">
+          Sign In to Participate
+        </OxLink>
       </div>
     );
   }
@@ -27,14 +25,20 @@ const ProductSubmitButton = ({ open, setOpen, onSubmit, isLoggedIn }: ProductSub
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-6" size="lg">
-          <BriefcaseBusiness className="mr-2 h-5 w-5" />
+        <button
+          type="button"
+          className="group inline-flex items-center gap-3 bg-cream px-7 py-[1.05rem] text-[0.95rem] font-semibold leading-none text-ink transition-colors hover:bg-card"
+        >
           Submit Your Innovation
-        </Button>
+          <span aria-hidden className="arw">
+            →
+          </span>
+        </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px]">
+      <DialogContent className="max-h-[90svh] overflow-y-auto border-ink/15 bg-paper p-[clamp(22px,3vw,40px)] shadow-none sm:max-w-[560px] sm:rounded-none [&>button]:rounded-none [&>button]:bg-transparent">
         <DialogHeader>
-          <DialogTitle>Submit a New Product</DialogTitle>
+          <p className="eyebrow mb-2 text-quiet">Marketplace</p>
+          <DialogTitle className="h-card text-ink">Submit a New Product</DialogTitle>
         </DialogHeader>
         <EmployeeProductForm onSubmit={onSubmit} />
       </DialogContent>

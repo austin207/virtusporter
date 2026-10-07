@@ -1,9 +1,8 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode } from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import { getSupabase } from "@/integrations/supabase/lazy";
 import { useToast } from "@/hooks/use-toast";
-import { signInWithEmail, signUpWithEmail, signInWithOAuthProvider } from "@/services/authService";
 
 type AuthContextType = {
   session: Session | null;
@@ -34,24 +33,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Supabase is loaded on demand: only when a saved session or an auth redirect exists, or when
+  // the visitor signs in. Anonymous visitors never download the auth client.
+  const connection = useRef<Promise<void> | null>(null);
+  const unsubscribe = useRef<() => void>(() => {});
+
+  const connect = useCallback(() => {
+    if (connection.current) return connection.current;
+    connection.current = getSupabase()
+      .then((supabase) => {
+        // Set up auth state listener FIRST
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+
+          // Show toast on successful sign in
+          if (event === 'SIGNED_IN') {
+            toast({
+              title: "Welcome back!",
+              description: "You've successfully logged in.",
+            });
+          }
+        });
+        unsubscribe.current = () => subscription.unsubscribe();
+
+        // THEN check for existing session
+        return supabase.auth.getSession().then(({ data: { session } }) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        });
+      })
+      .catch(() => setLoading(false));
+    return connection.current;
+  }, [toast]);
+
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log("Auth state changed:", event);
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-        
-        // Show toast on successful sign in
-        if (event === 'SIGNED_IN') {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully logged in.",
-          });
-        }
-      }
-    );
+    let hasStoredSession = false;
+    try {
+      hasStoredSession = Object.keys(localStorage).some((k) => k.startsWith('sb-') && k.endsWith('-auth-token'));
+    } catch {
+      /* storage blocked */
+    }
+    const hasAuthRedirect = /access_token|refresh_token|[?&]code=|error_description|type=recovery/.test(window.location.hash + window.location.search);
+    if (hasStoredSession || hasAuthRedirect) connect();
+    else setLoading(false);
 
     // Check for URL error parameters that might indicate OAuth issues
     const url = new URL(window.location.href);
@@ -70,18 +97,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       window.history.replaceState({}, document.title, url.toString());
     }
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [toast]);
+    return () => {
+      unsubscribe.current();
+      unsubscribe.current = () => {};
+      connection.current = null; // allow a clean reconnect (StrictMode remount)
+    };
+  }, [toast, connect]);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
+    void connect();
+    const { signInWithEmail } = await import("@/services/authService");
     const result = await signInWithEmail(email, password);
     setLoading(false);
     return result;
@@ -89,6 +115,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
+    void connect();
+    const { signUpWithEmail } = await import("@/services/authService");
     const result = await signUpWithEmail(email, password);
     setLoading(false);
     return result;
@@ -96,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     setLoading(true);
-    await supabase.auth.signOut();
+    await (await getSupabase()).auth.signOut();
     setLoading(false);
   };
 
@@ -104,6 +132,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithOAuth = async (provider: 'google' | 'github' | 'facebook') => {
     try {
       setLoading(true);
+      void connect();
+      const { signInWithOAuthProvider } = await import("@/services/authService");
       const result = await signInWithOAuthProvider(provider);
       
       // If there's no error, the user is being redirected to OAuth provider

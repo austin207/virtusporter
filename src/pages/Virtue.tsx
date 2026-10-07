@@ -1,11 +1,15 @@
 // pages/Virtue.tsx
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { offlineAnswer } from '@/lib/offlineAnswer';
 import { supabase } from "@/integrations/supabase/client";
 import { MemoizedMarkdown } from '@/components/chat/MemoizedMarkdown';
 import { v4 as uuidv4 } from 'uuid';
 import { Message } from '@/components/chat/types';
-import { ArrowUpIcon, BotIcon, SparklesIcon, CodeIcon, BookOpenIcon, HelpCircleIcon } from 'lucide-react';
+import { ArrowUpIcon, SparklesIcon, CodeIcon, BookOpenIcon, HelpCircleIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Logo } from '@/components/layout/Logo';
+import Seo from '@/seo/Seo';
 
 export default function Virtue() {
   const [messages, setMessages] = useState<Message[]>([
@@ -42,7 +46,7 @@ export default function Virtue() {
           .single();
 
         if (fetchError && fetchError.code !== 'PGRST116') {
-          console.error('Error fetching conversation:', fetchError);
+          console.warn('Error fetching conversation:', fetchError);
           return;
         }
 
@@ -56,7 +60,7 @@ export default function Virtue() {
             .order('created_at', { ascending: true });
 
           if (messageError) {
-            console.error('Error fetching messages:', messageError);
+            console.warn('Error fetching messages:', messageError);
             return;
           }
 
@@ -74,7 +78,7 @@ export default function Virtue() {
             .single();
 
           if (createError) {
-            console.error('Error creating conversation:', createError);
+            console.warn('Error creating conversation:', createError);
             return;
           }
 
@@ -90,12 +94,12 @@ export default function Virtue() {
               });
 
             if (welcomeError) {
-              console.error('Error saving welcome message:', welcomeError);
+              console.warn('Error saving welcome message:', welcomeError);
             }
           }
         }
       } catch (error) {
-        console.error('Error initializing conversation:', error);
+        console.warn('Error initializing conversation:', error);
       }
     };
 
@@ -154,27 +158,9 @@ export default function Virtue() {
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Error calling Gemini API:', error);
-      const placeholderResponses = [
-        "I'd be happy to tell you more about our autonomous porter robots designed for airports.",
-        "VirtusCo specializes in creating tailored robotics solutions for businesses of all sizes.",
-        "Our services include custom ROS development, robot prototyping, and full robotics implementation.",
-        "Our team of talented engineers is dedicated to pushing the boundaries of autonomous robotics.",
-        "Our mission is to bridge the gap between those with resources and those without, while building tailored robotic solutions."
-      ];
-
-      const randomResponse = placeholderResponses[Math.floor(Math.random() * placeholderResponses.length)];
-      const botMessage: Message = { role: 'assistant', content: randomResponse };
-
-      if (user && conversationId) {
-        await supabase
-          .from('chat_messages')
-          .insert({
-            conversation_id: conversationId,
-            role: 'assistant',
-            content: randomResponse
-          });
-      }
+      console.warn('Error calling Gemini API:', error);
+      // Backend unreachable: say so honestly (never fabricate an AI reply). Not persisted.
+      const botMessage: Message = { role: 'assistant', content: offlineAnswer(messageText) };
 
       setMessages(prev => [...prev, botMessage]);
     } finally {
@@ -199,21 +185,41 @@ export default function Virtue() {
   const showWelcome = messages.length === 1;
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div data-tone="dark" className="on-dark flex h-svh flex-col bg-ink text-light">
+      <Seo
+        path="/virtue"
+        title="Virtue: VirtusCo AI Assistant"
+        description="Chat with Virtue, VirtusCo's AI assistant, about our robotics services, the autonomous porter robot and how to get a demo or consultation."
+        noindex
+      />
+
       {/* Header */}
-      <header className="flex-shrink-0 border-b border-[#e5e7eb] px-4 py-3">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#1d1d1f] flex items-center justify-center">
-              <BotIcon className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-base font-medium text-[#1d1d1f]">Virtue</span>
+      <header className="flex-shrink-0 border-b border-light/15">
+        <div className="flex items-center justify-between gap-4 px-[var(--gutter-hero)] py-4">
+          <div className="flex items-center gap-4">
+            <Link to="/" aria-label="VirtusCo home" className="text-light">
+              <Logo />
+            </Link>
+            <span aria-hidden className="h-5 w-px bg-light/20" />
+            <span className="eyebrow flex items-center gap-2 text-soft">
+              <span aria-hidden className="inline-block h-[7px] w-[7px] bg-accent" />
+              Virtue
+            </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
+            <Link
+              to="/"
+              className="group hidden items-center gap-2 font-mono text-[11.5px] uppercase tracking-[0.14em] text-soft transition-colors hover:text-light sm:inline-flex"
+            >
+              <span aria-hidden className="inline-block transition-transform group-hover:-translate-x-1">
+                ←
+              </span>
+              Back to site
+            </Link>
             {user && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[#86868b] hidden sm:block">{user.email}</span>
-                <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-xs text-white font-medium">
+                <span className="hidden font-mono text-[11px] tracking-wide text-quiet md:block">{user.email}</span>
+                <div className="flex h-7 w-7 items-center justify-center border border-light/25 font-mono text-[11px] text-light">
                   {user.email?.charAt(0).toUpperCase() || 'U'}
                 </div>
               </div>
@@ -223,28 +229,28 @@ export default function Virtue() {
       </header>
 
       {/* Messages area */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-4">
+      <main className="flex-1 overflow-y-auto" data-lenis-prevent>
+        <div className="mx-auto max-w-3xl px-5">
           {/* Welcome state */}
           {showWelcome && (
-            <div className="flex flex-col items-center justify-center pt-24 pb-8">
-              <div className="w-12 h-12 rounded-full bg-[#1d1d1f] flex items-center justify-center mb-6">
-                <BotIcon className="w-6 h-6 text-white" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-[#1d1d1f] mb-2 text-center" style={{ letterSpacing: '-0.02em' }}>
+            <div className="flex flex-col pb-8 pt-[clamp(48px,14vh,140px)]">
+              <p className="eyebrow mb-6 text-quiet">VirtusCo AI assistant</p>
+              <h1 className="h-hero text-light">
                 {greeting()}{user ? `, ${user.email?.split('@')[0]}` : ''}
-              </h2>
-              <p className="text-lg text-[#86868b] mb-12 text-center">How can I help you today?</p>
+              </h1>
+              <p className="lede mt-4 text-quiet">How can I help you today?</p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+              <div className="mt-12 grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
                 {suggestions.map((s, i) => (
                   <button
                     key={i}
+                    type="button"
                     onClick={() => handleSendMessage(s.text)}
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl border border-[#e5e7eb] text-left hover:bg-[#f9fafb] transition-colors group"
+                    className="group flex items-center gap-3 border border-light/20 px-4 py-4 text-left font-mono text-[12px] uppercase leading-snug tracking-[0.08em] text-soft transition-colors hover:border-light hover:bg-light hover:text-ink"
                   >
-                    <span className="text-[#86868b] group-hover:text-[#1d1d1f] transition-colors">{s.icon}</span>
-                    <span className="text-sm text-[#3c3c43]">{s.label}</span>
+                    <span className="text-quiet transition-colors group-hover:text-ink">{s.icon}</span>
+                    <span className="flex-1">{s.label}</span>
+                    <span aria-hidden className="arw">→</span>
                   </button>
                 ))}
               </div>
@@ -253,40 +259,41 @@ export default function Virtue() {
 
           {/* Message list */}
           {!showWelcome && (
-            <div className="py-6 space-y-2">
+            <div className="space-y-2 py-8">
               {messages.map((message, index) => (
                 <div key={index}>
                   {message.role === 'assistant' ? (
-                    <div className="flex gap-4 py-4">
-                      <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <BotIcon className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <MemoizedMarkdown
-                          content={message.content}
-                          id={`msg-${index}`}
-                          variant="light"
-                        />
-                      </div>
+                    <div className="py-4">
+                      <p className="mono-tag mb-3 flex items-center gap-2 text-quiet">
+                        <span aria-hidden className="inline-block h-[6px] w-[6px] bg-accent" />
+                        Virtue
+                      </p>
+                      <MemoizedMarkdown
+                        content={message.content}
+                        id={`msg-${index}`}
+                        variant="dark"
+                        className="text-[1.02rem]"
+                      />
                     </div>
                   ) : (
                     <div className="flex justify-end py-4">
-                      <div className="bg-[#f5f5f7] px-4 py-3 rounded-2xl rounded-tr-sm max-w-[80%]">
-                        <p className="text-sm text-[#1d1d1f]">{message.content}</p>
+                      <div className="max-w-[80%] bg-paper-2 px-5 py-4">
+                        <p className="whitespace-pre-wrap text-[0.95rem] leading-relaxed text-ink">{message.content}</p>
                       </div>
                     </div>
                   )}
                 </div>
               ))}
               {isLoading && (
-                <div className="flex gap-4 py-4">
-                  <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center flex-shrink-0">
-                    <BotIcon className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <div className="flex items-center gap-1.5 pt-2">
-                    <div className="w-1.5 h-1.5 bg-[#86868b] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-[#86868b] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-[#86868b] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="py-4" role="status" aria-label="Virtue is typing">
+                  <p className="mono-tag mb-3 flex items-center gap-2 text-quiet">
+                    <span aria-hidden className="inline-block h-[6px] w-[6px] bg-accent" />
+                    Virtue
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-1.5 w-1.5 animate-bounce bg-soft" style={{ animationDelay: '0ms' }}></div>
+                    <div className="h-1.5 w-1.5 animate-bounce bg-soft" style={{ animationDelay: '150ms' }}></div>
+                    <div className="h-1.5 w-1.5 animate-bounce bg-soft" style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
               )}
@@ -297,9 +304,9 @@ export default function Virtue() {
       </main>
 
       {/* Input area */}
-      <div className="flex-shrink-0 px-4 pb-4 pt-2">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-[#f5f5f7] rounded-2xl px-4 py-3 flex items-end gap-3">
+      <div className="flex-shrink-0 px-5 pb-5 pt-2">
+        <div className="mx-auto max-w-3xl">
+          <div className="flex items-end gap-3 border border-light/20 bg-ink-2 py-2 pl-4 pr-2 transition-colors focus-within:border-accent">
             <textarea
               ref={textareaRef}
               value={input}
@@ -308,8 +315,9 @@ export default function Virtue() {
                 e.target.style.height = 'auto';
                 e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
               }}
+              aria-label="Message Virtue"
               placeholder="Ask Virtue anything..."
-              className="flex-1 min-h-[24px] max-h-40 resize-none bg-transparent border-none py-1 text-sm text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:ring-0"
+              className="max-h-40 min-h-[24px] flex-1 resize-none border-none bg-transparent py-2 text-[0.95rem] text-light placeholder:text-quiet focus:outline-none focus:ring-0"
               rows={1}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -319,18 +327,16 @@ export default function Virtue() {
               }}
             />
             <button
+              type="button"
+              aria-label="Send message"
               onClick={() => handleSendMessage()}
               disabled={!input.trim() || isLoading}
-              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                !input.trim() || isLoading
-                  ? 'bg-[#d2d2d7] text-white'
-                  : 'bg-[#1d1d1f] text-white hover:bg-[#424245]'
-              }`}
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-accent text-accent-foreground transition-colors hover:bg-accent-hover disabled:bg-ink-3 disabled:text-quiet"
             >
-              <ArrowUpIcon className="w-4 h-4" />
+              <ArrowUpIcon className="h-4 w-4" />
             </button>
           </div>
-          <p className="text-[10px] text-[#86868b] text-center mt-2">
+          <p className="mt-3 text-center font-mono text-[10.5px] tracking-wide text-quiet">
             Virtue may display inaccurate info. Double-check important responses.
           </p>
         </div>

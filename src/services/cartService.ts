@@ -10,7 +10,7 @@ export async function fetchCartItems(userId: string): Promise<CartItem[]> {
     .eq('user_id', userId);
     
   if (error) {
-    console.error('Error fetching cart items:', error);
+    console.warn('Error fetching cart items:', error);
     throw error;
   }
   
@@ -28,7 +28,7 @@ export async function fetchCartItemCount(userId: string): Promise<number> {
     .eq('user_id', userId);
     
   if (error) {
-    console.error('Error fetching cart count:', error);
+    console.warn('Error fetching cart count:', error);
     throw error;
   }
   
@@ -42,7 +42,7 @@ export async function updateCartItemQuantity(itemId: string, quantity: number): 
     .eq('id', itemId);
     
   if (error) {
-    console.error('Error updating cart item quantity:', error);
+    console.warn('Error updating cart item quantity:', error);
     throw error;
   }
 }
@@ -54,7 +54,7 @@ export async function removeCartItem(itemId: string): Promise<void> {
     .eq('id', itemId);
     
   if (error) {
-    console.error('Error removing cart item:', error);
+    console.warn('Error removing cart item:', error);
     throw error;
   }
 }
@@ -68,7 +68,7 @@ export async function addToCart(userId: string, productId: string, productType: 
     .eq('product_id', productId);
     
   if (fetchError) {
-    console.error('Error checking cart:', fetchError);
+    console.warn('Error checking cart:', fetchError);
     throw fetchError;
   }
   
@@ -83,7 +83,7 @@ export async function addToCart(userId: string, productId: string, productType: 
       .eq('id', existingItem.id);
       
     if (error) {
-      console.error('Error updating cart item:', error);
+      console.warn('Error updating cart item:', error);
       throw error;
     }
   } else {
@@ -98,7 +98,7 @@ export async function addToCart(userId: string, productId: string, productType: 
       });
       
     if (error) {
-      console.error('Error adding to cart:', error);
+      console.warn('Error adding to cart:', error);
       throw error;
     }
   }
@@ -113,7 +113,7 @@ export async function getCartWithProducts(userId: string): Promise<CartItem[]> {
     .eq('user_id', userId);
     
   if (cartError) {
-    console.error('Error fetching cart:', cartError);
+    console.warn('Error fetching cart:', cartError);
     throw cartError;
   }
   

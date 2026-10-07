@@ -1,0 +1,93 @@
+/*
+ * VirtusCo design tokens: the ONLY place colours and fonts are defined.
+ *
+ * Switch palette: change data-palette on <html> in index.html
+ *   graphite      → graphite + Virtus red (default)
+ *   oxigen-teal   → Oxigen's original teal-black + muted teal
+ * Values are RGB channels so Tailwind opacity modifiers work (bg-ink/80).
+ *
+ * Swap fonts: edit the three --font-* variables below (and load the font, e.g. an
+ * Adobe Fonts <link> in index.html). Nothing else needs to change.
+ */
+
+:root {
+  --font-sans: 'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader Variable', 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --radius: 0px;
+  --gutter: 6.5vw;
+  --gutter-hero: clamp(20px, 3vw, 48px);
+  --header-h: 76px;
+}
+
+:root,
+:root[data-palette='graphite'] {
+  --ink: 17 18 20;          /* #111214 dark surfaces, primary text on light */
+  --ink-2: 27 29 32;        /* #1b1d20 raised dark surface */
+  --ink-3: 42 45 49;        /* #2a2d31 dark button hover */
+  --paper: 244 244 244;     /* #f4f4f4 light page */
+  --paper-2: 230 231 232;   /* #e6e7e8 alt light section */
+  --paper-3: 214 216 218;   /* #d6d8da */
+  --card: 255 255 255;
+  --light: 236 238 238;     /* #eceeee text on dark */
+  --soft: 196 200 202;      /* #c4c8ca body on dark */
+  --quiet: 98 102 106;      /* #62666a labels on light (4.9:1 on paper) */
+  --mut: 120 123 127;       /* #787b7f faded half of two-tone headings on light (3.9:1, large text) */
+  --body: 82 84 88;         /* #525458 serif body on light */
+  --cream: 239 234 225;     /* #efeae1 button on dark */
+  --line: 214 216 218;      /* hairlines on light */
+  --accent: 234 56 76;      /* #ea384c Virtus red */
+  --accent-hover: 208 35 54;/* #d02336 */
+  --accent-fg: 255 255 255;
+  --accent-text: 196 22 44;  /* #c4162c red for small text on light surfaces (5.2:1) */
+  --danger: 208 35 54;
+
+  /* Raw values for canvas / WebGL scenes (read via getComputedStyle) */
+  --scene-bg: #0d0e10;
+  --scene-fog: #15171a;
+  --scene-point: #d9dcde;
+  --scene-glow: #ea384c;
+  --scene-wire: #8a9096;
+}
+
+:root[data-palette='oxigen-teal'] {
+  --ink: 17 34 40;          /* #112228 */
+  --ink-2: 22 44 52;
+  --ink-3: 28 58 66;        /* #1c3a42 */
+  --paper: 244 244 244;
+  --paper-2: 221 230 233;   /* #dde6e9 */
+  --paper-3: 230 230 227;   /* #e6e6e3 */
+  --card: 255 255 255;
+  --light: 236 238 238;
+  --soft: 196 205 205;
+  --quiet: 92 106 108;
+  --mut: 112 124 127;
+  --body: 89 88 79;
+  --cream: 239 234 225;
+  --line: 205 212 214;
+  --accent: 110 158 164;    /* #6e9ea4 */
+  --accent-hover: 82 118 123;
+  --accent-fg: 255 255 255;
+  --accent-text: 62 98 104;
+  --danger: 208 35 54;
+
+  --scene-bg: #06121a;
+  --scene-fog: #00364a;
+  --scene-point: #cef4f9;
+  --scene-glow: #7fe3e8;
+  --scene-wire: #6e9ea4;
+}
+
+/* Dark surfaces (.on-dark) get lighter muted tokens so labels keep >= 4.5:1 on ink. */
+:root .on-dark,
+:root[data-palette] .on-dark {
+  --quiet: 142 148 152;
+  --mut: 142 148 152;
+  --accent-text: 242 92 108;
+}
+:root[data-palette='oxigen-teal'] .on-dark {
+  --quiet: 140 158 160;
+  --mut: 140 158 160;
+  --accent-text: 140 190 196;
+}

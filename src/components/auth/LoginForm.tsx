@@ -1,13 +1,8 @@
-
 import { z } from "zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/Button";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import PasswordInput from "./PasswordInput";
 
 export const loginSchema = z.object({
@@ -33,34 +28,31 @@ const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-5">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className="space-y-0">
+              <FormLabel className="field-label">Email</FormLabel>
               <FormControl>
-                <Input
+                <input
                   {...field}
                   type="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
-                  className="bg-white border-[#d2d2d7] focus:ring-[#1d1d1f] focus:border-[#1d1d1f] rounded-xl"
+                  className="field"
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="mt-1.5 font-mono text-[11px] font-normal tracking-wide text-accent-ink" />
             </FormItem>
           )}
         />
 
         <PasswordInput name="password" label="Password" />
 
-        <div>
-          <Button
-            type="submit"
-            className={cn("w-full bg-[#1d1d1f] hover:bg-[#424245] rounded-full")}
-            isLoading={loading}
-          >
+        <div className="pt-2">
+          <Button type="submit" size="lg" className="w-full" isLoading={loading}>
             Sign in
           </Button>
         </div>

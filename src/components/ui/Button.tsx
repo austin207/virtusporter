@@ -6,25 +6,23 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-[#1d1d1f] text-white hover:bg-[#424245]",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-[#1d1d1f] bg-transparent text-[#1d1d1f] hover:bg-[#1d1d1f] hover:text-white",
-        secondary:
-          "bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed]",
-        ghost: "hover:bg-[#f5f5f7] hover:text-[#1d1d1f]",
-        link: "text-[#1d1d1f] underline-offset-4 hover:underline",
-        primary: "bg-[#1d1d1f] text-white hover:bg-[#424245]",
+        default: "bg-ink text-cream hover:bg-ink-3",
+        primary: "bg-ink text-cream hover:bg-ink-3",
+        accent: "bg-accent-hover text-accent-foreground hover:bg-accent-ink",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-ink/25 bg-transparent text-ink hover:bg-ink hover:text-paper",
+        secondary: "bg-paper-2 text-ink hover:bg-paper-3",
+        ghost: "text-ink hover:bg-paper-2",
+        link: "text-ink underline-offset-4 hover:underline hover:text-accent-ink",
       },
       size: {
-        default: "h-10 px-6 py-2",
-        sm: "h-9 px-4",
-        lg: "h-12 px-8 text-base",
+        default: "h-11 px-6",
+        sm: "h-9 px-4 text-[13px]",
+        lg: "h-[52px] px-7 text-[0.95rem]",
         icon: "h-10 w-10",
       },
     },
@@ -77,8 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <a
           href={href}
           className={baseStyles}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         >
           {content}
         </a>

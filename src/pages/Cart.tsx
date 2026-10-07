@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, ShoppingCart, MinusCircle, PlusCircle, ArrowLeft } from "lucide-react";
+import { Trash2, Minus, Plus, ArrowLeft } from "lucide-react";
+import Seo from "@/seo/Seo";
+import { Eyebrow, OxLink, Section } from "@/components/ox/primitives";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { dbService, CartItem } from "@/services/DatabaseService";
@@ -12,21 +11,22 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 
 const Cart = () => {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    // Redirect if not logged in
+    // Wait for the session to be restored before deciding the user is logged out
+    if (authLoading) return;
     if (!user) {
       navigate('/auth');
       return;
     }
-    
+
     fetchCartItems();
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const fetchCartItems = async () => {
     if (!user) return;
@@ -36,7 +36,7 @@ const Cart = () => {
       const items = await dbService.getCartWithProducts(user.id);
       setCartItems(items);
     } catch (error) {
-      console.error('Error fetching cart items:', error);
+      console.warn('Error fetching cart items:', error);
       toast({
         title: "Failed to load cart",
         description: "Please try refreshing the page.",
@@ -71,7 +71,7 @@ const Cart = () => {
         });
       }
     } catch (error) {
-      console.error('Error updating cart:', error);
+      console.warn('Error updating cart:', error);
       toast({
         title: "Failed to update cart",
         description: "Please try again.",
@@ -98,7 +98,7 @@ const Cart = () => {
         description: "Item has been removed from your cart.",
       });
     } catch (error) {
-      console.error('Error removing item:', error);
+      console.warn('Error removing item:', error);
       toast({
         title: "Failed to remove item",
         description: "Please try again.",
@@ -123,126 +123,132 @@ const Cart = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-24 bg-gray-50">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-extrabold text-gray-900">Your Cart</h1>
-            <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
-              <ArrowLeft className="mr-2 h-4 w-4" /> Continue Shopping
-            </Button>
+    <>
+      <Seo
+        path="/cart"
+        title="Your Cart"
+        description="Review the products in your VirtusCo cart."
+        noindex
+      />
+
+      <section data-tone="dark" data-rail="Cart" className="on-dark bg-ink text-light">
+        <div className="wrap flex flex-wrap items-end justify-between gap-6 pb-12 pt-40">
+          <div>
+            <Eyebrow dot className="mb-5 text-light/70">Marketplace</Eyebrow>
+            <h1 className="h-page text-light">Your Cart</h1>
           </div>
-          
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-3 border border-light/30 px-5 py-[13px] font-mono text-[12.5px] uppercase leading-none tracking-[0.08em] text-light transition-colors hover:bg-light hover:text-ink"
+          >
+            <ArrowLeft className="h-4 w-4" /> Continue Shopping
+          </button>
+        </div>
+      </section>
+
+      <Section label="Items" className="sec-sm wrap">
+        {loading ? (
+          <div className="flex items-center gap-4 py-16" role="status">
+            <span aria-hidden className="h-[7px] w-[7px] animate-pulse bg-accent" />
+            <span className="eyebrow text-quiet">Loading cart</span>
+          </div>
+        ) : cartItems.length === 0 ? (
+          <div className="border-y border-ink/15 py-16">
+            <h2 className="h-section text-ink">Your cart is empty</h2>
+            <p className="lede mt-4 text-body">Start adding products to your cart to see them here</p>
+            <div className="mt-8">
+              <OxLink to="/employee-products" variant="solid">
+                Browse Products
+              </OxLink>
             </div>
-          ) : cartItems.length === 0 ? (
-            <Card>
-              <CardContent className="pt-6 text-center">
-                <div className="flex flex-col items-center justify-center py-12">
-                  <ShoppingCart className="h-16 w-16 text-gray-400 mb-4" />
-                  <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
-                  <p className="text-gray-600 mb-6">Start adding products to your cart to see them here</p>
-                  <Button onClick={() => navigate('/employee-products')}>
-                    Browse Products
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cart Items ({cartItems.length})</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[120px]">Product</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead>Quantity</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead className="w-[100px]">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {cartItems.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell>
-                            <img 
-                              src={item.product?.image_url || "/placeholder.svg"} 
-                              alt={item.product?.name || "Product"}
-                              className="w-16 h-16 object-cover rounded" 
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/placeholder.svg";
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">{item.product?.name || "Unknown Product"}</TableCell>
-                          <TableCell>${(item.product?.price || 0).toFixed(2)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                className="h-8 w-8" 
-                                onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                disabled={updating}
-                              >
-                                <MinusCircle className="h-4 w-4" />
-                              </Button>
-                              <span className="w-8 text-center">{item.quantity}</span>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                className="h-8 w-8" 
-                                onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                disabled={updating}
-                              >
-                                <PlusCircle className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                          <TableCell>${((item.product?.price || 0) * item.quantity).toFixed(2)}</TableCell>
-                          <TableCell>
-                            <Button 
-                              variant="destructive" 
-                              size="icon" 
-                              className="h-8 w-8" 
-                              onClick={() => removeItem(item.id)}
-                              disabled={updating}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-right font-bold">Total</TableCell>
-                        <TableCell className="font-bold">${calculateTotal().toFixed(2)}</TableCell>
-                        <TableCell></TableCell>
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </CardContent>
-                <CardFooter className="flex justify-end">
-                  <Button className="w-full md:w-auto" onClick={handleCheckout} disabled={updating}>
-                    Proceed to Checkout
-                  </Button>
-                </CardFooter>
-              </Card>
+          </div>
+        ) : (
+          <div className="bg-card">
+            <div className="flex items-center justify-between border-b border-ink/15 px-6 py-5">
+              <h2 className="h-card text-ink">Cart Items ({cartItems.length})</h2>
             </div>
-          )}
-        </section>
-      </main>
-      <Footer />
-    </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-ink/15 hover:bg-transparent">
+                  <TableHead className="eyebrow h-12 w-[120px] px-6 text-quiet">Product</TableHead>
+                  <TableHead className="eyebrow h-12 text-quiet">Name</TableHead>
+                  <TableHead className="eyebrow h-12 text-quiet">Price</TableHead>
+                  <TableHead className="eyebrow h-12 text-quiet">Quantity</TableHead>
+                  <TableHead className="eyebrow h-12 text-quiet">Total</TableHead>
+                  <TableHead className="eyebrow h-12 w-[100px] px-6 text-quiet">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {cartItems.map((item) => (
+                  <TableRow key={item.id} className="border-ink/15 hover:bg-paper/60">
+                    <TableCell className="px-6">
+                      <img
+                        src={item.product?.image_url || "/placeholder.svg"}
+                        alt={item.product?.name || "Product"}
+                        className="h-16 w-16 border border-ink/15 bg-paper-2 object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/placeholder.svg";
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell className="font-sans text-[0.98rem] font-medium text-ink">{item.product?.name || "Unknown Product"}</TableCell>
+                    <TableCell className="font-mono text-[13px] text-body">${(item.product?.price || 0).toFixed(2)}</TableCell>
+                    <TableCell>
+                      <div className="inline-flex items-center border border-ink/20">
+                        <button
+                          type="button"
+                          aria-label="Decrease quantity"
+                          className="flex h-9 w-9 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-paper disabled:opacity-40"
+                          onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                          disabled={updating}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        <span className="w-10 text-center font-mono text-[13px]">{item.quantity}</span>
+                        <button
+                          type="button"
+                          aria-label="Increase quantity"
+                          className="flex h-9 w-9 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-paper disabled:opacity-40"
+                          onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                          disabled={updating}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-[13px] text-ink">${((item.product?.price || 0) * item.quantity).toFixed(2)}</TableCell>
+                    <TableCell className="px-6">
+                      <button
+                        type="button"
+                        aria-label="Remove item"
+                        className="flex h-9 w-9 items-center justify-center border border-ink/20 text-ink transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+                        onClick={() => removeItem(item.id)}
+                        disabled={updating}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter className="border-t border-ink/15 bg-transparent">
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={4} className="eyebrow text-right text-quiet">Total</TableCell>
+                  <TableCell className="font-sans text-[1.1rem] font-semibold text-ink">${calculateTotal().toFixed(2)}</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+            <div className="flex justify-end border-t border-ink/15 p-6">
+              <Button size="lg" className="w-full md:w-auto" onClick={handleCheckout} disabled={updating}>
+                Proceed to Checkout
+              </Button>
+            </div>
+          </div>
+        )}
+      </Section>
+    </>
   );
 };
 

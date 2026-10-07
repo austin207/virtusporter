@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { dbService, Product } from "@/services/DatabaseService";
 import ProductGrid from "@/components/employee-products/ProductGrid";
 import ProductHero from "@/components/employee-products/ProductHero";
+import Seo from "@/seo/Seo";
+import { Section } from "@/components/ox/primitives";
 
 const EmployeeProducts = () => {
   const { toast } = useToast();
@@ -14,6 +14,7 @@ const EmployeeProducts = () => {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [cartItems, setCartItems] = useState<{id: string, quantity: number}[]>([]);
   
   // Fetch products from Supabase
@@ -24,12 +25,8 @@ const EmployeeProducts = () => {
         const data = await dbService.fetchEmployeeProducts();
         setProducts(data);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        toast({
-          title: "Failed to load products",
-          description: "Please try refreshing the page.",
-          variant: "destructive"
-        });
+        console.warn('Error fetching products:', error);
+        setLoadFailed(true);
       } finally {
         setIsLoading(false);
       }
@@ -50,7 +47,7 @@ const EmployeeProducts = () => {
           quantity: item.quantity
         })));
       } catch (error) {
-        console.error('Error fetching cart:', error);
+        console.warn('Error fetching cart:', error);
       }
     };
     
@@ -84,7 +81,7 @@ const EmployeeProducts = () => {
         description: "This product has been added to your cart.",
       });
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.warn('Error adding to cart:', error);
       toast({
         title: "Failed to add to cart",
         description: "Please try again.",
@@ -123,7 +120,7 @@ const EmployeeProducts = () => {
         description: "Your product has been added to the marketplace.",
       });
     } catch (error) {
-      console.error('Error submitting product:', error);
+      console.warn('Error submitting product:', error);
       toast({
         title: "Failed to submit product",
         description: "Please try again.",
@@ -133,26 +130,30 @@ const EmployeeProducts = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-24 bg-gray-50">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <ProductHero 
-            open={open} 
-            setOpen={setOpen} 
-            onSubmit={handleNewProduct} 
-            isLoggedIn={!!user} 
-          />
-          <ProductGrid 
-            products={products} 
-            cartItems={cartItems} 
-            onAddToCart={handleAddToCart}
-            isLoading={isLoading}
-          />
-        </section>
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Seo
+        path="/employee-products"
+        type="CollectionPage"
+        title="Employee Innovation Marketplace"
+        description="Discover innovative products created by VirtusCo employees and supported through our innovation nurturing program. Browse the marketplace or sign in to submit your own."
+        noindex
+      />
+      <ProductHero
+        open={open}
+        setOpen={setOpen}
+        onSubmit={handleNewProduct}
+        isLoggedIn={!!user}
+      />
+      <Section label="Marketplace" className="sec-sm wrap">
+        <ProductGrid
+          products={products}
+          cartItems={cartItems}
+          onAddToCart={handleAddToCart}
+          isLoading={isLoading}
+          loadFailed={loadFailed}
+        />
+      </Section>
+    </>
   );
 };
 

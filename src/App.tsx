@@ -1,100 +1,124 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "./context/AuthContext";
-import { useState, useEffect } from "react";
-import LoadingScreen from "./components/layout/LoadingScreen";
-import Index from "./pages/Index";
-import Product from "./pages/Product";
-import Service from "./pages/Service";
-import About from "./pages/About";
-//import Blog from "./pages/Blog";
-import Contact from "./pages/Contact";
+import { features } from "./content/company";
+import SiteLayout, { PageFallback } from "./components/layout/SiteLayout";
+import SmoothScroll from "./components/layout/SmoothScroll";
+import PageWipe from "./components/layout/PageWipe";
+import Preloader from "./components/layout/Preloader";
 
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
-import VirtueChat from "./components/chat/VirtueChat";
-import ScrollToTop from "./components/layout/ScrollToTop";
-import FounderAntony from "./pages/founders/FounderAntony";
-import FounderAlwinGeorge from "./pages/founders/FounderAlwinGeorge";
-import FounderAzeem from "./pages/founders/FounderAzeem";
-import FounderAllenGeorge from "./pages/founders/FounderAllenGeorge";
-import FounderDanush from "./pages/founders/FounderDanush";
-import EmployeeProducts from "./pages/EmployeeProducts";
-import Cart from "./pages/Cart";
-import PressKit from "./pages/PressKit";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import Virtue from './pages/Virtue';
+// Route-level code splitting. The build-time prerenderer waits for these (renderToPipeableStream
+// onAllReady), so every public page is still emitted as complete static HTML.
+const Index = lazy(() => import("./pages/Index"));
+const Service = lazy(() => import("./pages/Service"));
+const Product = lazy(() => import("./pages/Product"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Founder = lazy(() => import("./pages/Founder"));
+const EmployeeProducts = lazy(() => import("./pages/EmployeeProducts"));
+const Cart = lazy(() => import("./pages/Cart"));
+const PressKit = lazy(() => import("./pages/PressKit"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const Auth = lazy(() => import("./pages/Auth"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const Virtue = lazy(() => import("./pages/Virtue"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const VirtueChat = lazy(() => import("./components/chat/VirtueChat"));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+/**
+ * The floating chat widget everywhere except the full-page chat (it used to render twice there).
+ * Only a tiny launcher ships with the page; the widget (markdown, syntax highlighting, KaTeX)
+ * is downloaded on first click.
+ */
+function ChatWidget() {
+  const { pathname } = useLocation();
+  const [requested, setRequested] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
+  useEffect(() => {
+    // step aside while the footer is on screen so the button never covers footer links
+    const footer = document.getElementById("footer");
+    if (!footer) return;
+    const io = new IntersectionObserver(([e]) => setFooterVisible(e.isIntersecting));
+    io.observe(footer);
+    return () => io.disconnect();
+  }, [pathname]);
+  // Hidden on the full-page chat and on focused task flows where it would cover form buttons
+  if (["/virtue", "/auth", "/forgot-password", "/cart"].some((p) => pathname.startsWith(p))) return null;
+  if (!requested)
+    return (
+      <button
+        type="button"
+        onClick={() => setRequested(true)}
+        onPointerEnter={() => import("./components/chat/VirtueChat")}
+        aria-label={features.virtueAI ? "Open chat" : "Open FAQ assistant"}
+        title={features.virtueAI ? "Chat with Virtue" : "Questions? Our FAQ assistant can help"}
+        className={`fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 z-[45] flex h-12 w-12 items-center sm:right-5 sm:h-14 sm:w-14 justify-center bg-accent text-accent-foreground transition-[background-color,opacity,transform] duration-300 hover:bg-accent-hover ${
+          footerVisible ? "pointer-events-none translate-y-4 opacity-0" : ""
+        }`}
+        tabIndex={footerVisible ? -1 : 0}
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+        </svg>
+      </button>
+    );
+  return (
+    <Suspense fallback={null}>
+      <VirtueChat defaultOpen />
+    </Suspense>
+  );
+}
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    // Simulate initial loading with a safety timeout
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Adjust the timing as needed
-    
-    // Safety fallback in case the loading screen gets stuck
-    const fallbackTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 8000); // Force loading to end after 8 seconds
-    
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(fallbackTimer);
-    };
-  }, []);
+  // One QueryClient per app instance (important for server rendering).
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
+      }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          {isLoading && <LoadingScreen />}
+        <>
+          <Preloader />
+          <SmoothScroll />
+          <PageWipe />
           <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
+          <Suspense fallback={<PageFallback />}>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/product" element={<Product />} />
-              <Route path="/service" element={<Service />} />
-              <Route path="/about" element={<About />} />
-
-              <Route path="/contact" element={<Contact />} />
-
+              <Route element={<SiteLayout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/service" element={<Service />} />
+                <Route path="/product" element={<Product />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/founders/:slug" element={<Founder />} />
+                <Route path="/employee-products" element={<EmployeeProducts />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/press-kit" element={<PressKit />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                {/* legacy / alias URLs */}
+                <Route path="/services" element={<Navigate to="/service" replace />} />
+                <Route path="/porter" element={<Navigate to="/product" replace />} />
+                <Route path="/investor" element={<Navigate to="/contact?type=investor" replace />} />
+                <Route path="/blog" element={<Navigate to="/press-kit" replace />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
               <Route path="/auth" element={<Auth />} />
-              <Route path="/auth/callback" element={<Navigate to="/auth" />} />
-              <Route path="/founders/antony-austin" element={<FounderAntony />} />
-              <Route path="/founders/alwin-george-thomas" element={<FounderAlwinGeorge />} />
-              <Route path="/founders/azeem-kouther" element={<FounderAzeem />} />
-              <Route path="/founders/allen-george-thomas" element={<FounderAllenGeorge />} />
-              <Route path="/founders/danush-krishna" element={<FounderDanush />} />
-              <Route path="/employee-products" element={<EmployeeProducts />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/press-kit" element={<PressKit />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/virtue" element={<Virtue />}/>
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="/auth/callback" element={<Navigate to="/auth" replace />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/virtue" element={<Virtue />} />
             </Routes>
-            <VirtueChat />
-          </BrowserRouter>
-        </TooltipProvider>
+          </Suspense>
+          <ChatWidget />
+        </>
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -1,39 +1,32 @@
 
 import { useState, useEffect } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/Button";
 import { Download, FileText, Image, FileIcon, Video } from "lucide-react";
+import Seo from "@/seo/Seo";
+import { PageHero } from "@/components/ox/Blocks";
+import { Section } from "@/components/ox/primitives";
+import { cn } from "@/lib/utils";
 import { dbService, PressKitItem } from "@/services/DatabaseService";
-import { useToast } from "@/hooks/use-toast";
+import { staticPressKit } from "@/content/pressKit";
+import { company } from "@/content/company";
 
 const PressKit = () => {
-  const [items, setItems] = useState<PressKitItem[]>([]);
+  // Built-in assets render immediately (and in the prerendered HTML); backend items are extras.
+  const [remote, setRemote] = useState<PressKitItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const { toast } = useToast();
-  
+  const items = [...staticPressKit, ...remote];
+
   useEffect(() => {
-    const fetchPressKitItems = async () => {
-      try {
-        setLoading(true);
-        const data = await dbService.fetchPressKitItems();
-        setItems(data);
-      } catch (error) {
-        console.error('Error fetching press kit items:', error);
-        toast({
-          title: "Failed to load press kit",
-          description: "Please try refreshing the page.",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
+    let alive = true;
+    dbService
+      .fetchPressKitItems()
+      .then((data) => alive && setRemote(data))
+      .catch((error) => console.warn('Press kit backend unavailable, showing built-in assets.', error))
+      .finally(() => alive && setLoading(false));
+    return () => {
+      alive = false;
     };
-    
-    fetchPressKitItems();
-  }, [toast]);
+  }, []);
   
   const categories = ['all', ...new Set(items.map(item => item.category))];
   
@@ -46,98 +39,128 @@ const PressKit = () => {
   const getItemIcon = (fileType: string) => {
     switch (fileType.toLowerCase()) {
       case 'image':
-        return <Image className="h-8 w-8" />;
+        return <Image className="h-4 w-4" />;
       case 'video':
-        return <Video className="h-8 w-8" />;
+        return <Video className="h-4 w-4" />;
       case 'pdf':
-        return <FileText className="h-8 w-8" />;
+        return <FileText className="h-4 w-4" />;
       default:
-        return <FileIcon className="h-8 w-8" />;
+        return <FileIcon className="h-4 w-4" />;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-              VirtusCo Press Kit
-            </h1>
-            <p className="max-w-2xl mx-auto text-xl text-gray-600">
-              Download official VirtusCo media resources for press coverage, partnerships, and brand usage.
-            </p>
+    <>
+      <Seo
+        path="/press-kit"
+        type="CollectionPage"
+        title="Press Kit"
+        description="Download official VirtusCo media resources for press coverage, partnerships, and brand usage."
+      />
+
+      <PageHero
+        compact
+        eyebrow="Press & Media"
+        title={
+          <>
+            VirtusCo <span className="text-accent-ink">Press Kit</span>
+          </>
+        }
+        lede="Download official VirtusCo media resources for press coverage, partnerships, and brand usage."
+      />
+
+      <Section label="Resources" className="sec-sm wrap">
+        {/* Category Filter */}
+        <div className="mb-10 flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              aria-pressed={activeCategory === category}
+              onClick={() => setActiveCategory(category)}
+              className={cn(
+                "border px-4 py-[10px] font-mono text-[11.5px] uppercase leading-none tracking-[0.12em] transition-colors",
+                activeCategory === category
+                  ? "border-ink bg-ink text-paper"
+                  : "border-ink/20 text-ink hover:border-ink"
+              )}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {loading && remote.length === 0 && (
+          <p className="sr-only" role="status">
+            Checking for additional press materials
+          </p>
+        )}
+        {filteredItems.length === 0 ? (
+          <div className="border-y border-ink/15 py-16">
+            <p className="lede text-body">No press kit materials available in this category.</p>
           </div>
-          
-          {/* Category Filter */}
-          <div className="mb-8 flex flex-wrap gap-2 justify-center">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={activeCategory === category ? "primary" : "outline"}
-                onClick={() => setActiveCategory(category)}
-                className="capitalize"
-              >
-                {category}
-              </Button>
+        ) : (
+          <div className="grid grid-cols-1 gap-[14px] md:grid-cols-2 lg:grid-cols-3">
+            {filteredItems.map((item) => (
+              <article key={item.id} className="flex h-full flex-col border border-ink/15 bg-card">
+                {item.thumbnail_url && (
+                  <div className="flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-ink/15 bg-paper-2">
+                    <img
+                      src={item.thumbnail_url}
+                      alt={item.title}
+                      loading="lazy"
+                      className="max-h-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/placeholder.svg";
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="mb-4 flex items-center justify-between gap-4 text-quiet">
+                    <span className="flex items-center gap-2">
+                      {getItemIcon(item.file_type)}
+                      <span className="mono-tag">{item.category}</span>
+                    </span>
+                    <span className="mono-tag border border-ink/15 px-2 py-1">{item.file_type}</span>
+                  </div>
+                  <h3 className="h-card text-ink">{item.title}</h3>
+                  <p className="mt-3 flex-1 font-serif text-[1rem] leading-relaxed text-body">{item.description}</p>
+                  <a
+                    href={item.file_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 bg-ink px-6 text-sm font-semibold text-cream transition-colors hover:bg-ink-3"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download
+                  </a>
+                </div>
+              </article>
             ))}
           </div>
-          
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          ) : filteredItems.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-lg text-gray-600">No press kit materials available in this category.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems.map((item) => (
-                <Card key={item.id} className="flex flex-col h-full">
-                  <CardHeader>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center">
-                        {getItemIcon(item.file_type)}
-                        <CardTitle className="ml-2">{item.title}</CardTitle>
-                      </div>
-                      <span className="text-xs bg-gray-100 px-2 py-1 rounded-full capitalize">
-                        {item.file_type}
-                      </span>
-                    </div>
-                    <CardDescription>{item.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    {item.thumbnail_url && (
-                      <div className="mb-4 rounded-md overflow-hidden bg-gray-100 flex justify-center">
-                        <img
-                          src={item.thumbnail_url}
-                          alt={item.title}
-                          className="object-contain max-h-48"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/placeholder.svg";
-                          }}
-                        />
-                      </div>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" asChild>
-                      <a href={item.file_url} download target="_blank" rel="noopener noreferrer">
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                      </a>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
+        )}
+      </Section>
+
+      <Section tone="paper-2" label="Boilerplate" className="sec-sm wrap">
+        <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p className="eyebrow mb-5">Boilerplate</p>
+            <h2 className="h-section">About VirtusCo</h2>
+          </div>
+          <div>
+            <p className="copy max-w-[64ch] text-ink">{company.shortDescription}</p>
+            <p className="mt-6 font-serif text-body">
+              Media contact:{' '}
+              <a className="ulink text-ink" href={`mailto:${company.email}`}>
+                {company.email}
+              </a>
+            </p>
+          </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </Section>
+    </>
   );
 };
 

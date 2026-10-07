@@ -1,26 +1,37 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<!-- Palette switch: data-palette="graphite" (graphite + Virtus red) | "oxigen-teal". Tokens: src/styles/theme.css -->
+<html lang="en-IN" data-palette="graphite">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VirtusCo</title>
-
-    <meta name="description" content="VirtusCo" />
-    <meta name="author" content="V25" />
-
-    <meta property="og:title" content="VirtusCo" />
-    <meta property="og:description" content="VirtusCo" />
-    <meta property="og:type" content="website" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@VirtuscoTech" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      // Progressive enhancement flags (before first paint): reveal animations only hide content
+      // when JS runs; the intro preloader shows once per session.
+      (function (d) {
+        d.classList.add('js');
+        try { if (sessionStorage.getItem('vc-seen')) d.classList.add('seen'); } catch (e) {}
+      })(document.documentElement);
+    </script>
+    <!--app-head-->
+    <title>VirtusCo | Robotics Engineering Company in Kochi, India</title>
+    <meta name="description" content="VirtusCo builds custom robots in Kochi, India: ROS development, mechanical and electronics design, system integration and AI, scoped to your budget." />
+    <!--/app-head-->
+    <meta name="author" content="VirtusCo" />
+    <meta name="theme-color" content="#111214" />
+    <meta name="color-scheme" content="light" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="application-name" content="VirtusCo" />
+    <meta name="apple-mobile-web-app-title" content="VirtusCo" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="author" href="/humans.txt" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary" />
   </head>
 
   <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

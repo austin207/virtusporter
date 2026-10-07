@@ -1,7 +1,5 @@
 
 import { useRef, useState, useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
@@ -127,7 +125,6 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       
       <main className="flex-grow pt-16">
         {/* Hero Section */}
@@ -309,7 +306,6 @@ const Blog = () => {
         </section>
       </main>
       
-      <Footer />
     </div>
   );
 };

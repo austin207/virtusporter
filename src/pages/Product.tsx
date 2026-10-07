@@ -1,296 +1,147 @@
+import { lazy } from 'react';
+import Seo from '@/seo/Seo';
+import { breadcrumbs, porterProduct } from '@/seo/schema';
+import { porter, porterFeatures, porterGroups } from '@/content/porter';
+import { faqs } from '@/content/about';
+import { Eyebrow, OxLink, Reveal, Section, TwoTone } from '@/components/ox/primitives';
+import { ScrollStory, PointPoster } from '@/components/ox/ScrollStory';
+import { FeatureGrid } from '@/components/ox/Cards';
+import { CtaBand, FaqList } from '@/components/ox/Blocks';
 
-import { useRef, useState, useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
+const PorterScene = lazy(() => import('@/scenes/PorterScene'));
 
-interface Feature {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
+const porterFaqs = faqs.filter((f) => f.topic === 'porter');
+
+const groupCopy: Record<string, { ink: string; mut: string; tone: 'paper' | 'paper-2' | 'ink' }> = {
+  features: { ink: 'Designed for', mut: 'exceptional experience.', tone: 'paper' },
+  technology: { ink: 'Built on', mut: 'proven robotics technology.', tone: 'ink' },
+  sustainability: { ink: 'Engineered for', mut: 'a lighter footprint.', tone: 'paper-2' },
+};
 
 const Product = () => {
-  const [activeTab, setActiveTab] = useState('features');
-  const [isInView, setIsInView] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
-  const features: Feature[] = [
+  const chapters = [
     {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      ),
-      title: 'High Payload Capacity',
-      description: 'Our porter robots feature a robust chassis designed to handle heavy luggage with ease, supporting multiple bags while maintaining stability and maneuverability throughout the airport.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-        </svg>
-      ),
-      title: 'Autonomous Navigation',
-      description: 'Advanced sensors and AI algorithms enable our robots to navigate complex airport layouts autonomously, tracking users in real-time while intelligently avoiding obstacles and crowds.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      ),
-      title: 'Adjustable Lifting Mechanism',
-      description: 'The integrated smart lifting system adjusts to various luggage sizes and weights, providing seamless transfer between ground, robot platform, and check-in counters without physical strain.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      title: 'Interactive Display',
-      description: 'Our touchscreen interface provides real-time information on check-in, boarding gates, flight status, and interactive airport maps, transforming the porter into a comprehensive travel assistant.',
-    },
-  ];
-
-  const techFeatures = [
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-        </svg>
-      ),
-      title: 'Advanced AI Processing',
-      description: 'Onboard neural network processors handle complex environmental analysis and decision-making in real-time, without relying on cloud connectivity.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-        </svg>
-      ),
-      title: 'Multi-sensor Fusion',
-      description: 'Combines data from LiDAR, cameras, ultrasonic sensors, and radar to create an accurate 3D map of surroundings for precise navigation.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-        </svg>
-      ),
-      title: 'Modular Hardware Architecture',
-      description: "Field-replaceable components allow for rapid maintenance and upgrades, extending the robot's operational life and reducing downtime.",
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-      ),
-      title: 'Enterprise-grade Security',
-      description: 'End-to-end encryption, secure boot processes, and continuous security updates protect passenger data and prevent unauthorized access.',
-    },
-  ];
-
-  const sustainabilityFeatures = [
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      ),
-      title: 'Energy-Efficient Design',
-      description: 'Ultra-efficient motors and power management systems maximize operational time between charges while minimizing energy consumption.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-      title: 'Renewable Charging',
-      description: 'Solar-powered docking stations and kinetic energy harvesting systems reduce dependence on grid electricity and lower carbon footprint.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
-      ),
-      title: 'Circular Economy Model',
-      description: 'Modular components designed for repair, refurbishment, and recyclability, extending product lifecycle and reducing waste.',
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
-        </svg>
-      ),
-      title: 'Eco-friendly Materials',
-      description: 'Constructed using recycled aluminum, bio-based plastics, and responsibly sourced materials to minimize environmental impact.',
-    },
-  ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const renderFeatureGrid = (items: Feature[]) => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      {items.map((feature, index) => (
-        <div
-          key={index}
-          className={`bg-white rounded-2xl transition-all duration-300 ${
-            index === 0
-              ? 'md:col-span-2 p-9 flex flex-col md:flex-row items-start gap-6'
-              : 'p-7'
-          }`}
-        >
-          <div className={`flex items-center justify-center bg-[#f5f5f7] text-[#1d1d1f] flex-shrink-0 ${
-            index === 0 ? 'w-14 h-14 rounded-2xl' : 'w-10 h-10 rounded-xl mb-4'
-          }`}>
-            {feature.icon}
+      key: 'hero',
+      rail: 'Intro',
+      node: (
+        <>
+          <Eyebrow dot className="mb-6 text-light/70">
+            {porter.status}
+          </Eyebrow>
+          <h1 className="h-hero text-light">{porter.title}</h1>
+          <p className="lede mt-6 text-soft">{porter.lede}</p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <OxLink to="/contact?type=porter" variant="cream">
+              Register interest
+            </OxLink>
+            <OxLink to="/product#faq" variant="ghost">
+              Revenue model
+            </OxLink>
           </div>
-          <div>
-            <h3 className={`font-semibold text-[#1d1d1f] ${index === 0 ? 'text-xl mb-3' : 'text-lg mb-2'}`}>
-              {feature.title}
-            </h3>
-            <p className={`text-[#86868b] leading-relaxed ${index === 0 ? 'text-sm' : 'text-sm'}`}>
-              {feature.description}
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+        </>
+      ),
+    },
+    ...porterFeatures.map((f, i) => ({
+      key: f.title,
+      rail: i === 0 ? 'Anatomy' : undefined,
+      node: (
+        <>
+          <p className="eyebrow mb-3 text-light/60">{f.part}</p>
+          <p className="step-num mb-5">{String(i + 1).padStart(2, '0')}</p>
+          <h2 className="h-chapter !text-[clamp(32px,4.4vw,58px)] text-light">{f.title}</h2>
+          <p className="lede mt-5 text-soft">{f.description}</p>
+        </>
+      ),
+    })),
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <>
+      <Seo
+        path="/product"
+        ogType="product"
+        title="Autonomous Airport Porter Robot (In Development)"
+        description="The VirtusCo autonomous porter robot, in development: high payload capacity, LiDAR and AI navigation, a lifting mechanism and a touch display for airports."
+        keywords={['autonomous porter robot', 'airport baggage robot', 'luggage carrying robot', 'airport robotics India', 'autonomous mobile robot']}
+        schema={[porterProduct(), breadcrumbs([{ name: 'Porter', path: '/product' }])]}
+      />
 
-      <main className="flex-grow pt-16">
-        {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="heading-lg text-[#1d1d1f] mb-6">
-              Meet the Autonomous Porter Robot
-            </h1>
-            <p className="subtitle mx-auto mb-10">
-              Our state-of-the-art autonomous porter robot combines cutting-edge technology with thoughtful design to transform the airport experience.
+      <ScrollStory id="features" Scene={PorterScene} poster={<PointPoster image="/posters/product.webp" />} chapters={chapters} />
+
+      {/* Status / photo */}
+      <Section tone="paper" label="Status" className="sec wrap">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <Reveal>
+            <figure className="relative bg-card">
+              <img
+                src={porter.image}
+                alt={porter.imageAlt}
+                width={1200}
+                height={900}
+                loading="lazy"
+                decoding="async"
+                className="h-auto w-full object-cover"
+              />
+              <figcaption className="absolute left-0 top-0 bg-accent-hover px-3 py-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-white">
+                {porter.status}
+              </figcaption>
+            </figure>
+          </Reveal>
+          <div>
+            <Eyebrow className="mb-5">{porter.heroTeaser.title}</Eyebrow>
+            <TwoTone ink={porter.contactPitch.title} />
+            <p className="lede mt-6 text-body">{porter.contactPitch.body}</p>
+            <p className="mt-4 max-w-[52ch] font-serif text-[0.98rem] leading-relaxed text-body">
+              We are designing the porter robot to make airport baggage handling easier for travellers and airport staff.
             </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
-              <Button to="/contact" size="lg">Request a Demo</Button>
-              <Button to="/service" variant="outline" size="lg">Revenue Model</Button>
-            </div>
-
-            <div className="mt-16">
-              <div className="bg-[#f5f5f7] rounded-2xl p-12 max-w-3xl mx-auto">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-[#1d1d1f] mb-2">Autonomous Porter</div>
-                  <div className="text-[#86868b] text-sm">Interactive 3D Model Coming Soon</div>
-                </div>
-              </div>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <OxLink to="/contact?type=porter" variant="solid">
+                Register interest
+              </OxLink>
+              <OxLink to="/service" variant="outline-dark">
+                Our engineering services
+              </OxLink>
             </div>
           </div>
-        </section>
+        </div>
+      </Section>
 
-        {/* Product Details Section */}
-        <section ref={sectionRef} id="features" className="py-24 lg:py-32 bg-[#f5f5f7]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-[#1d1d1f] mb-4">Designed for Excellence</h2>
-              <p className="subtitle mx-auto">
-                Our autonomous porter robots combine cutting-edge technology with thoughtful design to transform the airport experience.
-              </p>
+      {/* Features / Technology / Sustainability: real anchored sections (were tabs) */}
+      {porterGroups.filter((g) => g.id !== 'features').map((g) => {
+        const copy = groupCopy[g.id];
+        const dark = copy.tone === 'ink';
+        return (
+          <Section key={g.id} id={g.id} tone={copy.tone} label={g.label} className="sec wrap scroll-mt-0">
+            <div className="mb-[clamp(36px,6vh,64px)] grid gap-8 lg:grid-cols-2 lg:items-end">
+              <div>
+                <Eyebrow className={dark ? 'mb-5 text-quiet' : 'mb-5'}>{g.label}</Eyebrow>
+                <TwoTone dark={dark} ink={copy.ink} mut={copy.mut} />
+              </div>
+              {g.id === 'technology' && <p className="lede text-soft lg:ml-auto">{porter.sectionsIntro.lede}</p>}
             </div>
+            <FeatureGrid items={[...g.items]} dark={dark} />
+          </Section>
+        );
+      })}
 
-            {/* Tab Navigation */}
-            <div className="flex justify-center mb-12">
-              <div className="inline-flex p-1 bg-white rounded-full">
-                <button
-                  className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'features' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
-                  }`}
-                  onClick={() => handleTabChange('features')}
-                >
-                  Features
-                </button>
-                <button
-                  className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'technology' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
-                  }`}
-                  onClick={() => handleTabChange('technology')}
-                >
-                  Technology
-                </button>
-                <button
-                  className={`px-6 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTab === 'sustainability' ? 'bg-[#1d1d1f] text-white' : 'text-[#86868b] hover:text-[#1d1d1f]'
-                  }`}
-                  onClick={() => handleTabChange('sustainability')}
-                >
-                  Sustainability
-                </button>
-              </div>
-            </div>
-
-            {/* Tab Content */}
-            <div className={`transition-all duration-500 ${isInView ? 'opacity-100' : 'opacity-0'}`}>
-              <div className={`transition-opacity duration-500 ${activeTab === 'features' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                {renderFeatureGrid(features)}
-              </div>
-              <div className={`transition-opacity duration-500 ${activeTab === 'technology' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                {renderFeatureGrid(techFeatures)}
-              </div>
-              <div className={`transition-opacity duration-500 ${activeTab === 'sustainability' ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                {renderFeatureGrid(sustainabilityFeatures)}
-              </div>
-            </div>
+      <Section id="faq" label="FAQ" className="sec wrap">
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow className="mb-5">FAQ</Eyebrow>
+            <TwoTone ink="Porter" mut="questions, answered." />
           </div>
-        </section>
+          <FaqList items={porterFaqs} />
+        </div>
+      </Section>
 
-        {/* CTA Section */}
-        <section className="py-24 lg:py-32 bg-[#1d1d1f]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
-              Ready to transform your airport experience?
-            </h2>
-            <p className="text-[#86868b] text-lg mb-10 max-w-2xl mx-auto">
-              Schedule a demo to see our autonomous porter robots in action.
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
-              <Button to="/contact" className="bg-white text-[#1d1d1f] hover:bg-[#f5f5f7]" size="lg">
-                Request a Demo
-              </Button>
-              <Button to="/service" className="bg-transparent text-white border border-white hover:bg-white hover:text-[#1d1d1f]" size="lg">
-                Learn About Pricing
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+      <CtaBand
+        eyebrow={porter.status}
+        title={porter.cta.title}
+        body={`${porter.cta.body} ${porter.cta.note}`}
+        primary={{ label: 'Register interest', to: '/contact?type=porter' }}
+        secondary={{ label: 'Request financials', to: '/contact?type=investor' }}
+      />
+    </>
   );
 };
 

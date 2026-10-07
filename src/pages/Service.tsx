@@ -1,322 +1,187 @@
+import { lazy } from 'react';
+import Seo from '@/seo/Seo';
+import { breadcrumbs, howTo, serviceNodes } from '@/seo/schema';
+import { approach, approachIntro, budget, serviceCta, serviceHero, services, servicesIntro } from '@/content/services';
+import { faqs } from '@/content/about';
+import { Eyebrow, OxLink, Reveal, Section, TwoTone } from '@/components/ox/primitives';
+import { ScrollStory, PointPoster } from '@/components/ox/ScrollStory';
+import { CtaBand, FaqList } from '@/components/ox/Blocks';
+import PixelIcon from '@/components/ox/PixelIcon';
 
-import { useRef, useState, useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
-import { Code, Settings, Cpu, GitBranch, Bot, BarChart, Server, ArrowUpToLine } from 'lucide-react';
+const ServiceScene = lazy(() => import('@/scenes/ServiceScene'));
+
+const serviceFaqs = faqs.filter((f) => f.topic === 'services');
 
 const Service = () => {
-  const [isInView, setIsInView] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const services = [
+  const chapters = [
     {
-      title: "ROS Development",
-      description: "Custom Robot Operating System (ROS) development tailored to your specific use case and hardware requirements.",
-      icon: <Code className="h-6 w-6" />,
-      features: [
-        "ROS package development",
-        "Navigation stack customization",
-        "Sensor integration",
-        "Custom algorithms",
-        "Performance optimization"
-      ]
+      key: 'hero',
+      rail: 'Intro',
+      node: (
+        <>
+          <Eyebrow dot className="mb-6 text-light/70">
+            {serviceHero.eyebrow}
+          </Eyebrow>
+          <h1 className="h-hero text-light">{serviceHero.title}</h1>
+          <p className="lede mt-6 text-soft">{serviceHero.lede}</p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <OxLink to="/contact?type=project" variant="cream">
+              Get a Consultation
+            </OxLink>
+            <OxLink to="/product" variant="ghost" arrow={false}>
+              Explore Our Products
+            </OxLink>
+          </div>
+        </>
+      ),
     },
-    {
-      title: "Custom Robotics Solutions",
-      description: "End-to-end development of specialized robotics systems from concept to deployment.",
-      icon: <Bot className="h-6 w-6" />,
-      features: [
-        "Requirements analysis",
-        "Hardware selection",
-        "Mechanical design",
-        "Electronics integration",
-        "Testing and validation"
-      ]
-    },
-    {
-      title: "System Integration",
-      description: "Seamless integration of robotics systems with existing infrastructure and workflows.",
-      icon: <GitBranch className="h-6 w-6" />,
-      features: [
-        "API development",
-        "Legacy system integration",
-        "Cloud connectivity",
-        "Database integration",
-        "User management systems"
-      ]
-    },
-    {
-      title: "AI & Machine Learning",
-      description: "Intelligent systems that learn and adapt to changing environments and requirements.",
-      icon: <Cpu className="h-6 w-6" />,
-      features: [
-        "Computer vision systems",
-        "Predictive maintenance",
-        "Behavioral modeling",
-        "Reinforcement learning",
-        "Neural network design"
-      ]
-    }
-  ];
-
-  const processSteps = [
-    {
-      title: "Consultation",
-      description: "We assess your unique challenges and operational environment to determine how robotics can best serve your business needs.",
-      icon: <Settings className="h-6 w-6" />
-    },
-    {
-      title: "Budget Alignment",
-      description: "We work within your funding constraints, adjusting scope and approach to maximize value while meeting your core requirements.",
-      icon: <BarChart className="h-6 w-6" />
-    },
-    {
-      title: "Development",
-      description: "Our expert team designs and implements customized solutions, keeping you involved throughout the process.",
-      icon: <Code className="h-6 w-6" />
-    },
-    {
-      title: "Deployment",
-      description: "We ensure smooth integration with your existing systems and provide comprehensive training for your team.",
-      icon: <Server className="h-6 w-6" />
-    },
-    {
-      title: "Ongoing Support",
-      description: "We offer continued maintenance, updates, and optimization to ensure your solution evolves with your business.",
-      icon: <ArrowUpToLine className="h-6 w-6" />
-    }
+    ...services.map((s, i) => ({
+      key: s.id,
+      rail: i === 0 ? 'Services' : undefined,
+      node: (
+        <>
+          <p className="eyebrow mb-3 text-light/60">{s.tag}</p>
+          <p className="step-num mb-5">{String(i + 1).padStart(2, '0')}</p>
+          <h2 className="h-chapter text-light">{s.title}</h2>
+          <p className="lede mt-5 text-soft">{s.description}</p>
+        </>
+      ),
+    })),
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <>
+      <Seo
+        path="/service"
+        title="ROS and Custom Robotics Engineering Services"
+        description="Custom robotics for your business: ROS development, end-to-end custom robots, system integration and AI, scoped to your needs and budget. VirtusCo, Kochi."
+        keywords={['ROS development company India', 'custom robotics solutions', 'robot system integration', 'robotics AI machine learning', 'robotics consultancy Kerala']}
+        schema={[...serviceNodes(), howTo(), breadcrumbs([{ name: 'Services', path: '/service' }])]}
+      />
 
-      <main className="flex-grow pt-16">
-        {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="heading-lg text-[#1d1d1f] mb-6">
-              Custom Robotics Solutions for Your Business
-            </h1>
-            <p className="subtitle mx-auto mb-10">
-              VirtusCo specializes in creating tailored robotics solutions that address your unique business challenges. From ROS development to complete robotics systems, we adapt our approach to your needs and budget.
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
-              <Button to="/contact" size="lg">Get a Consultation</Button>
-              <Button to="/product" variant="outline" size="lg">Explore Our Products</Button>
-            </div>
+      <ScrollStory Scene={ServiceScene} poster={<PointPoster image="/posters/service.webp" />} chapters={chapters} />
+
+      {/* Service detail */}
+      <Section id="services" label="Detail" className="sec wrap">
+        <div className="mb-[clamp(36px,6vh,64px)] grid gap-8 lg:grid-cols-2 lg:items-end">
+          <div>
+            <Eyebrow className="mb-5">{servicesIntro.eyebrow}</Eyebrow>
+            <TwoTone ink={servicesIntro.title[0]} mut={servicesIntro.title[1]} />
           </div>
-        </section>
+          <p className="lede text-body lg:ml-auto">{servicesIntro.lede}</p>
+        </div>
+        <div className="border-t border-ink/15">
+          {services.map((s, i) => (
+            <Reveal
+              as="article"
+              key={s.id}
+              id={s.id}
+              className="group grid scroll-mt-28 gap-6 border-b border-ink/15 py-[clamp(28px,5vh,52px)] md:grid-cols-[80px_1fr_1fr] md:gap-10"
+            >
+              <div className="flex items-start gap-4 md:flex-col">
+                <span className="step-num">{String(i + 1).padStart(2, '0')}</span>
+                <PixelIcon art={s.pixel} className="h-12 w-12" />
+              </div>
+              <div>
+                <p className="mono-tag mb-3 text-quiet">{s.tag}</p>
+                <h3 className="h-section !text-[clamp(1.4rem,2.2vw,2rem)]">{s.title}</h3>
+                <p className="mt-4 max-w-[46ch] font-serif text-[1.02rem] leading-relaxed text-body">{s.description}</p>
+              </div>
+              <ul className="grid content-start grid-cols-1 gap-px self-start bg-ink/10 sm:grid-cols-2">
+                {s.features.map((f) => (
+                  <li key={f} className="flex items-center gap-3 bg-paper px-4 py-3.5 font-sans text-[0.93rem] text-ink sm:[&:last-child:nth-child(odd)]:col-span-2">
+                    <span aria-hidden className="h-[5px] w-[5px] shrink-0 bg-accent" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
 
-        {/* Services Section */}
-        <section ref={sectionRef} id="services" className="py-24 lg:py-32 bg-[#f5f5f7]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-[#1d1d1f] mb-4">Our Services</h2>
-              <p className="subtitle mx-auto">
-                We offer a comprehensive range of robotics solutions, from specialized development to complete systems.
-              </p>
-            </div>
+      {/* Approach */}
+      <Section id="approach" tone="ink" label="Approach" className="sec wrap">
+        <div className="mb-[clamp(36px,6vh,64px)] grid gap-8 lg:grid-cols-2 lg:items-end">
+          <div>
+            <Eyebrow className="mb-5 text-quiet">{approachIntro.eyebrow}</Eyebrow>
+            <TwoTone dark ink="From first conversation" mut="to ongoing support." />
+          </div>
+          <p className="lede text-soft lg:ml-auto">{approachIntro.lede}</p>
+        </div>
+        <ol className="grid grid-cols-1 border-t border-light/15 md:grid-cols-5">
+          {approach.map((s, i) => (
+            <Reveal
+              as="li"
+              key={s.n}
+              delay={i * 90}
+              className="border-b border-light/15 py-8 md:border-b-0 md:px-6 md:first:pl-0 md:[&:not(:last-child)]:border-r"
+            >
+              <p className="step-num mb-8">{s.n}</p>
+              <h3 className="h-card mb-3 text-light">{s.title}</h3>
+              <p className="font-serif text-[0.98rem] leading-relaxed text-soft">{s.description}</p>
+            </Reveal>
+          ))}
+        </ol>
+      </Section>
 
-            <div className="space-y-4">
-              {services.map((service, index) => (
-                <div
-                  key={index}
-                  className={`bg-white rounded-2xl transition-all duration-700 transform ${
-                    isInView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-                  } ${index % 2 === 0 ? 'p-8 md:p-10' : 'p-7 md:p-8'}`}
-                  style={{ transitionDelay: `${150 * index}ms` }}
-                >
-                  <div className="flex flex-col md:flex-row md:items-start gap-5">
-                    <div className={`flex-shrink-0 flex items-center justify-center text-[#1d1d1f] ${
-                      index % 2 === 0
-                        ? 'w-14 h-14 rounded-2xl bg-[#f5f5f7]'
-                        : 'w-11 h-11 rounded-xl bg-[#f5f5f7]'
-                    }`}>
-                      {service.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className={`font-semibold text-[#1d1d1f] mb-2 ${index % 2 === 0 ? 'text-xl' : 'text-lg'}`}>{service.title}</h3>
-                      <p className="text-[#86868b] text-sm mb-4">{service.description}</p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {service.features.map((feature, i) => (
-                          <span key={i} className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[#f5f5f7] text-[#3c3c43]">
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+      {/* Budget */}
+      <Section id="budget" tone="dots" label="Budget" className="sec wrap">
+        <div className="mb-[clamp(36px,6vh,64px)] grid gap-8 lg:grid-cols-2 lg:items-end">
+          <div>
+            <Eyebrow className="mb-5">{budget.eyebrow}</Eyebrow>
+            <TwoTone ink={budget.title[0]} mut={budget.title[1]} />
+          </div>
+          <p className="lede text-body lg:ml-auto">{budget.lede}</p>
+        </div>
+        <div className="grid gap-[14px] lg:grid-cols-[0.8fr_1.2fr]">
+          <Reveal className="bg-card p-[clamp(24px,3vw,40px)]">
+            <h3 className="h-card mb-4">{budget.flexible.title}</h3>
+            <p className="font-serif text-[1rem] leading-relaxed text-body">{budget.flexible.body}</p>
+            <ul className="mt-7 space-y-3 border-t border-ink/10 pt-6">
+              {budget.flexible.points.map((p) => (
+                <li key={p} className="flex items-center gap-3 font-sans text-[0.95rem]">
+                  <span aria-hidden className="font-mono text-accent-ink">✓</span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal delay={120} className="on-dark bg-ink p-[clamp(24px,3vw,40px)] text-light">
+            <h3 className="h-card mb-6 text-light">{budget.tiersTitle}</h3>
+            <div className="grid gap-px bg-light/15 sm:grid-cols-3">
+              {budget.tiers.map((t) => (
+                <div key={t.title} className="bg-ink p-5 sm:first:pl-0">
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-accent-ink">{t.fit}</p>
+                  <h4 className="mt-3 font-sans text-[1.05rem] font-medium text-light">{t.title}</h4>
+                  <p className="mt-2 font-serif text-[0.95rem] leading-relaxed text-soft">{t.body}</p>
                 </div>
               ))}
             </div>
+            <p className="mt-7 border-t border-light/15 pt-6 font-serif text-[1rem] leading-relaxed text-soft">{budget.closing}</p>
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* FAQ */}
+      <Section id="faq" label="FAQ" className="sec wrap">
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow className="mb-5">FAQ</Eyebrow>
+            <TwoTone ink="Questions about" mut="working with us." />
           </div>
-        </section>
+          <FaqList items={serviceFaqs} />
+        </div>
+      </Section>
 
-        {/* Process Section */}
-        <section className="py-24 lg:py-32 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-[#1d1d1f] mb-4">Our Approach</h2>
-              <p className="subtitle mx-auto">
-                We adapt our process to your specific needs and budget constraints, ensuring maximum value for your investment.
-              </p>
-            </div>
-
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-[2px] bg-[#d2d2d7] transform md:translate-x-0 translate-x-6"></div>
-
-              <div className="space-y-12">
-                {processSteps.map((step, index) => (
-                  <div key={index} className={`relative flex flex-col md:flex-row items-start md:even:flex-row-reverse`}>
-                    <div className="w-12 h-12 rounded-full bg-white border-2 border-[#d2d2d7] absolute left-0 md:left-1/2 transform translate-x-0 md:-translate-x-1/2 z-10 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-[#f5f5f7] flex items-center justify-center text-[#1d1d1f]">
-                        {step.icon}
-                      </div>
-                    </div>
-
-                    <div className={`pl-16 md:pl-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16 text-right' : 'md:pl-16'}`}>
-                      <div className={`bg-[#f5f5f7] p-6 rounded-2xl max-w-lg ${index % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}>
-                        <h3 className="text-xl font-semibold text-[#1d1d1f] mb-2">{step.title}</h3>
-                        <p className="text-[#86868b] text-sm">{step.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="md:w-1/2"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Case Studies Section */}
-        <section className="py-24 lg:py-32 bg-[#f5f5f7]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="heading-lg text-[#1d1d1f] mb-4">Tailored to Your Budget</h2>
-              <p className="subtitle mx-auto">
-                We understand that every business has different financial constraints. Our approach ensures you get the most value within your budget.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl overflow-hidden">
-              <div className="p-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="md:col-span-1">
-                    <h3 className="text-xl font-semibold text-[#1d1d1f] mb-4">Flexible Scope</h3>
-                    <p className="text-[#86868b] text-sm mb-6">
-                      Whether you need a targeted ROS development project or a complete robotics solution, we tailor our services to match your requirements and budget constraints.
-                    </p>
-                    <div className="space-y-3">
-                      <div className="flex items-center">
-                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="text-sm text-[#86868b]">Feature prioritization</span>
-                      </div>
-                      <div className="flex items-center">
-                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="text-sm text-[#86868b]">Phased implementation</span>
-                      </div>
-                      <div className="flex items-center">
-                        <svg className="h-5 w-5 text-[#1d1d1f] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="text-sm text-[#86868b]">Technology selection</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <div className="bg-[#f5f5f7] p-6 rounded-2xl">
-                      <h4 className="text-lg font-medium text-[#1d1d1f] mb-4">Budget-Based Approaches</h4>
-
-                      <div className="space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div className="bg-white p-5 rounded-xl">
-                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Focused Solution</div>
-                            <div className="text-xs text-[#86868b] mb-3">For smaller budgets</div>
-                            <div className="text-xs text-[#86868b]">
-                              Targeted ROS development for specific functionality, with potential for future expansion.
-                            </div>
-                          </div>
-
-                          <div className="bg-white p-5 rounded-xl">
-                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Balanced Approach</div>
-                            <div className="text-xs text-[#86868b] mb-3">For medium budgets</div>
-                            <div className="text-xs text-[#86868b]">
-                              Core robotics solution with essential features and reasonable customization options.
-                            </div>
-                          </div>
-
-                          <div className="bg-white p-5 rounded-xl">
-                            <div className="text-sm font-semibold text-[#1d1d1f] mb-2">Comprehensive System</div>
-                            <div className="text-xs text-[#86868b] mb-3">For larger budgets</div>
-                            <div className="text-xs text-[#86868b]">
-                              Complete end-to-end solution with advanced features, integrations, and ongoing support.
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="text-sm text-[#86868b]">
-                          Every project is unique, and we'll work with you to find the right balance between your requirements, timeline, and budget. Our goal is to deliver maximum value regardless of project size.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-24 lg:py-32 bg-[#1d1d1f]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
-              Ready to discuss your project?
-            </h2>
-            <p className="text-[#86868b] text-lg mb-10 max-w-2xl mx-auto">
-              Contact us for a free consultation to explore how our robotics solutions can address your business challenges.
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
-              <Button to="/contact" className="bg-white text-[#1d1d1f] hover:bg-[#f5f5f7]" size="lg">
-                Contact Us
-              </Button>
-              <Button to="/product" className="bg-transparent text-white border border-white hover:bg-white hover:text-[#1d1d1f]" size="lg">
-                Explore Products
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+      <CtaBand
+        eyebrow="Start a project"
+        title={serviceCta.title}
+        body={serviceCta.body}
+        primary={{ label: 'Contact Us', to: '/contact?type=project' }}
+        secondary={{ label: 'Explore Products', to: '/product' }}
+      />
+    </>
   );
 };
 

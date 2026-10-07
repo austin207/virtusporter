@@ -10,7 +10,7 @@ export async function fetchPressKitItems(): Promise<PressKitItem[]> {
     .order('created_at', { ascending: false });
     
   if (error) {
-    console.error('Error fetching press kit items:', error);
+    console.warn('Error fetching press kit items:', error);
     throw error;
   }
   

@@ -1,0 +1,12 @@
+/* TEAM */
+Founder, Technology: Antony Austin, Kochi, India
+Founder, Chief Mechanical Officer: A. Azeem Kouther, Kochi, India
+Founder, Finance & Strategy: Allen George Thomas, Kochi, India
+Founder, Strategy & Operations: Alwin George Thomas, Kochi, India
+Founder, Sales Director: Danush Krishna, Kochi, India
+
+/* SITE */
+Company: VirtusCo, robotics engineering, Tripunithura, Kochi, Kerala, India
+Contact: virtusco.tech@gmail.com
+Standards: HTML5, CSS3, schema.org JSON-LD, llms.txt
+Components: React, Vite, Tailwind CSS, three.js / react-three-fiber, Lenis

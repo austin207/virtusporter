@@ -1,11 +1,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/context/AuthContext";
 
 interface EmployeeProductFormProps {
   onSubmit: (data: {
@@ -17,7 +12,6 @@ interface EmployeeProductFormProps {
 }
 
 const EmployeeProductForm = ({ onSubmit }: EmployeeProductFormProps) => {
-  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -65,69 +59,74 @@ const EmployeeProductForm = ({ onSubmit }: EmployeeProductFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5 pt-2">
       {validationErrors.length > 0 && (
-        <div className="bg-red-50 text-red-800 p-3 rounded-md border border-red-200">
-          <p className="font-medium mb-1">Please correct the following errors:</p>
-          <ul className="list-disc pl-5 text-sm">
+        <div role="alert" className="border-l-2 border-accent bg-card p-4">
+          <p className="eyebrow mb-3 text-accent-ink">Please correct the following errors:</p>
+          <ul className="space-y-1 font-serif text-[0.95rem] text-body">
             {validationErrors.map((error, index) => (
               <li key={index}>{error}</li>
             ))}
           </ul>
         </div>
       )}
-      
-      <div className="space-y-2">
-        <Label htmlFor="name">Product Name *</Label>
-        <Input
+
+      <div>
+        <label htmlFor="name" className="field-label">Product Name *</label>
+        <input
           id="name"
           name="name"
+          className="field"
           placeholder="Enter product name"
           value={formData.name}
           onChange={handleChange}
         />
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="description">Description *</Label>
-        <Textarea
+
+      <div>
+        <label htmlFor="description" className="field-label">Description *</label>
+        <textarea
           id="description"
           name="description"
+          rows={4}
+          className="field resize-y"
           placeholder="Describe your product..."
           value={formData.description}
           onChange={handleChange}
         />
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="price">Price (USD) *</Label>
-        <Input
+
+      <div>
+        <label htmlFor="price" className="field-label">Price (USD) *</label>
+        <input
           id="price"
           name="price"
           type="number"
           min="0.01"
           step="0.01"
+          className="field"
           placeholder="29.99"
           value={formData.price}
           onChange={handleChange}
         />
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="image">Image URL</Label>
-        <Input
+
+      <div>
+        <label htmlFor="image" className="field-label">Image URL</label>
+        <input
           id="image"
           name="image"
+          className="field"
           placeholder="/placeholder.svg"
           value={formData.image}
           onChange={handleChange}
         />
-        <p className="text-sm text-gray-500">Leave blank to use default image</p>
+        <p className="mt-2 font-mono text-[11px] tracking-wide text-quiet">Leave blank to use default image</p>
       </div>
-      
-      <div className="flex justify-end space-x-4 pt-4">
-        <Button 
-          variant="outline" 
+
+      <div className="flex flex-wrap justify-end gap-3 border-t border-ink/15 pt-6">
+        <Button
+          variant="outline"
           type="button"
           onClick={() => onSubmit({
             name: "Sample Product",
