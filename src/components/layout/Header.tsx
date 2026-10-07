@@ -98,7 +98,7 @@ const Header = () => {
       </a>
       <div
         className={cn(
-          'flex items-center justify-between border-b px-[var(--gutter-hero)] transition-[padding,background-color,border-color] duration-300',
+          'relative flex items-center justify-between border-b px-[var(--gutter-hero)] transition-[padding,background-color,border-color] duration-300',
           scrolled ? 'py-3.5 backdrop-blur-md' : 'border-transparent py-[clamp(18px,2.3vw,30px)]',
           // once scrolled, a solid bar keeps the header off body copy
           scrolled && (dark ? 'border-light/10 bg-ink/90' : 'border-ink/10 bg-paper/90'),
@@ -108,7 +108,8 @@ const Header = () => {
           <Logo tone={dark ? 'dark' : 'light'} />
         </Link>
 
-        <nav aria-label="Primary" className="hidden lg:block">
+        {/* centred on the bar itself (not between logo and actions, which are different widths) */}
+        <nav aria-label="Primary" className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
           <ul className="flex items-center gap-8">
             {nav.map((item) => (
               <li key={item.to}>
