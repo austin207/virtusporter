@@ -129,7 +129,7 @@ export const approach: ApproachStep[] = [
 export const budget = {
   eyebrow: 'Tailored to Your Budget',
   title: ['Every budget,', 'engineered for maximum value.'] as [string, string], // DRAFT
-  lede: 'We understand that every business has different financial constraints. Our approach ensures you get the most value within your budget.',
+  lede: 'Your budget sets the scope, not the other way round: we start from the problem and choose the smallest build that solves it.',
   flexible: {
     title: 'Flexible Scope',
     body: 'Whether you need a targeted ROS development project or a complete robotics solution, we tailor our services to match your requirements and budget constraints.',
@@ -145,7 +145,7 @@ export const budget = {
     {
       title: 'Balanced Approach',
       fit: 'For medium budgets',
-      body: 'Core robotics solution with essential features and reasonable customization options.',
+      body: 'A core robotics system with the essential features, customised where your use case needs it.',
     },
     {
       title: 'Comprehensive System',
@@ -181,7 +181,6 @@ export const homeChapters = [
     title: 'Robotics has been built for the few.',
     body: [
       'Automation transforms operations, but bespoke robotics has stayed out of reach for most businesses: too expensive, too rigid, too far from the problem it was meant to solve.',
-      'VirtusCo exists to bridge the gap between those with resources and those without, building tailored robotic solutions for any industry.',
     ],
   },
 ] as const; // DRAFT

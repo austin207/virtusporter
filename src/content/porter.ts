@@ -29,7 +29,7 @@ export const porter = {
     note: 'The porter robot is in development, so specifications may change before launch.',
   },
   contactPitch: {
-    title: 'Ready to Transform Your Airport Experience?',
+    title: 'Bring the porter robot to your airport',
     body: 'Talk to us about how an autonomous porter robot could improve the passenger experience and open new revenue streams for your airport.',
   },
 };

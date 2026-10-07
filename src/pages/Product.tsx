@@ -14,7 +14,7 @@ const porterFaqs = faqs.filter((f) => f.topic === 'porter');
 
 const groupCopy: Record<string, { ink: string; mut: string; tone: 'paper' | 'paper-2' | 'ink' }> = {
   features: { ink: 'Designed for', mut: 'exceptional experience.', tone: 'paper' },
-  technology: { ink: 'Built on', mut: 'proven robotics technology.', tone: 'ink' },
+  technology: { ink: 'Built on', mut: 'established robotics tools.', tone: 'ink' },
   sustainability: { ink: 'Engineered for', mut: 'a lighter footprint.', tone: 'paper-2' },
 };
 
@@ -34,7 +34,7 @@ const Product = () => {
             <OxLink to="/contact?type=porter" variant="cream">
               Register interest
             </OxLink>
-            <OxLink to="/product#faq" variant="ghost">
+            <OxLink to="/product#faq-how-does-the-revenue-model-work" variant="ghost">
               Revenue model
             </OxLink>
           </div>

@@ -27,7 +27,7 @@ const Index = () => {
       node: (
         <>
           <Eyebrow dot className="mb-6 text-light/70">
-            Robotics engineering · {company.address.city}, India
+            Robotics engineering<span className="hidden whitespace-nowrap sm:inline">&nbsp;· {company.address.city}, India</span>
           </Eyebrow>
           <h1 className="h-hero text-light">{homeHero.title}</h1>
           <p className="lede mt-6 text-soft">{homeHero.lede}</p>

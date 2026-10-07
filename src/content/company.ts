@@ -12,7 +12,7 @@ export const company = {
   mission:
     'Democratizing robotics: bridging the gap between those with resources and those without, while building tailored robotic solutions for any industry.',
   vision:
-    "At VirtusCo, we're committed to democratizing robotics and making automation accessible to businesses of all sizes. Our work grows out of hands-on research and engineering, with a focus on creating technology that's genuinely helpful and accessible to everyone.",
+    "A future where robots take on the heavy, repetitive work, and any business, large or small, can afford a robot built around its own problem. We get there through hands-on engineering: prototypes on real hardware, reviewed with our clients at every step.",
   foundingDate: '2025-01',
   email: 'virtusco.tech@gmail.com',
   phones: [

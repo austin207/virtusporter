@@ -37,6 +37,19 @@ function ChatWidget() {
   const { pathname } = useLocation();
   const [requested, setRequested] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
+  const [scrollingDown, setScrollingDown] = useState(false);
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - last) > 8) {
+        setScrollingDown(y > last && y > 200 && window.innerWidth < 768);
+        last = y;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   useEffect(() => {
     // step aside while the footer is on screen so the button never covers footer links
     const footer = document.getElementById("footer");
@@ -56,9 +69,9 @@ function ChatWidget() {
         aria-label={features.virtueAI ? "Open chat" : "Open FAQ assistant"}
         title={features.virtueAI ? "Chat with Virtue" : "Questions? Our FAQ assistant can help"}
         className={`fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 z-[45] flex h-12 w-12 items-center sm:right-5 sm:h-14 sm:w-14 justify-center bg-accent text-accent-foreground transition-[background-color,opacity,transform] duration-300 hover:bg-accent-hover ${
-          footerVisible ? "pointer-events-none translate-y-4 opacity-0" : ""
+          footerVisible || scrollingDown ? "pointer-events-none translate-y-4 opacity-0" : ""
         }`}
-        tabIndex={footerVisible ? -1 : 0}
+        tabIndex={footerVisible || scrollingDown ? -1 : 0}
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />

@@ -15,8 +15,8 @@ interface RevealProps {
 }
 
 /** Oxigen's fade-up (translateY 26px, 1s ease-out). One observer per element; replaces all ad-hoc observers. */
-export function Reveal({ as = 'div', delay = 0, threshold = 0.2, className, children, id }: RevealProps) {
-  const { ref, inView } = useInViewOnce<HTMLElement>(threshold);
+export function Reveal({ as = 'div', delay = 0, threshold = 0.08, className, children, id }: RevealProps) {
+  const { ref, inView } = useInViewOnce<HTMLElement>(threshold, '0px 0px -6% 0px');
   return createElement(
     as,
     { ref, id, className: cn('reveal', inView && 'is-in', className), style: delay ? { transitionDelay: `${delay}ms` } : undefined },

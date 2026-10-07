@@ -1,5 +1,5 @@
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode } from "react";
+import { createContext, startTransition, useCallback, useContext, useEffect, useRef, useState, ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase } from "@/integrations/supabase/lazy";
 import { useToast } from "@/hooks/use-toast";
@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const hasAuthRedirect = /access_token|refresh_token|[?&]code=|error_description|type=recovery/.test(window.location.hash + window.location.search);
     if (hasStoredSession || hasAuthRedirect) connect();
-    else setLoading(false);
+    else startTransition(() => setLoading(false)); // non-urgent: never interrupts route hydration
 
     // Check for URL error parameters that might indicate OAuth issues
     const url = new URL(window.location.href);

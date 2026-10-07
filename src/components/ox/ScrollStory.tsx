@@ -29,10 +29,24 @@ export function SceneGate({
   const [ready, setReady] = useState(false);
   useEffect(() => {
     if (!canRunScene()) return;
-    // let the page settle (LCP = poster) before pulling in three.js
+    // Keep the main thread free right after load: start three.js on the first scroll / pointer /
+    // touch, or after ~2.5 s once the browser is idle, whichever comes first.
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      cleanup();
+      setRun(true);
+    };
+    const events = ['scroll', 'pointermove', 'touchstart', 'keydown'] as const;
+    events.forEach((e) => window.addEventListener(e, start, { passive: true, once: true }));
     const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: object) => number }).requestIdleCallback;
-    if (idle) idle(() => setRun(true), { timeout: 1200 });
-    else setTimeout(() => setRun(true), 300);
+    const timer = window.setTimeout(() => (idle ? idle(start, { timeout: 1500 }) : start()), 2500);
+    const cleanup = () => {
+      clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, start));
+    };
+    return cleanup;
   }, []);
   return (
     <div className="absolute inset-0">
@@ -159,11 +173,16 @@ export function ScrollStory({
             style={{ background: 'linear-gradient(270deg, rgb(var(--ink) / .82) 0%, rgb(var(--ink) / .5) 34%, rgb(var(--ink) / 0) 62%)' }}
           />
         </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 md:hidden"
+          style={{ background: 'linear-gradient(0deg, rgb(var(--ink) / .92) 0%, rgb(var(--ink) / .7) 42%, rgb(var(--ink) / 0) 72%)' }}
+        />
         {/* scroll cue */}
         <div
           aria-hidden
           className={cn(
-            'absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3 transition-opacity duration-500',
+            'absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 transition-opacity duration-500 md:flex',
             chapter > 0 && 'opacity-0',
           )}
         >
@@ -177,9 +196,11 @@ export function ScrollStory({
           key={c.key}
           data-rail={c.rail}
           className={cn(
-            // shorter chapters on phones: the scene is a static poster there, so 7 full screens drag
-            'relative z-10 flex min-h-[78svh] px-[var(--gutter-hero)] pb-[clamp(56px,11vh,120px)] pt-32 md:min-h-[100svh]',
-            c.align === 'right' ? 'items-end justify-end' : 'items-end',
+            'relative z-10 flex px-[var(--gutter-hero)] md:min-h-[100svh] md:bg-transparent md:pb-[clamp(56px,11vh,120px)] md:pt-32',
+            // phones: the scene is a static poster, so only the opener is full-screen; the remaining
+            // chapters are compact panels on a dark backing (readable, and ~half the scroll length)
+            i === 0 ? 'min-h-[100svh] pb-16 pt-32' : 'story-panel bg-ink/[0.86] py-14 md:py-0',
+            c.align === 'right' ? 'items-end md:justify-end' : 'items-end',
           )}
         >
           <div ref={(el) => (textRefs.current[i] = el)} data-active={chapter === i} className="story-ch max-w-[620px] [text-shadow:0_1px_18px_rgb(0_0_0/0.55)]">

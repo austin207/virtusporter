@@ -15,7 +15,7 @@ const Footer = () => {
 
   return (
     <footer id="footer" data-tone="dark" className="on-dark relative bg-ink text-soft">
-      <div className="wrap pb-[clamp(40px,6vh,72px)] pt-[clamp(64px,11vh,140px)]">
+      <div className="wrap pb-[clamp(32px,6vh,72px)] pt-[clamp(48px,11vh,140px)]">
         {/* CTA */}
         {showCta && (
         <>
@@ -28,12 +28,12 @@ const Footer = () => {
           </OxLink>
         </div>
 
-        <hr className="my-[clamp(40px,7vh,80px)] h-px border-0 bg-light/15" />
+        <hr className="my-[clamp(32px,7vh,80px)] h-px border-0 bg-light/15" />
         </>
         )}
 
         {/* Columns */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-9 lg:grid-cols-[1.5fr_repeat(4,1fr)] lg:gap-y-12">
           <div className="col-span-2 lg:col-span-1">
             <Link to="/" aria-label="VirtusCo home" className="text-light">
               <Logo />
@@ -63,7 +63,7 @@ const Footer = () => {
           ))}
         </div>
 
-        <hr className="my-[clamp(40px,6vh,64px)] h-px border-0 bg-light/15" />
+        <hr className="my-[clamp(28px,6vh,64px)] h-px border-0 bg-light/15" />
 
         {/* Contact strip */}
         <address className="grid grid-cols-1 gap-6 not-italic sm:grid-cols-3">

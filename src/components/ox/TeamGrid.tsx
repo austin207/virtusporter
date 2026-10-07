@@ -7,8 +7,8 @@ import { portrait } from '@/content/photos';
 export function FounderCard({ f, i = 0, showExpertise = false }: { f: Founder; i?: number; showExpertise?: boolean }) {
   return (
     <Reveal delay={i * 90}>
-      <Link to={`/founders/${f.slug}`} className="group block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-paper-3">
+      <Link to={`/founders/${f.slug}`} className="group flex h-full gap-4 sm:flex-col sm:gap-0">
+        <div className="relative aspect-[3/4] w-[104px] shrink-0 self-start overflow-hidden bg-paper-3 sm:w-auto">
           <img
             {...portrait(f.image, '(min-width: 1280px) 18vw, (min-width: 768px) 30vw, 46vw')}
             alt={`${f.name}, ${f.title.replace(' · ', ', ')} at VirtusCo`}
@@ -22,7 +22,7 @@ export function FounderCard({ f, i = 0, showExpertise = false }: { f: Founder; i
             {String(i + 1).padStart(2, '0')}
           </span>
         </div>
-        <div className="pt-5">
+        <div className="flex min-w-0 flex-1 flex-col sm:pt-5">
           <h3 className="h-card text-ink">{f.name}</h3>
           <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-quiet">{f.title}</p>
           <p className="mt-3 font-serif text-[0.95rem] leading-relaxed text-body">{f.summary}</p>
@@ -35,7 +35,7 @@ export function FounderCard({ f, i = 0, showExpertise = false }: { f: Founder; i
               ))}
             </ul>
           )}
-          <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ink">
+          <span className="mt-4 inline-flex items-center gap-2 pt-0 font-mono text-[11px] uppercase tracking-[0.16em] text-ink sm:mt-auto sm:pt-4">
             View profile <span className="arw">→</span>
           </span>
         </div>
@@ -47,7 +47,7 @@ export function FounderCard({ f, i = 0, showExpertise = false }: { f: Founder; i
 export default function TeamGrid({ showExpertise = false, exclude, className }: { showExpertise?: boolean; exclude?: string; className?: string }) {
   const list = founders.filter((f) => f.slug !== exclude);
   return (
-    <div className={cn('grid grid-cols-2 gap-x-[14px] gap-y-12 md:grid-cols-3 xl:grid-cols-5', className)}>
+    <div className={cn('grid grid-cols-1 gap-x-[14px] gap-y-8 sm:grid-cols-2 sm:gap-y-12 md:grid-cols-3 xl:grid-cols-5', className)}>
       {list.map((f, i) => (
         <FounderCard key={f.slug} f={f} i={i} showExpertise={showExpertise} />
       ))}

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import type { Faq } from '@/content/about';
 import { Eyebrow, OxLink, Reveal } from './primitives';
@@ -41,11 +41,24 @@ export function CtaBand({
 }
 
 /** Question-style FAQ: every answer is plain visible text (answer engines quote these verbatim). */
+export const faqId = (q: string) =>
+  'faq-' + q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 export function FaqList({ items, className }: { items: Faq[]; className?: string }) {
+  // open the item a link points at (e.g. /product#faq-how-does-the-revenue-model-work)
+  useEffect(() => {
+    const openTarget = () => {
+      const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      if (el instanceof HTMLDetailsElement) el.open = true;
+    };
+    openTarget();
+    window.addEventListener('hashchange', openTarget);
+    return () => window.removeEventListener('hashchange', openTarget);
+  }, []);
   return (
     <div className={cn('border-t border-ink/15', className)}>
       {items.map((f, i) => (
-        <details key={f.q} className="group border-b border-ink/15" open={i === 0}>
+        <details key={f.q} id={faqId(f.q)} className="group scroll-mt-28 border-b border-ink/15" open={i === 0}>
           <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 [&::-webkit-details-marker]:hidden">
             <h3 className="h-card text-ink">{f.q}</h3>
             <span aria-hidden className="mt-1 font-mono text-lg leading-none text-quiet transition-transform duration-300 group-open:rotate-45">

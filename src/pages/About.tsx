@@ -57,7 +57,7 @@ const About = () => (
         </div>
         <dl className="border-t border-ink/15">
           {keyFacts.map((f) => (
-            <div key={f.label} className="grid grid-cols-[110px_1fr] gap-4 border-b border-ink/15 py-4 sm:grid-cols-[150px_1fr]">
+            <div key={f.label} className="grid grid-cols-1 gap-1.5 border-b border-ink/15 py-4 sm:grid-cols-[150px_1fr] sm:gap-4">
               <dt className="eyebrow pt-1 text-quiet">{f.label}</dt>
               <dd className="font-serif text-[1.02rem] leading-relaxed text-ink">{f.value}</dd>
             </div>

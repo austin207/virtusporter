@@ -41,6 +41,10 @@ export default defineConfig(() => ({
     react(),
     llmFilesInDev(),
   ],
+  build: {
+    // lets scripts/prerender.ts modulepreload each page's own chunk (avoids hydration races)
+    manifest: true,
+  },
   ssr: {
     // CJS packages without proper ESM named exports get bundled into the prerender build
     noExternal: ['react-helmet-async'],

@@ -29,8 +29,8 @@ export function AccordionCards({ items, headingLevel = 'h3' }: { items: CardItem
               <span className="font-mono text-[11px] tracking-[0.2em] text-quiet">{String(i + 1).padStart(2, '0')}</span>
               {it.tag && <span className="mono-tag border border-ink/20 px-3 py-[7px] text-ink/80">{it.tag}</span>}
             </div>
-            <div className="flex flex-1 items-center justify-center py-8">
-              <PixelIcon art={it.art} className="h-[clamp(64px,7vw,104px)] w-[clamp(64px,7vw,104px)]" />
+            <div className="flex flex-1 items-center justify-start py-5 min-[820px]:justify-center min-[820px]:py-8">
+              <PixelIcon art={it.art} className="h-12 w-12 min-[820px]:h-[clamp(64px,7vw,104px)] min-[820px]:w-[clamp(64px,7vw,104px)]" />
             </div>
             <div>
               <H className="h-card text-ink">{it.title}</H>
@@ -57,7 +57,7 @@ export function AccordionCards({ items, headingLevel = 'h3' }: { items: CardItem
           </>
         );
         const cls =
-          'ox-acc group relative flex min-h-[340px] flex-col bg-card p-7 text-left transition-[flex-grow] [transition-duration:550ms] ease-accordion min-[820px]:h-[clamp(440px,33vw,580px)] min-[820px]:flex-1';
+          'ox-acc group relative flex flex-col bg-card p-6 text-left transition-[flex-grow] [transition-duration:550ms] ease-accordion min-[820px]:h-[clamp(440px,33vw,580px)] min-[820px]:flex-1 min-[820px]:p-7';
         return it.to ? (
           <Link key={it.title} id={it.id} to={it.to} className={cls}>
             {inner}
@@ -86,7 +86,7 @@ export function ColorPanels({
           key={it.title}
           to={it.to}
           className={cn(
-            'group relative flex min-h-[clamp(300px,34vw,460px)] flex-col justify-between p-[clamp(24px,3vw,40px)] transition-[filter] duration-300 hover:brightness-[1.06]',
+            'group relative flex min-h-[clamp(300px,34vw,460px)] flex-col justify-between p-[clamp(24px,3vw,40px)] transition-[filter] duration-300 hover:brightness-[1.06] md:last:pr-[clamp(64px,6vw,96px)]',
             tones[i % 3],
           )}
         >

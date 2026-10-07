@@ -13,7 +13,7 @@ export const democratizing = {
 };
 
 export const story = {
-  title: 'From Idea to Innovation',
+  title: 'From a question to a company',
   paragraphs: [
     'VirtusCo began when our founders experienced firsthand the challenges of navigating airports with heavy luggage. What started as a simple question, "Why isn\'t there a better way?", grew into a robotics company that combines engineering with thoughtful service design.',
     "That question became our first product concept, the autonomous porter robot, and taught us how to take a robot from idea to prototype. Today we bring the same process to clients as custom robotics engineering.",
