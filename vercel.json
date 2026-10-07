@@ -12,12 +12,12 @@
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/cart", "destination": "/_shell.html" },
-    { "source": "/employee-products", "destination": "/_shell.html" },
-    { "source": "/auth", "destination": "/_shell.html" },
-    { "source": "/auth/:path*", "destination": "/_shell.html" },
-    { "source": "/forgot-password", "destination": "/_shell.html" },
-    { "source": "/virtue", "destination": "/_shell.html" }
+    { "source": "/cart", "destination": "/_shell" },
+    { "source": "/employee-products", "destination": "/_shell" },
+    { "source": "/auth", "destination": "/_shell" },
+    { "source": "/auth/:path*", "destination": "/_shell" },
+    { "source": "/forgot-password", "destination": "/_shell" },
+    { "source": "/virtue", "destination": "/_shell" }
   ],
   "headers": [
     {
