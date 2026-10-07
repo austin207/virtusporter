@@ -104,7 +104,7 @@ const PressKit = () => {
             {filteredItems.map((item) => (
               <article key={item.id} className="flex h-full flex-col border border-ink/15 bg-card">
                 {item.thumbnail_url && (
-                  <div className={`flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-ink/15 ${item.id === "logo-dark" ? "bg-ink" : "bg-paper-2"}`}>
+                  <div className={`flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-ink/15 ${item.id === "static-logo-dark" ? "bg-ink" : "bg-paper-2"}`}>
                     <img
                       src={item.thumbnail_url}
                       alt={item.title}

@@ -36,6 +36,16 @@
     outline: 2px solid rgb(var(--accent));
     outline-offset: 3px;
   }
+  /* red on red is invisible: accent surfaces get a light ring, drawn inside full-bleed panels */
+  .bg-accent:focus-visible,
+  .bg-accent-hover:focus-visible,
+  .bg-accent :focus-visible,
+  .bg-accent-hover :focus-visible {
+    outline-color: rgb(var(--light));
+  }
+  .bg-accent-hover:focus-visible {
+    outline-offset: -6px;
+  }
 
   img {
     max-width: 100%;

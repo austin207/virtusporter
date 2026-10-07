@@ -35,7 +35,7 @@ const Footer = () => {
         {/* Columns */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-9 lg:grid-cols-[1.5fr_repeat(4,1fr)] lg:gap-y-12">
           <div className="col-span-2 lg:col-span-1">
-            <Link to="/" aria-label="VirtusCo home" className="text-light">
+            <Link to="/" aria-label="VirtusCo home" className="inline-block py-2 text-light">
               <Logo />
             </Link>
             <p className="mt-5 max-w-xs font-serif text-[0.98rem] leading-relaxed text-soft">
@@ -69,13 +69,13 @@ const Footer = () => {
         <address className="grid grid-cols-1 gap-6 not-italic sm:grid-cols-3">
           <div>
             <p className="eyebrow mb-3 text-quiet">Email</p>
-            <a href={`mailto:${company.email}`} className="ulink text-light">
+            <a href={`mailto:${company.email}`} className="ulink inline-block py-1.5 text-light">
               {company.email}
             </a>
           </div>
           <div>
             <p className="eyebrow mb-3 text-quiet">Phone</p>
-            <a href={`tel:${company.phones[0].tel}`} className="ulink text-light">
+            <a href={`tel:${company.phones[0].tel}`} className="ulink inline-block py-1.5 text-light">
               {company.phones[0].display}
             </a>
           </div>

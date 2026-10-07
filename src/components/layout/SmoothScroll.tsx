@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 
@@ -20,6 +20,7 @@ export function scrollToEl(el: HTMLElement | string, offset = -10) {
  */
 const SmoothScroll = () => {
   const { pathname, hash } = useLocation();
+  const first = useRef(true);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -39,6 +40,8 @@ const SmoothScroll = () => {
   }, []);
 
   useEffect(() => {
+    const initial = first.current;
+    first.current = false;
     if (hash) {
       // wait for the new route to render its sections
       const t = setTimeout(() => scrollToEl(decodeURIComponent(hash), -20), 80);
@@ -46,6 +49,8 @@ const SmoothScroll = () => {
     }
     if (lenis) lenis.scrollTo(0, { immediate: true });
     else window.scrollTo(0, 0);
+    // after client-side navigation, move focus to the new page so keyboard and screen-reader users land on it
+    if (!initial) document.getElementById('main')?.focus({ preventScroll: true });
   }, [pathname, hash]);
 
   return null;

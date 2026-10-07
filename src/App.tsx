@@ -76,6 +76,7 @@ function ChatWidget() {
           footerVisible || scrollingDown ? "pointer-events-none translate-y-4 opacity-0" : ""
         }`}
         tabIndex={footerVisible || scrollingDown ? -1 : 0}
+        aria-hidden={footerVisible || scrollingDown || undefined}
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />

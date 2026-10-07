@@ -91,7 +91,7 @@ const NewsletterSignup = () => {
       )}
       <p className="mt-2 font-serif text-[0.82rem] text-quiet">
         By subscribing you agree to our{' '}
-        <a href="/privacy-policy" className="ulink text-soft">
+        <a href="/privacy-policy" className="ulink inline-block py-1.5 text-soft">
           privacy policy
         </a>
         .
