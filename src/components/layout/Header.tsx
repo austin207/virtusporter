@@ -105,7 +105,7 @@ const Header = () => {
         )}
       >
         <Link to="/" aria-label="VirtusCo home" className="relative z-10">
-          <Logo />
+          <Logo tone={dark ? 'dark' : 'light'} />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

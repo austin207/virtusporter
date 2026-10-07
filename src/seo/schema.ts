@@ -16,7 +16,7 @@ export const organization = () => ({
   legalName: company.legalName,
   alternateName: ['Virtus Co', 'VirtusCo Robotics', 'virtusco.in'],
   url: SITE_URL,
-  logo: { '@type': 'ImageObject', url: abs('/logo.svg'), width: 512, height: 512 },
+  logo: { '@type': 'ImageObject', url: abs('/brand/virtusco-logo-white.png'), width: 232, height: 303 },
   image: abs('/og/home.png'),
   description: company.shortDescription,
   slogan: company.tagline,

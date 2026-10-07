@@ -17,8 +17,9 @@ const item = (id: string, category: string, file_type: string, title: string, de
 });
 
 export const staticPressKit: PressKitItem[] = [
-  item('logo-svg', 'brand', 'image', 'VirtusCo mark (SVG)', 'Vector logo mark on a light background. Use with clear space equal to the red core.', '/logo.svg'),
-  item('icon-512', 'brand', 'image', 'VirtusCo icon (PNG, 512 px)', 'App and avatar icon on graphite.', '/icon-512.png'),
+  item('logo', 'brand', 'image', 'VirtusCo logo (PNG, transparent)', 'Official logo for light backgrounds. Keep clear space around it equal to the red core.', '/brand/virtusco-logo.png'),
+  item('logo-dark', 'brand', 'image', 'VirtusCo logo for dark backgrounds (PNG)', 'Light version of the official logo for dark backgrounds; the red core is unchanged.', '/brand/virtusco-logo-dark.png'),
+  item('logo-white', 'brand', 'image', 'VirtusCo logo on white (PNG)', 'Official logo on a solid white background.', '/brand/virtusco-logo-white.png'),
   item('og-home', 'brand', 'image', 'Brand card (PNG, 1200 × 630)', 'Social and press header image.', '/og/home.png'),
   item('porter', 'product', 'image', `${porter.name} concept render`, 'Concept render of the autonomous porter robot (in development). Please caption as a concept.', porter.image),
   ...founders.map((f) =>

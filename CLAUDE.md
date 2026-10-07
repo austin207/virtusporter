@@ -31,6 +31,9 @@ All copy lives in typed data files in `src/content/` (company, services, porter,
 - Every top-level section needs `data-tone="dark|light"` (the `Section` primitive sets it) — the fixed header flips colour from it; `data-rail="Label"` adds it to the right-edge section rail.
 - Layout: `SiteLayout` (Header, SideRail, Footer) wraps all routes except `/auth`, `/forgot-password`, `/virtue`. App-level: Preloader (once per session), Lenis `SmoothScroll` (also handles scroll-to-top/hash), `PageWipe` route transition.
 
+### Logo
+Official artwork only (owner-supplied PNG): `public/brand/` holds the mark, wordmark and full lockup, each with a `-dark` variant for dark backgrounds (black recoloured light, red core untouched). `src/components/layout/Logo.tsx` renders them (`tone` prop). Do not redraw the logo. `public/favicon.ico` is the original favicon.
+
 ### 3D scenes (`src/scenes/`)
 three.js via react-three-fiber v8 (React 18). Lazy-loaded behind `SceneGate`, which shows the poster on mobile, low-memory, reduced-motion or no-WebGL devices and during prerender. Scroll progress is passed as a ref (no re-renders). Home = LiDAR scan → voxel quadruped assembles; Service = SLAM mapping run; Product = exploded Porter schematic.
 - **Gotcha:** the dev-only `lovable-tagger` adds `data-lov-*` props to JSX in `.tsx` files, which crashes r3f/postprocessing components. Keep postprocessing in `src/scenes/post.ts` (createElement, no JSX).
