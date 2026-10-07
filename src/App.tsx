@@ -39,11 +39,15 @@ function ChatWidget() {
   const [footerVisible, setFooterVisible] = useState(false);
   const [scrollingDown, setScrollingDown] = useState(false);
   useEffect(() => {
+    if (window.innerWidth < 768 && window.scrollY < 400) setScrollingDown(true);
+  }, [pathname]);
+  useEffect(() => {
     let last = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
       if (Math.abs(y - last) > 8) {
-        setScrollingDown(y > last && y > 200 && window.innerWidth < 768);
+        // phones: stay out of the way of hero text and forms; reappear only when scrolling back up mid-page
+        setScrollingDown(window.innerWidth < 768 && (y > last || y < 400));
         last = y;
       }
     };

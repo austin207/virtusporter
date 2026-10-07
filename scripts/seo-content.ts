@@ -56,7 +56,7 @@ const aiAgents = [
   'CCBot', 'cohere-ai', 'cohere-training-data-crawler', 'Bytespider', 'YouBot', 'MistralAI-User', 'PhindBot', 'Diffbot',
   'Timpibot', 'ImagesiftBot', 'Twitterbot', 'LinkedInBot', 'Slackbot', 'Discordbot', 'TelegramBot', 'WhatsApp',
 ];
-const disallow = ['/cart', '/auth', '/forgot-password', '/virtue', '/_shell.html'];
+const disallow = ['/cart', '/auth', '/forgot-password', '/virtue', '/employee-products', '/_shell'];
 out(
   'robots.txt',
   `# VirtusCo: robotics engineering company, Kochi, India. Humans and AI agents welcome.

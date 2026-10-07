@@ -89,7 +89,6 @@ export const footerLinks = [
     title: 'Resources',
     links: [
       { name: 'Press Kit', path: '/press-kit' },
-      { name: 'Employee Products', path: '/employee-products' },
       { name: 'FAQ', path: '/contact#faq' },
       { name: 'Privacy Policy', path: '/privacy-policy' },
       { name: 'Terms of Service', path: '/terms-of-service' },

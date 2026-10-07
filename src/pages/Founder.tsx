@@ -108,7 +108,7 @@ const Founder = () => {
       <Section label="Team" className="sec wrap">
         <Eyebrow className="mb-5">The team</Eyebrow>
         <h2 className="h-section">Meet the rest of the team</h2>
-        <TeamGrid exclude={f.slug} className="!grid-cols-2 md:!grid-cols-4 xl:!grid-cols-4 mt-10" />
+        <TeamGrid exclude={f.slug} className="mt-10 sm:!grid-cols-2 md:!grid-cols-4 xl:!grid-cols-4" />
       </Section>
     </>
   );

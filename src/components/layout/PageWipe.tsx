@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { scrollToEl } from './SmoothScroll';
 
 type Phase = 'idle' | 'cover' | 'covered' | 'reveal';
 
@@ -26,7 +27,14 @@ const PageWipe = () => {
       const url = new URL(a.href, window.location.href);
       if (url.origin !== window.location.origin) return;
       if (/\.(txt|xml|md|pdf|png|jpe?g|webp|svg)$/i.test(url.pathname)) return;
-      if (url.pathname === window.location.pathname) return; // same page (hash links handled by router)
+      if (url.pathname === window.location.pathname) {
+        // same page: the router handles a new hash, but re-clicking the current hash is a no-op there
+        if (url.hash && url.hash === window.location.hash && url.search === window.location.search) {
+          e.preventDefault();
+          scrollToEl(decodeURIComponent(url.hash), -20);
+        }
+        return;
+      }
       e.preventDefault();
       if (busy.current) return;
       busy.current = true;

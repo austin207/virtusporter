@@ -171,15 +171,15 @@ const Header = () => {
               open ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2.5 opacity-0',
             )}
           >
-            <ul className="space-y-3.5">
+            <ul className="space-y-0.5">
               <li>
-                <NavLink to="/" end className="font-mono text-[12px] uppercase tracking-[0.16em]">
+                <NavLink to="/" end className="block py-2.5 font-mono text-[12px] uppercase tracking-[0.16em]">
                   Home
                 </NavLink>
               </li>
               {nav.map((item) => (
                 <li key={item.to}>
-                  <NavLink to={item.to} className="font-mono text-[12px] uppercase tracking-[0.16em]">
+                  <NavLink to={item.to} className="block py-2.5 font-mono text-[12px] uppercase tracking-[0.16em]">
                     {item.label}
                   </NavLink>
                 </li>

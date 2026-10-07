@@ -2,6 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { company } from '@/content/company';
 import { abs, graph, ogKey, webPage } from './schema';
 
+const MD_PAGES = ['/', '/service', '/product', '/about', '/contact'];
+
 interface SeoProps {
   path: string;
   title: string; // page title without brand suffix
@@ -19,6 +21,8 @@ export default function Seo({ path, title, description, type = 'WebPage', ogType
   const url = abs(path);
   const fullTitle = path === '/' || title.includes(company.name) ? title : `${title} | ${company.name}`;
   const img = abs(image ?? `/og/${ogKey(path)}.png`);
+  // Markdown twins exist only for the main pages and founder profiles (scripts/seo-content.ts)
+  const hasMd = !noindex && (MD_PAGES.includes(path) || path.startsWith('/founders/'));
   const ld = graph(webPage({ path, title: fullTitle, description, type }), ...schema);
 
   return (
@@ -33,7 +37,7 @@ export default function Seo({ path, title, description, type = 'WebPage', ogType
       />
       <meta property="og:site_name" content={company.name} />
       <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={url} />
+      {!noindex && <meta property="og:url" content={url} />}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={img} />
@@ -46,7 +50,7 @@ export default function Seo({ path, title, description, type = 'WebPage', ogType
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={img} />
-      <link rel="alternate" type="text/markdown" href={abs(path === '/' ? '/index.md' : `${path}.md`)} title="Markdown version" />
+      {hasMd && <link rel="alternate" type="text/markdown" href={abs(path === '/' ? '/index.md' : `${path}.md`)} title="Markdown version" />}
       {!noindex && <script type="application/ld+json">{JSON.stringify(ld)}</script>}
     </Helmet>
   );

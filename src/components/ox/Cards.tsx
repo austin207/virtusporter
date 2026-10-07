@@ -40,7 +40,7 @@ export function AccordionCards({ items, headingLevel = 'h3' }: { items: CardItem
                   {it.list && (
                     <ul className="mt-4 flex flex-wrap gap-1.5">
                       {it.list.map((l) => (
-                        <li key={l} className="border border-ink/15 px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink/75">
+                        <li key={l} className="border border-ink/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.08em] text-ink/75">
                           {l}
                         </li>
                       ))}

@@ -50,10 +50,10 @@ const Footer = () => {
           {footerLinks.map((col) => (
             <nav key={col.title} aria-label={col.title}>
               <p className="eyebrow mb-5 text-quiet">{col.title}</p>
-              <ul className="space-y-2.5">
+              <ul className="space-y-0.5">
                 {col.links.map((l) => (
                   <li key={l.path}>
-                    <Link to={l.path} className="font-sans text-[0.92rem] text-soft transition-colors hover:text-white">
+                    <Link to={l.path} className="inline-block py-1.5 font-sans text-[0.92rem] text-soft transition-colors hover:text-white">
                       {l.name}
                     </Link>
                   </li>
@@ -93,10 +93,10 @@ const Footer = () => {
 
       <div className="wrap flex flex-col items-center justify-between gap-4 border-t border-light/10 py-6 font-mono text-[11px] uppercase tracking-[0.14em] text-quiet sm:flex-row">
         <p>© {year} VirtusCo. All rights reserved.</p>
-        <ul className="flex flex-wrap items-center gap-5">
+        <ul className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {company.socials.map((s) => (
             <li key={s.id}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer me" className="transition-colors hover:text-white">
+              <a href={s.url} target="_blank" rel="noopener noreferrer me" className="inline-block px-1 py-2 transition-colors hover:text-white">
                 {s.label}
               </a>
             </li>

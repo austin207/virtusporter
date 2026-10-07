@@ -8,7 +8,7 @@ const NotFound = () => {
 
   return (
     <>
-      <Seo path={location.pathname} title="Page not found" description="The page you are looking for does not exist." noindex />
+      <Seo path={location.pathname} title="Page not found" description="The page you are looking for does not exist." image="/og/home.png" noindex />
       <section data-tone="dark" className="on-dark flex min-h-[100svh] items-end bg-ink px-[var(--gutter-hero)] pb-[clamp(56px,12vh,130px)] pt-40 text-light">
         <div className="grid w-full gap-10 md:grid-cols-[1fr_auto] md:items-end">
           <div>
