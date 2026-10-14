@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getSupabase } from '@/integrations/supabase/lazy';
+import { sendForm } from '@/lib/sendForm';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
 import { inquiryTypes } from '@/content/about';
@@ -33,12 +33,14 @@ const typeFromQuery: Record<string, (typeof inquiryTypes)[number]> = {
 };
 
 /**
- * Contact form → Supabase `feedback` table. The table only has name/email/message, so the extra
- * fields are folded into a structured message header.
+ * Contact form → company inbox via FormSubmit (src/lib/sendForm.ts). If delivery fails, the
+ * visitor gets the message pre-filled for Gmail / their email app, plus a copy button.
  */
 const ContactForm = ({ compact = false, className }: { compact?: boolean; className?: string }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [fallback, setFallback] = useState<{ mailto: string; gmail: string; text: string } | null>(null);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const [params] = useSearchParams();
@@ -67,8 +69,12 @@ const ContactForm = ({ compact = false, className }: { compact?: boolean; classN
     if (t && typeFromQuery[t]) setValue('inquiryType', typeFromQuery[t]);
   }, [params, setValue]);
 
-  const onSubmit = async (v: ContactFormValues) => {
+  const onSubmit = async (v: ContactFormValues, e?: React.BaseSyntheticEvent) => {
+    // honeypot: bots fill every field, people never see this one
+    const honey = (e?.target as HTMLFormElement | undefined)?.elements.namedItem('_honey');
+    if (honey instanceof HTMLInputElement && honey.value) return;
     setIsSubmitting(true);
+    setFallback(null);
     const header = [
       `[${v.inquiryType}]${v.subject ? ` ${v.subject}` : ''}`,
       v.company ? `Company: ${v.company}` : null,
@@ -78,30 +84,34 @@ const ContactForm = ({ compact = false, className }: { compact?: boolean; classN
       .filter(Boolean)
       .join('\n');
 
+    const subject = `[${v.inquiryType}] ${v.subject || 'Website enquiry'}`;
     try {
-      const supabase = await getSupabase();
-      const { error } = await supabase.from('feedback').insert({
-        user_id: user?.id || null,
+      await sendForm(`Website: ${subject}`, {
         name: v.name,
         email: v.email,
-        message: `${header}\n\n${v.message}`,
+        phone: v.phone,
+        company: v.company,
+        inquiry_type: v.inquiryType,
+        subject: v.subject,
+        message: v.message,
+        page: typeof window !== 'undefined' ? window.location.pathname : undefined,
+        _replyto: v.email,
       });
-      if (error) throw error;
       toast({
         title: 'Thank you!',
-        description: "Your message has been sent successfully. We'll get back to you soon.",
+        description: "Your message has been sent. We'll get back to you soon.",
       });
       reset();
       setSent(true);
     } catch (error) {
-      console.warn('Error submitting feedback:', error);
-      // Never lose an enquiry: fall back to the visitor's email client with everything pre-filled.
-      const mailto = `mailto:${company.email}?subject=${encodeURIComponent(`[${v.inquiryType}] ${v.subject || 'Website enquiry'}`)}&body=${encodeURIComponent(`${header}\n\nFrom: ${v.name} <${v.email}>\n\n${v.message}`)}`;
-      toast({
-        title: 'Opening your email app instead',
-        description: `We couldn't reach our server, so your message is ready to send from your email to ${company.email}.`,
+      console.warn('Error sending enquiry:', error);
+      // Never lose an enquiry: offer the message pre-filled for the visitor's own email.
+      const text = `${header}\n\nFrom: ${v.name} <${v.email}>\n\n${v.message}`;
+      setFallback({
+        text,
+        mailto: `mailto:${company.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`,
+        gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${company.email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`,
       });
-      window.location.href = mailto;
     } finally {
       setIsSubmitting(false);
     }
@@ -116,6 +126,7 @@ const ContactForm = ({ compact = false, className }: { compact?: boolean; classN
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className={cn('grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2', className)}>
+      <input type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden className="absolute -left-[9999px] h-px w-px opacity-0" />
       <div>
         <label htmlFor="cf-name" className="field-label">
           Full name *
@@ -197,6 +208,29 @@ const ContactForm = ({ compact = false, className }: { compact?: boolean; classN
         </button>
         {sent && <p className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-quiet">Message received. We'll be in touch.</p>}
       </div>
+      {fallback && (
+        <div role="alert" className="border border-accent/40 bg-accent/[0.06] p-5 sm:col-span-2">
+          <p className="font-serif text-[0.98rem] text-body">
+            We couldn&apos;t send that from the website just now. Your message is ready to send yourself to{' '}
+            <a href={`mailto:${company.email}`} className="ulink text-ink">{company.email}</a>:
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a href={fallback.gmail} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-ink px-5 py-3 text-[0.9rem] font-semibold text-cream hover:bg-ink-3">
+              Send with Gmail <span aria-hidden className="arw">→</span>
+            </a>
+            <a href={fallback.mailto} className="inline-flex items-center border border-ink/25 px-5 py-3 text-[0.9rem] font-semibold text-ink hover:border-ink">
+              Open email app
+            </a>
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(fallback.text).then(() => setCopied(true), () => setCopied(false))}
+              className="inline-flex items-center border border-ink/25 px-5 py-3 text-[0.9rem] font-semibold text-ink hover:border-ink"
+            >
+              {copied ? 'Copied' : 'Copy message'}
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 };

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getSupabase } from '@/integrations/supabase/lazy';
+import { sendForm } from '@/lib/sendForm';
 import { useToast } from '@/hooks/use-toast';
 
 const newsletterSchema = z.object({
@@ -27,27 +27,12 @@ const NewsletterSignup = () => {
     setIsSubmitting(true);
     
     try {
-      const supabase = await getSupabase();
-      const { error } = await supabase
-        .from('subscribers')
-        .insert({ email: values.email });
-        
-      if (error) {
-        if (error.code === '23505') { // Unique violation error code
-          toast({
-            title: 'Already subscribed',
-            description: 'This email is already subscribed to our newsletter.',
-          });
-        } else {
-          throw error;
-        }
-      } else {
-        toast({
-          title: 'Subscription successful!',
-          description: 'Thank you for subscribing to our newsletter.',
-        });
-        form.reset();
-      }
+      await sendForm('Website: newsletter signup', { email: values.email, list: 'newsletter' });
+      toast({
+        title: 'Subscription successful!',
+        description: 'Thank you for subscribing to our newsletter.',
+      });
+      form.reset();
     } catch (error) {
       console.warn('Error subscribing to newsletter:', error);
       toast({
