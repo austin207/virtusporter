@@ -2,7 +2,7 @@ import { useEffect, useRef, type MutableRefObject } from 'react';
 
 /** Frame sets rendered from the 3D scenes by scripts/capture-frames.py (see public/frames/). */
 export const FRAME_COUNT = 120;
-export type FrameVariant = 'd' | 'm'; // d = landscape 1920x1200, m = portrait 810x1620
+export type FrameVariant = 'd' | 'm'; // d = landscape 2560x1600, m = portrait 1080x2160
 
 export const frameSrc = (scene: string, variant: FrameVariant, i: number) => `/frames/${scene}/${variant}/${String(i).padStart(3, '0')}.avif`;
 
@@ -93,8 +93,8 @@ export function ScrollFrames({
     for (let c = 0; c < 6; c++) next();
 
     const resize = () => {
-      // full device resolution (capped at 2x); the frames are 1920 / 810 px wide
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // full device resolution (capped at 3x); the frames are 2560 / 1080 px wide
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
       const r = canvas.getBoundingClientRect();
       canvas.width = Math.max(1, Math.round(r.width * dpr));
       canvas.height = Math.max(1, Math.round(r.height * dpr));

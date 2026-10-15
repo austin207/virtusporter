@@ -17,8 +17,8 @@ BASE = 'http://localhost:8080'
 COUNT = int(os.environ.get('FRAMES', 120))
 PAGES = {'home': '/', 'service': '/service', 'product': '/product'}
 VARIANTS = {  # name: (viewport w, h, device scale, AVIF quality) -> output px = viewport * scale
-    'd': (1600, 1000, 1.2, 62),  # 1920 x 1200
-    'm': (360, 720, 2.25, 58),  # 810 x 1620
+    'd': (1600, 1000, 1.6, 60),  # 2560 x 1600 (2.5K)
+    'm': (360, 720, 3, 56),  # 1080 x 2160 (phone native)
 }
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MASTER = ROOT / '.cache' / 'frames-master'
