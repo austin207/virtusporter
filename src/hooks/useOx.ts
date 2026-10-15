@@ -70,8 +70,12 @@ export function useScrollProgress<T extends HTMLElement>() {
 }
 
 /** Decide whether a heavy WebGL scene should run on this device. */
-/** True only for a hardware-accelerated WebGL context (software renderers like SwiftShader / llvmpipe report false). */
-export function hasHardwareWebGL() {
+/**
+ * True only for a dedicated GPU (or Apple silicon). Software renderers (SwiftShader, llvmpipe,
+ * hardware acceleration off) and integrated laptop graphics (Intel UHD/Iris, AMD Radeon APUs)
+ * report false: they stutter on the live scenes, so those PCs get the frame sequence instead.
+ */
+export function hasDedicatedGPU() {
   try {
     const c = document.createElement('canvas');
     const opts = { failIfMajorPerformanceCaveat: true };
@@ -80,7 +84,10 @@ export function hasHardwareWebGL() {
     const info = gl.getExtension('WEBGL_debug_renderer_info');
     const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
+    if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer)) return false;
+    if (/nvidia|geforce|quadro|rtx|radeon\s*rx|radeon\s*pro|arc\s*a\d|apple/i.test(renderer)) return true;
+    if (/intel|iris|uhd|radeon\s*\(tm\)\s*(graphics|\d{3}m)|radeon\s*(graphics|vega)|vega\s*\d/i.test(renderer)) return false;
+    return true; // unknown but hardware: try live, the fps guard falls back if it stutters
   } catch {
     return false;
   }
@@ -90,8 +97,8 @@ export type SceneMode = 'webgl' | 'frames' | 'poster';
 
 /**
  * How a scroll story renders its background:
- *  - webgl:  live three.js scene (desktop with a real GPU)
- *  - frames: pre-rendered image sequence scrubbed by scroll (phones, weak or GPU-less PCs)
+ *  - webgl:  live three.js scene (desktop with a dedicated GPU)
+ *  - frames: pre-rendered image sequence scrubbed by scroll (phones, PCs on integrated or no GPU)
  *  - poster: a single still (reduced motion, data saver)
  */
 export function sceneMode(): SceneMode {
@@ -103,7 +110,7 @@ export function sceneMode(): SceneMode {
   if (window.innerWidth < 760) return 'frames';
   if (nav.deviceMemory !== undefined && nav.deviceMemory < 4) return 'frames';
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return 'frames';
-  return hasHardwareWebGL() ? 'webgl' : 'frames';
+  return hasDedicatedGPU() ? 'webgl' : 'frames';
 }
 
 /** Read a CSS custom property from :root (used by canvases to follow the palette). */
