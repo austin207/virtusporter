@@ -4,7 +4,10 @@ import { useEffect, useRef, type MutableRefObject } from 'react';
 export const FRAME_COUNT = 120;
 export type FrameVariant = 'd' | 'm'; // d = landscape 2560x1600, m = portrait 1080x2160
 
-export const frameSrc = (scene: string, variant: FrameVariant, i: number) => `/frames/${scene}/${variant}/${String(i).padStart(3, '0')}.avif`;
+/** Bump after re-rendering frames: the files keep their names and are cached for a week. */
+const FRAMES_VERSION = 3;
+export const frameSrc = (scene: string, variant: FrameVariant, i: number) =>
+  `/frames/${scene}/${variant}/${String(i).padStart(3, '0')}.avif?v=${FRAMES_VERSION}`;
 
 let avifSupport: Promise<boolean> | null = null;
 /** AVIF decodes in every current browser; very old ones keep the static poster instead. */
