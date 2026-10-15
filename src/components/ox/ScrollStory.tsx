@@ -1,7 +1,8 @@
 import { Suspense, useEffect, useRef, useState, type ComponentType, type MutableRefObject, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { sceneMode, type SceneMode } from '@/hooks/useOx';
-import { ScrollFrames } from './ScrollFrames';
+import { ScrollFrames, supportsAvif } from './ScrollFrames';
+import { sceneQuality } from '@/scenes/quality';
 
 export interface SceneProps {
   /** 0..1 scroll progress through the whole story; read every frame, never causes re-renders */
@@ -16,7 +17,7 @@ type CaptureWindow = Window & { __sceneCapture?: { progress: number } };
 /**
  * Renders the static poster first (server, first client paint, reduced motion), then swaps in
  * either the live 3D scene (GPU desktops) or its pre-rendered frame sequence (phones, GPU-less
- * or weak PCs), and cross-fades once it reports ready. A live scene that can't hold ~28 fps is
+ * or weak PCs), and cross-fades once it reports ready. A live scene that can't hold ~45 fps is
  * replaced by the frame sequence.
  */
 export function SceneGate({
@@ -39,14 +40,17 @@ export function SceneGate({
     let m = sceneMode();
     if (m === 'frames' && !frames) m = 'poster';
     if (m === 'poster') return;
+    sceneQuality.lite = m === 'lite';
     // Keep the main thread free right after load: start on the first scroll / pointer / touch,
     // or after ~2.5 s once the browser is idle, whichever comes first.
     let started = false;
+    let alive = true;
     const start = () => {
       if (started) return;
       started = true;
       cleanup();
-      setMode(m);
+      if (m === 'frames') supportsAvif().then((ok) => alive && ok && setMode('frames'));
+      else setMode(m);
     };
     const events = ['scroll', 'pointermove', 'touchstart', 'keydown'] as const;
     events.forEach((e) => window.addEventListener(e, start, { passive: true, once: true }));
@@ -56,12 +60,16 @@ export function SceneGate({
       clearTimeout(timer);
       events.forEach((e) => window.removeEventListener(e, start));
     };
-    return cleanup;
+    return () => {
+      alive = false;
+      cleanup();
+    };
   }, [frames]);
 
-  // Frame-rate guard: integrated / weak GPUs that pass the WebGL checks but stutter get the frames.
+  // Frame-rate guard: live rendering is only for devices that keep it smooth. If the scene stays
+  // under 45 fps even after adaptive resolution has stepped down, switch to the pre-rendered video.
   useEffect(() => {
-    if (mode !== 'webgl' || !ready || !frames || (window as CaptureWindow).__sceneCapture) return;
+    if ((mode !== 'webgl' && mode !== 'lite') || !ready || !frames || (window as CaptureWindow).__sceneCapture) return;
     let raf = 0;
     let n = 0;
     let t0 = 0;
@@ -75,9 +83,9 @@ export function SceneGate({
           t0 = t;
         } else if (++n === 60) {
           const fps = (n * 1000) / (t - t0);
-          if (fps < 28) slow++;
+          if (fps < 45) slow++;
           else slow = 0;
-          if (slow >= 2) {
+          if (slow >= 3) {
             setReady(false);
             setMode('frames');
             return;
@@ -88,7 +96,7 @@ export function SceneGate({
         raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
-    }, 1500);
+    }, 3000); // give adaptive resolution time to step down first
     return () => {
       clearTimeout(warmup);
       cancelAnimationFrame(raf);
@@ -98,7 +106,7 @@ export function SceneGate({
   return (
     <div className="absolute inset-0">
       <div className={cn('absolute inset-0 transition-opacity duration-1000', ready ? 'opacity-0' : 'opacity-100')}>{poster}</div>
-      {mode === 'webgl' && (
+      {(mode === 'webgl' || mode === 'lite') && (
         <Suspense fallback={null}>
           <div className={cn('absolute inset-0 transition-opacity duration-1000', ready ? 'opacity-100' : 'opacity-0')}>
             <Scene progress={progress} pointer={pointer} onReady={() => setReady(true)} />

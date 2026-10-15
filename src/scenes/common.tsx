@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { PerformanceMonitor } from '@react-three/drei';
 import { PostFX } from './post';
+import { sceneQuality } from './quality';
 import * as THREE from 'three';
 import type { SceneProps } from '@/components/ox/ScrollStory';
 import { cssVar } from '@/hooks/useOx';
@@ -109,10 +111,21 @@ export function ReadySignal({ onReady }: { onReady?: () => void }) {
  * Shared canvas: transparent-free dark background, exponential fog, bloom + vignette + a whisper
  * of grain (Oxigen's filmic grade). Rendering pauses when the canvas is off-screen.
  */
+
 export function SceneCanvas({ children, fogDensity = 0.035, bloom = 0.9, camera }: { children: ReactNode; fogDensity?: number; bloom?: number; camera?: { fov?: number; position?: [number, number, number] } }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
   const colors = useSceneColors();
+  // Adaptive resolution: start at 1x on integrated graphics (mid-range otherwise) and climb toward
+  // the screen's native resolution (up to 2x, i.e. full 4K on a 4K display) while the scene holds
+  // ~60 fps; step back down if it starts dropping frames. Frame capture renders fixed at native.
+  const [range] = useState(() => {
+    const native = typeof window === 'undefined' ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const capture = typeof window !== 'undefined' && !!(window as Window & { __sceneCapture?: unknown }).__sceneCapture;
+    if (capture) return { min: window.devicePixelRatio, max: window.devicePixelRatio, start: 1, capture };
+    return { min: 1, max: native, start: sceneQuality.lite ? 0 : 0.5, capture };
+  });
+  const [dpr, setDpr] = useState(range.min + (range.max - range.min) * range.start);
   useEffect(() => {
     const el = wrap.current;
     if (!el) return;
@@ -124,7 +137,7 @@ export function SceneCanvas({ children, fogDensity = 0.035, bloom = 0.9, camera 
     <div ref={wrap} className="absolute inset-0">
       <Canvas
         frameloop={visible ? 'always' : 'never'}
-        dpr={[1, 1.75]}
+        dpr={dpr}
         gl={{ antialias: false, powerPreference: 'high-performance', alpha: false, stencil: false }}
         camera={{ fov: camera?.fov ?? 38, near: 0.1, far: 200, position: camera?.position ?? [0, 6, 18] }}
         onCreated={({ gl, scene }) => {
@@ -134,6 +147,16 @@ export function SceneCanvas({ children, fogDensity = 0.035, bloom = 0.9, camera 
           scene.fog = new THREE.FogExp2(colors.fog.getHex(), fogDensity);
         }}
       >
+        {!range.capture && range.max > range.min && (
+          <PerformanceMonitor
+            factor={range.start}
+            step={0.125}
+            flipflops={6}
+            bounds={(hz) => [hz * 0.8, hz * 0.93]}
+            onChange={({ factor }) => setDpr(range.min + (range.max - range.min) * factor)}
+            onFallback={() => setDpr(range.min)}
+          />
+        )}
         <PortraitFov fov={camera?.fov ?? 38} />
         {children}
         <PostFX bloom={bloom} />

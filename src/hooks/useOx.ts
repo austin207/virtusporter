@@ -71,34 +71,34 @@ export function useScrollProgress<T extends HTMLElement>() {
 
 /** Decide whether a heavy WebGL scene should run on this device. */
 /**
- * True only for a dedicated GPU (or Apple silicon). Software renderers (SwiftShader, llvmpipe,
- * hardware acceleration off) and integrated laptop graphics (Intel UHD/Iris, AMD Radeon APUs)
- * report false: they stutter on the live scenes, so those PCs get the frame sequence instead.
+ * 'dedicated' (discrete GPU or Apple silicon), 'integrated' (Intel UHD/Iris, AMD Radeon APUs,
+ * unknown hardware) or 'none' (no WebGL, or a software renderer: SwiftShader, llvmpipe,
+ * hardware acceleration switched off).
  */
-export function hasDedicatedGPU() {
+export function gpuClass(): 'dedicated' | 'integrated' | 'none' {
   try {
     const c = document.createElement('canvas');
     const opts = { failIfMajorPerformanceCaveat: true };
     const gl = (c.getContext('webgl2', opts) || c.getContext('webgl', opts)) as WebGLRenderingContext | null;
-    if (!gl) return false;
+    if (!gl) return 'none';
     const info = gl.getExtension('WEBGL_debug_renderer_info');
     const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer)) return false;
-    if (/nvidia|geforce|quadro|rtx|radeon\s*rx|radeon\s*pro|arc\s*a\d|apple/i.test(renderer)) return true;
-    if (/intel|iris|uhd|radeon\s*\(tm\)\s*(graphics|\d{3}m)|radeon\s*(graphics|vega)|vega\s*\d/i.test(renderer)) return false;
-    return true; // unknown but hardware: try live, the fps guard falls back if it stutters
+    if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer)) return 'none';
+    if (/nvidia|geforce|quadro|rtx|radeon\s*rx|radeon\s*pro|arc\s*a\d|apple/i.test(renderer)) return 'dedicated';
+    return 'integrated'; // Intel / AMD APUs / unknown: live scene at 1x resolution, fps guard as backstop
   } catch {
-    return false;
+    return 'none';
   }
 }
 
-export type SceneMode = 'webgl' | 'frames' | 'poster';
+export type SceneMode = 'webgl' | 'lite' | 'frames' | 'poster';
 
 /**
  * How a scroll story renders its background:
- *  - webgl:  live three.js scene (desktop with a dedicated GPU)
- *  - frames: pre-rendered image sequence scrubbed by scroll (phones, PCs on integrated or no GPU)
+ *  - webgl:  live three.js scene at high DPI (desktop with a dedicated GPU)
+ *  - lite:   the same live scene at 1x resolution (integrated graphics), still 60 fps
+ *  - frames: pre-rendered image sequence scrubbed by scroll (phones, PCs with no usable GPU)
  *  - poster: a single still (reduced motion, data saver)
  */
 export function sceneMode(): SceneMode {
@@ -107,10 +107,13 @@ export function sceneMode(): SceneMode {
   const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
   if (nav.connection?.saveData) return 'poster';
   if ((window as Window & { __sceneCapture?: unknown }).__sceneCapture) return 'webgl'; // frame capture script
+  const forced = new URLSearchParams(window.location.search).get('scene'); // testing: ?scene=webgl|lite|frames|poster
+  if (forced === 'webgl' || forced === 'lite' || forced === 'frames' || forced === 'poster') return forced;
   if (window.innerWidth < 760) return 'frames';
   if (nav.deviceMemory !== undefined && nav.deviceMemory < 4) return 'frames';
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return 'frames';
-  return hasDedicatedGPU() ? 'webgl' : 'frames';
+  const gpu = gpuClass();
+  return gpu === 'dedicated' ? 'webgl' : gpu === 'integrated' ? 'lite' : 'frames';
 }
 
 /** Read a CSS custom property from :root (used by canvases to follow the palette). */
