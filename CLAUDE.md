@@ -35,13 +35,14 @@ All copy lives in typed data files in `src/content/` (company, services, porter,
 Official artwork only (owner-supplied PNG): `public/brand/` holds the mark, wordmark and full lockup, each with a `-dark` variant for dark backgrounds (black recoloured light, red core untouched). `src/components/layout/Logo.tsx` renders them (`tone` prop). Do not redraw the logo. `public/favicon.ico` is the original favicon.
 
 ### 3D scenes (`src/scenes/`)
-three.js via react-three-fiber v8 (React 18). Lazy-loaded behind `SceneGate`, which shows the poster on mobile, low-memory, reduced-motion or no-WebGL devices and during prerender. Scroll progress is passed as a ref (no re-renders). Home = LiDAR scan → voxel quadruped assembles; Service = SLAM mapping run; Product = exploded Porter schematic.
+three.js via react-three-fiber v8 (React 18). Lazy-loaded behind `SceneGate`, which picks a mode via `sceneMode()` (`src/hooks/useOx.ts`): live WebGL on desktops with a hardware GPU; a pre-rendered **frame sequence** (`ScrollFrames`, `public/frames/<scene>/{d,m}/NN.webp`) on phones, GPU-less/software-WebGL or weak PCs, and any live scene that drops below ~28 fps; a static poster for reduced motion / data saver and during prerender.
+- **After changing a scene, re-render its frames:** `npm run dev`, then `python scripts/capture-frames.py [home service product]` (needs Playwright + Chrome with a GPU). Portrait screens widen the camera FOV (`PortraitFov` in `common.tsx`). Scroll progress is passed as a ref (no re-renders). Home = LiDAR scan → voxel quadruped assembles; Service = SLAM mapping run; Product = exploded Porter schematic.
 - **Gotcha:** the dev-only `lovable-tagger` adds `data-lov-*` props to JSX in `.tsx` files, which crashes r3f/postprocessing components. Keep postprocessing in `src/scenes/post.ts` (createElement, no JSX).
 
 ### Backend: Supabase
 Client in `src/integrations/supabase/client.ts`; types auto-generated in `types.ts` (do not edit). Edge functions under `supabase/functions/` (`generate-with-gemini`, `auth-email`, `send-email`). Service layer in `src/services/`.
-- **As of 2026-10-07 the project host `whtdnzigerjvdfmzbwgg.supabase.co` does not resolve (NXDOMAIN)** — auth, cart, marketplace, press kit, chat persistence and the contact form insert are down until a project is restored/recreated. The contact form falls back to a prefilled `mailto:`.
-- Contact form → `feedback` table (extra fields folded into the message). Newsletter → `subscribers`. Password reset → `/forgot-password?reset=1` (add this URL to Supabase Auth redirect allow-list).
+- **As of 2026-10-07 the project host `whtdnzigerjvdfmzbwgg.supabase.co` does not resolve (NXDOMAIN)** — auth, cart, marketplace, press kit, and chat persistence are down until a project is restored/recreated.
+- Contact form and newsletter → company inbox via FormSubmit (`src/lib/sendForm.ts`, activated for virtusco.tech@gmail.com); on failure the form shows a Gmail / email-app / copy fallback. Password reset → `/forgot-password?reset=1` (add this URL to Supabase Auth redirect allow-list).
 
 ### State
 Auth via `useAuth()` (`src/context/AuthContext.tsx`); TanStack Query (`retry: 1`, no refetch on focus); one toast system — `toast()` from `@/hooks/use-toast` is a shim over Sonner.

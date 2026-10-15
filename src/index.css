@@ -375,9 +375,7 @@ html.seen .vc-preloader {
     transform: translateY(26px);
   }
 }
-.story-panel + .story-panel {
-  border-top: 1px solid rgb(var(--light) / 0.1);
-}
+
 
 /* Phones: reveals start sooner and settle faster, so content is never caught mid-fade */
 @media (max-width: 767px) {

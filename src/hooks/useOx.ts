@@ -70,20 +70,40 @@ export function useScrollProgress<T extends HTMLElement>() {
 }
 
 /** Decide whether a heavy WebGL scene should run on this device. */
-export function canRunScene() {
-  if (!isBrowser) return false;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
-  if (nav.connection?.saveData) return false;
-  if (nav.deviceMemory !== undefined && nav.deviceMemory < 4) return false;
-  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return false;
-  if (window.innerWidth < 760) return false;
+/** True only for a hardware-accelerated WebGL context (software renderers like SwiftShader / llvmpipe report false). */
+export function hasHardwareWebGL() {
   try {
     const c = document.createElement('canvas');
-    return !!(c.getContext('webgl2') || c.getContext('webgl'));
+    const opts = { failIfMajorPerformanceCaveat: true };
+    const gl = (c.getContext('webgl2', opts) || c.getContext('webgl', opts)) as WebGLRenderingContext | null;
+    if (!gl) return false;
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
   } catch {
     return false;
   }
+}
+
+export type SceneMode = 'webgl' | 'frames' | 'poster';
+
+/**
+ * How a scroll story renders its background:
+ *  - webgl:  live three.js scene (desktop with a real GPU)
+ *  - frames: pre-rendered image sequence scrubbed by scroll (phones, weak or GPU-less PCs)
+ *  - poster: a single still (reduced motion, data saver)
+ */
+export function sceneMode(): SceneMode {
+  if (!isBrowser) return 'poster';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'poster';
+  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+  if (nav.connection?.saveData) return 'poster';
+  if ((window as Window & { __sceneCapture?: unknown }).__sceneCapture) return 'webgl'; // frame capture script
+  if (window.innerWidth < 760) return 'frames';
+  if (nav.deviceMemory !== undefined && nav.deviceMemory < 4) return 'frames';
+  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return 'frames';
+  return hasHardwareWebGL() ? 'webgl' : 'frames';
 }
 
 /** Read a CSS custom property from :root (used by canvases to follow the palette). */

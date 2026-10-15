@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useRef, useState, type ComponentType, type MutableRefObject, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { canRunScene } from '@/hooks/useOx';
+import { sceneMode, type SceneMode } from '@/hooks/useOx';
+import { ScrollFrames } from './ScrollFrames';
 
 export interface SceneProps {
   /** 0..1 scroll progress through the whole story; read every frame, never causes re-renders */
@@ -10,53 +11,104 @@ export interface SceneProps {
   onReady?: () => void;
 }
 
+type CaptureWindow = Window & { __sceneCapture?: { progress: number } };
+
 /**
- * Renders the static poster first (server, first client paint, and any device that shouldn't run
- * WebGL), then swaps in the lazy 3D scene and cross-fades once it reports ready.
+ * Renders the static poster first (server, first client paint, reduced motion), then swaps in
+ * either the live 3D scene (GPU desktops) or its pre-rendered frame sequence (phones, GPU-less
+ * or weak PCs), and cross-fades once it reports ready. A live scene that can't hold ~28 fps is
+ * replaced by the frame sequence.
  */
 export function SceneGate({
   Scene,
   poster,
+  frames,
   progress,
   pointer,
 }: {
   Scene: ComponentType<SceneProps>;
   poster: ReactNode;
+  /** frame-set name under public/frames/ (omit to fall back to the poster) */
+  frames?: string;
   progress: MutableRefObject<number>;
   pointer: MutableRefObject<{ x: number; y: number }>;
 }) {
-  const [run, setRun] = useState(false);
+  const [mode, setMode] = useState<SceneMode | null>(null);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    if (!canRunScene()) return;
-    // Keep the main thread free right after load: start three.js on the first scroll / pointer /
-    // touch, or after ~2.5 s once the browser is idle, whichever comes first.
+    let m = sceneMode();
+    if (m === 'frames' && !frames) m = 'poster';
+    if (m === 'poster') return;
+    // Keep the main thread free right after load: start on the first scroll / pointer / touch,
+    // or after ~2.5 s once the browser is idle, whichever comes first.
     let started = false;
     const start = () => {
       if (started) return;
       started = true;
       cleanup();
-      setRun(true);
+      setMode(m);
     };
     const events = ['scroll', 'pointermove', 'touchstart', 'keydown'] as const;
     events.forEach((e) => window.addEventListener(e, start, { passive: true, once: true }));
     const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: object) => number }).requestIdleCallback;
-    const timer = window.setTimeout(() => (idle ? idle(start, { timeout: 1500 }) : start()), 2500);
+    const timer = window.setTimeout(() => (idle ? idle(start, { timeout: 1500 }) : start()), (window as CaptureWindow).__sceneCapture ? 0 : 2500);
     const cleanup = () => {
       clearTimeout(timer);
       events.forEach((e) => window.removeEventListener(e, start));
     };
     return cleanup;
-  }, []);
+  }, [frames]);
+
+  // Frame-rate guard: integrated / weak GPUs that pass the WebGL checks but stutter get the frames.
+  useEffect(() => {
+    if (mode !== 'webgl' || !ready || !frames || (window as CaptureWindow).__sceneCapture) return;
+    let raf = 0;
+    let n = 0;
+    let t0 = 0;
+    let slow = 0;
+    const warmup = window.setTimeout(() => {
+      const tick = (t: number) => {
+        if (document.visibilityState !== 'visible') {
+          t0 = 0;
+          n = 0;
+        } else if (!t0) {
+          t0 = t;
+        } else if (++n === 60) {
+          const fps = (n * 1000) / (t - t0);
+          if (fps < 28) slow++;
+          else slow = 0;
+          if (slow >= 2) {
+            setReady(false);
+            setMode('frames');
+            return;
+          }
+          t0 = t;
+          n = 0;
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, 1500);
+    return () => {
+      clearTimeout(warmup);
+      cancelAnimationFrame(raf);
+    };
+  }, [mode, ready, frames]);
+
   return (
     <div className="absolute inset-0">
       <div className={cn('absolute inset-0 transition-opacity duration-1000', ready ? 'opacity-0' : 'opacity-100')}>{poster}</div>
-      {run && (
+      {mode === 'webgl' && (
         <Suspense fallback={null}>
           <div className={cn('absolute inset-0 transition-opacity duration-1000', ready ? 'opacity-100' : 'opacity-0')}>
             <Scene progress={progress} pointer={pointer} onReady={() => setReady(true)} />
           </div>
         </Suspense>
+      )}
+      {mode === 'frames' && frames && (
+        <div className={cn('absolute inset-0 transition-opacity duration-700', ready ? 'opacity-100' : 'opacity-0')}>
+          <ScrollFrames scene={frames} progress={progress} onReady={() => setReady(true)} />
+        </div>
       )}
     </div>
   );
@@ -69,6 +121,7 @@ export function SceneGate({
 export function ScrollStory({
   Scene,
   poster,
+  frames,
   chapters,
   className,
   rail,
@@ -78,6 +131,7 @@ export function ScrollStory({
   id?: string;
   Scene: ComponentType<SceneProps>;
   poster: ReactNode;
+  frames?: string;
   chapters: { key: string; node: ReactNode; align?: 'left' | 'right'; rail?: string }[];
   className?: string;
   rail?: string;
@@ -99,7 +153,8 @@ export function ScrollStory({
       if (el && stage) {
         const r = el.getBoundingClientRect();
         const total = r.height - window.innerHeight;
-        const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
+        const cap = (window as CaptureWindow).__sceneCapture;
+        const p = cap ? cap.progress : total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
         progress.current = p;
         // Active chapter = the one whose text block sits closest to 60% of the viewport height.
         // (Deriving it from progress drifted: progress spans n-1 viewports, chapters span n.)
@@ -156,11 +211,11 @@ export function ScrollStory({
       {/* pinned stage */}
       <div className="sticky top-0 z-0 -mb-[100svh] h-[100svh] overflow-hidden">
         <div ref={stageRef} className="absolute inset-0 origin-top will-change-transform">
-          <SceneGate Scene={Scene} poster={poster} progress={progress} pointer={pointer} />
-          {/* Oxigen bottom-left vignette keeps text legible over the scene */}
+          <SceneGate Scene={Scene} poster={poster} frames={frames} progress={progress} pointer={pointer} />
+          {/* Oxigen bottom-left vignette keeps text legible over the scene (phones use per-chapter gradients) */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 max-md:hidden"
             style={{
               background:
                 'radial-gradient(135% 100% at 6% 112%, rgb(var(--ink) / .86) 0%, rgb(var(--ink) / .5) 38%, rgb(var(--ink) / 0) 80%), linear-gradient(90deg, rgb(var(--ink) / .8) 0%, rgb(var(--ink) / .55) 34%, rgb(var(--ink) / 0) 60%)',
@@ -169,15 +224,10 @@ export function ScrollStory({
           {/* mirrored scrim for right-aligned chapters (fades in only while one is active) */}
           <div
             aria-hidden
-            className={cn('pointer-events-none absolute inset-0 transition-opacity duration-700', chapters[chapter]?.align === 'right' ? 'opacity-100' : 'opacity-0')}
+            className={cn('pointer-events-none absolute inset-0 transition-opacity duration-700 max-md:hidden', chapters[chapter]?.align === 'right' ? 'opacity-100' : 'opacity-0')}
             style={{ background: 'linear-gradient(270deg, rgb(var(--ink) / .82) 0%, rgb(var(--ink) / .5) 34%, rgb(var(--ink) / 0) 62%)' }}
           />
         </div>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 md:hidden"
-          style={{ background: 'linear-gradient(0deg, rgb(var(--ink) / .92) 0%, rgb(var(--ink) / .7) 42%, rgb(var(--ink) / 0) 72%)' }}
-        />
         {/* scroll cue */}
         <div
           aria-hidden
@@ -197,9 +247,10 @@ export function ScrollStory({
           data-rail={c.rail}
           className={cn(
             'relative z-10 flex px-[var(--gutter-hero)] md:min-h-[100svh] md:bg-transparent md:pb-[clamp(56px,11vh,120px)] md:pt-32',
-            // phones: the scene is a static poster, so only the opener is full-screen; the remaining
-            // chapters are compact panels on a dark backing (readable, and ~half the scroll length)
-            i === 0 ? 'min-h-[100svh] pb-16 pt-32' : 'story-panel bg-ink/[0.86] py-14 md:py-0',
+            // phones: the frame sequence plays behind see-through chapters; each chapter darkens
+            // only toward its text at the bottom, so the animation stays visible between them
+            i === 0 ? 'min-h-[100svh] pb-16 pt-32' : 'min-h-[88svh] pb-16 pt-24 md:pt-32',
+            'max-md:bg-gradient-to-b max-md:from-transparent max-md:from-[35%] max-md:via-ink/60 max-md:via-[62%] max-md:to-ink/90',
             c.align === 'right' ? 'items-end md:justify-end' : 'items-end',
           )}
         >

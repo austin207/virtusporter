@@ -74,6 +74,22 @@ export function useWaypointCamera(waypoints: Waypoint[], inputs: ReturnType<type
   });
 }
 
+/**
+ * Portrait screens: three.js keeps the vertical FOV, so a tall viewport crops the sides of a
+ * scene composed for landscape. Widen the vertical FOV so the view is never narrower than at 0.8.
+ */
+function PortraitFov({ fov }: { fov: number }) {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    const cam = camera as THREE.PerspectiveCamera;
+    const aspect = size.width / size.height;
+    const minAspect = 0.8;
+    cam.fov = aspect >= minAspect ? fov : (2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov) / 2) * (minAspect / aspect)) * 180) / Math.PI;
+    cam.updateProjectionMatrix();
+  }, [camera, size.width, size.height, fov]);
+  return null;
+}
+
 /** Calls onReady after the first frames have actually rendered (so the poster cross-fade is clean). */
 export function ReadySignal({ onReady }: { onReady?: () => void }) {
   const frames = useRef(0);
@@ -118,6 +134,7 @@ export function SceneCanvas({ children, fogDensity = 0.035, bloom = 0.9, camera 
           scene.fog = new THREE.FogExp2(colors.fog.getHex(), fogDensity);
         }}
       >
+        <PortraitFov fov={camera?.fov ?? 38} />
         {children}
         <PostFX bloom={bloom} />
       </Canvas>

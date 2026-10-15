@@ -59,7 +59,7 @@ const Service = () => {
         schema={[...serviceNodes(), howTo(), breadcrumbs([{ name: 'Services', path: '/service' }])]}
       />
 
-      <ScrollStory Scene={ServiceScene} poster={<PointPoster image="/posters/service.webp" />} chapters={chapters} />
+      <ScrollStory Scene={ServiceScene} poster={<PointPoster image="/posters/service.webp" />} frames="service" chapters={chapters} />
 
       {/* Service detail */}
       <Section id="services" label="Detail" className="sec wrap">

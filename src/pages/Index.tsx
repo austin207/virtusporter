@@ -98,7 +98,7 @@ const Index = () => {
         schema={[...serviceNodes(), howTo(), breadcrumbs([])]}
       />
 
-      <ScrollStory Scene={HomeScene} poster={<PointPoster image="/posters/home.webp" />} chapters={chapters} />
+      <ScrollStory Scene={HomeScene} poster={<PointPoster image="/posters/home.webp" />} frames="home" chapters={chapters} />
 
       {/* Services / capabilities */}
       <Section id="services" label="Services" className="sec wrap">

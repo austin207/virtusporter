@@ -66,7 +66,7 @@ const Product = () => {
         schema={[porterProduct(), breadcrumbs([{ name: 'Porter', path: '/product' }])]}
       />
 
-      <ScrollStory id="features" Scene={PorterScene} poster={<PointPoster image="/posters/product.webp" />} chapters={chapters} />
+      <ScrollStory id="features" Scene={PorterScene} poster={<PointPoster image="/posters/product.webp" />} frames="product" chapters={chapters} />
 
       {/* Status / photo */}
       <Section tone="paper" label="Status" className="sec wrap">
